@@ -1,53 +1,25 @@
 import asyncio
+import datetime
 import logging
 import sys
-from os import getenv
-from callbacks import navigation
-from aiogram import Bot, Dispatcher, html, Router
+
+import requests as req
+from aiogram import Bot, Dispatcher, Router
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from aiogram.filters import CommandStart, Command
-from aiogram.handlers import InlineQueryHandler, CallbackQueryHandler
-from aiogram.types import Message, InlineQuery, InlineQueryResultArticle, InputMessageContent, InputTextMessageContent, \
-    InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
-import requests as req
+from aiogram.filters import Command
+from aiogram.types import Message, InlineQuery, InlineQueryResultArticle, InputTextMessageContent, \
+    InlineKeyboardMarkup, InlineKeyboardButton, MessageEntity
 
+from callbacks import navigation
+from callbacks.navigation import Search
 from models import Group
 
-# Bot token can be obtained via https://t.me/BotFather
 TOKEN = "7283968288:AAEdrChiKr149d2p5zeoVZ29bWEJIFlDtTs"
 API_URL = "https://api.uksivt.xyz/api/v1/"
-# All handlers should be attached to the Router (or Dispatcher)
-
 
 router = Router()
 
-@router.message(CommandStart())
-async def command_start_handler(message: Message) -> None:
-    """
-    This handler receives messages with `/start` command
-    """
-    # Most event objects have aliases for API methods that can be called in events' context
-    # For example if you want to answer to incoming message you can use `message.answer(...)` alias
-    # and the target chat will be passed to :ref:`aiogram.methods.send_message.SendMessage`
-    # method automatically or call API method directly via
-    # Bot instance: `bot.send_message(chat_id=message.chat.id, ...)`
-    await message.answer(f"Hello, {html.bold(message.from_user.full_name)}!")
-
-
-# @dp.message()
-# async def echo_handler(message: Message) -> None:
-#     """
-#     Handler will forward receive a message back to the sender
-#
-#     By default, message handler will handle all message types (like a text, photo, sticker etc.)
-#     """
-#     try:
-#         # Send a copy of the received message
-#         await message.send_copy(chat_id=message.chat.id)
-#     except TypeError:
-#         # But not all the types is supported to be copied so need to handle it
-#         await message.answer("Nice try!")
 
 @router.inline_query()
 async def handle(query: InlineQuery):
@@ -91,35 +63,71 @@ async def handle(query: InlineQuery):
                 title=group.name,
                 url='uksivt.xyz',
                 input_message_content=InputTextMessageContent(
-                    message_text="Here is your message with buttons!"
+                    message_text=f"/group {group.id} {datetime.datetime.now().timestamp()}",
                 ),
-                reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                    [
-                        InlineKeyboardButton(text="ПН",callback_data='monday'),
-                        InlineKeyboardButton(text="ВТ", callback_data='tuesday'),
-                        InlineKeyboardButton(text="СР", callback_data='wednesday')
-                    ],
-                    [
-                        InlineKeyboardButton(text="ЧТ",callback_data='thursday'),
-                        InlineKeyboardButton(text="ПТ", callback_data='friday'),
-                        InlineKeyboardButton(text="СБ", url="https://www.gooadsgle.com/",callback_data='saturday')
-                    ],
-                    [
-                        InlineKeyboardButton(text="Пред.неделя⬅️", url="https://www.gooasdgle.com/"),
-                        InlineKeyboardButton(text="Сегодня", url="https://www.goadsgle.com/"),
-                        InlineKeyboardButton(text="След.неделя➡️", url="https://www.gooadsgle.com/")
-                    ]
-                ]),
+                # reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                #     [
+                #         InlineKeyboardButton(text="ПН", callback_data='monday'),
+                #         InlineKeyboardButton(text="ВТ", callback_data='tuesday'),
+                #         InlineKeyboardButton(text="СР", callback_data='wednesday')
+                #     ],
+                #     [
+                #         InlineKeyboardButton(text="ЧТ", callback_data='thursday'),
+                #         InlineKeyboardButton(text="ПТ", callback_data='friday'),
+                #         InlineKeyboardButton(text="СБ", url="https://www.gooadsgle.com/", callback_data='saturday')
+                #     ],
+                #     [
+                #         InlineKeyboardButton(text="Пред.неделя⬅️", url="https://www.gooasdgle.com/"),
+                #         InlineKeyboardButton(text="Сегодня", url="https://www.goadsgle.com/"),
+                #         InlineKeyboardButton(text="След.неделя➡️", url="https://www.gooadsgle.com/")
+                #     ]
+                # ]),
                 thumbnail_url='https://ojbsikxdqcbuvamygezd.supabase.co/storage/v1/object/sign/zamenas/python_(1).png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ6YW1lbmFzL3B5dGhvbl8oMSkucG5nIiwiaWF0IjoxNzIwMzg2MDg0LCJleHAiOjE3NTE5MjIwODR9.Xn_fkGftIEKCGFwQRK8JY0HPNnJax6uU8RtxmDUD0A0&t=2024-07-07T21%3A01%3A23.755Z',
             )
         )
-
     await query.answer(results, cache_time=300, is_personal=False)
 
 
-# @dp.callback_query()
-# async def testss(query: CallbackQuery):
-#     await query.message.edit_text("asd")
+@router.message(Command('group'))
+async def a(message: Message) -> None:
+    await message.bot.delete_message(chat_id=message.chat.id,message_id=message.message_id)
+    group = message.text.split(' ')[1]
+    date: datetime.datetime = datetime.datetime.fromtimestamp(float(message.text.split(' ')[2]))
+    monday_date = date.date() - datetime.timedelta(days=date.weekday())
+    await message.answer(
+        f"🎓 Расписание группы {group}\n\n🗓️ {date.weekday()}, {date.day} {date.month}",
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [
+                    InlineKeyboardButton(text="ПН", callback_data=Search(type='group',search_id=int(group),date=monday_date.strftime('%Y-%m-%d')).pack()),
+                    InlineKeyboardButton(text="ВТ", callback_data=Search(type='group',search_id=int(group),date=(monday_date+ datetime.timedelta(days=1)).strftime('%Y-%m-%d')).pack()),
+                    InlineKeyboardButton(text="СР", callback_data=Search(type='group',search_id=int(group),date=(monday_date+ datetime.timedelta(days=2)).strftime('%Y-%m-%d')).pack()),
+                ],
+                [
+                    InlineKeyboardButton(text="ЧТ", callback_data=Search(type='group',search_id=int(group),date=(monday_date+ datetime.timedelta(days=3)).strftime('%Y-%m-%d')).pack()),
+                    InlineKeyboardButton(text="ПТ", callback_data=Search(type='group',search_id=int(group),date=(monday_date+ datetime.timedelta(days=4)).strftime('%Y-%m-%d')).pack()),
+                    InlineKeyboardButton(text="СБ", callback_data=Search(type='group',search_id=int(group),date=(monday_date+ datetime.timedelta(days=5)).strftime('%Y-%m-%d')).pack()),
+                ],
+                [
+                    InlineKeyboardButton(text="Пред.неделя⬅️", callback_data=f"group week {group} {monday_date - datetime.timedelta(days=7)}"),
+                    InlineKeyboardButton(text="Сегодня",callback_data= f'group today {group}'),
+                    InlineKeyboardButton(text="След.неделя➡️", callback_data=f"group week {group} {monday_date + datetime.timedelta(days=7)}")
+                ]
+            # [
+            #     InlineKeyboardButton(text="ПН", callback_data=f'group monday {group} {monday_date}'),
+            #     InlineKeyboardButton(text="ВТ", callback_data=f'group tuesday {group} {monday_date + datetime.timedelta(days=1)}'),
+            #     InlineKeyboardButton(text="СР", callback_data=f'group wednesday {group} {monday_date + datetime.timedelta(days=2)}')
+            # ],
+            # [
+            #     InlineKeyboardButton(text="ЧТ", callback_data=f'group thursday {group} {monday_date + datetime.timedelta(days=3)}'),
+            #     InlineKeyboardButton(text="ПТ", callback_data=f'group friday {group} {monday_date + datetime.timedelta(days=4)}'),
+            #     InlineKeyboardButton(text="СБ", callback_data=f'group saturday {group} {monday_date + datetime.timedelta(days=4)}')
+            # ],
+            # [
+            #     InlineKeyboardButton(text="Пред.неделя⬅️", callback_data=f"group week {group} {monday_date - datetime.timedelta(days=7)}"),
+            #     InlineKeyboardButton(text="Сегодня",callback_data= f'group today {group}'),
+            #     InlineKeyboardButton(text="След.неделя➡️", callback_data=f"group week {group} {monday_date + datetime.timedelta(days=7)}")
+            # ]
+        ]), )
 
 
 @router.message(Command('find'))
