@@ -2,7 +2,7 @@ import datetime
 import requests as req
 from aiogram import Router
 from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent
-from main import API_URL
+from secrets import API_URL
 from models.search_model import SearchResult
 
 router = Router()

@@ -1,17 +1,13 @@
 import asyncio
 import logging
 import sys
-import os
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 
 from callbacks import navigation, search
-
-TOKEN = os.environ.get("TELEGRAM_API_TOKEN")
-
-API_URL = os.environ.get("TELEGRAM_API_URL")
+from secrets import TOKEN
 
 
 async def main() -> None:

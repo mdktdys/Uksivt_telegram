@@ -6,7 +6,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 import aiohttp
 from aiogram import types
 
-from main import API_URL
+from secrets import API_URL
 from models.search_result import DayScheduleFormatted
 from utils.extensions import weekday_name, week_number_from_september, month_name
 router = Router()
