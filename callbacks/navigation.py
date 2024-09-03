@@ -29,7 +29,7 @@ async def handle_group_callback(callback: types.CallbackQuery, callback_data: Se
     choosed_day_is_current = True if date == now_date else False
     week_day = date.weekday()
 
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(trust_env=True) as session:
         print(f'{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/')
         async with session.get(f'{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/') as res:
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(await res.text())
@@ -76,7 +76,7 @@ async def a(message: Message) -> None:
     choosed_day_is_current = True if date == now_date else False
     week_day = date.weekday()
 
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(trust_env=True) as session:
         print(f'{API_URL}groups/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/')
         async with session.get(
                 f'{API_URL}groups/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/') as res:
@@ -145,7 +145,7 @@ async def handle_group_callback(callback: types.CallbackQuery, callback_data: Se
     choosed_day_is_current = True if date == now_date else False
     week_day = date.weekday()
 
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(trust_env=True) as session:
         print(f'{API_URL}teachers/day_schedule_formatted/{group}/{callback_data.date}/')
         async with session.get(
                 f'{API_URL}teachers/day_schedule_formatted/{group}/{callback_data.date}/') as res:
@@ -218,7 +218,7 @@ async def a(message: Message) -> None:
     choosed_day_is_current = True if date == now_date else False
     week_day = date.weekday()
 
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(trust_env=True) as session:
         print(f'{API_URL}teachers/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/')
         async with session.get(
                 f'{API_URL}teachers/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/') as res:
