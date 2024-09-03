@@ -5,6 +5,8 @@ from aiogram.filters.callback_data import CallbackData
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 import aiohttp
 from aiogram import types
+
+from main import API_URL
 from models.search_result import DayScheduleFormatted
 from utils.extensions import weekday_name, week_number_from_september, month_name
 router = Router()
@@ -28,7 +30,7 @@ async def handle_group_callback(callback: types.CallbackQuery, callback_data: Se
     week_day = date.weekday()
 
     async with aiohttp.ClientSession() as session:
-        async with session.get(f'http://api.uksivt.xyz/api/v1/groups/day_schedule_formatted/{group}/{callback_data.date}/') as res:
+        async with session.get(f'{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/') as res:
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(await res.text())
 
 
@@ -75,7 +77,7 @@ async def a(message: Message) -> None:
 
     async with aiohttp.ClientSession() as session:
         async with session.get(
-                f'http://api.uksivt.xyz/api/v1/groups/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/') as res:
+                f'{API_URL}groups/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/') as res:
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(await res.text())
 
     header = f"🎓 Расписание группы {response.search_name}\n"
@@ -143,7 +145,7 @@ async def handle_group_callback(callback: types.CallbackQuery, callback_data: Se
 
     async with aiohttp.ClientSession() as session:
         async with session.get(
-                f'http://api.uksivt.xyz/api/v1/teachers/day_schedule_formatted/{group}/{callback_data.date}/') as res:
+                f'{API_URL}teachers/day_schedule_formatted/{group}/{callback_data.date}/') as res:
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(await res.text())
 
     header = f"🎓 Расписание преподавателя {response.search_name}\n"
@@ -215,7 +217,7 @@ async def a(message: Message) -> None:
 
     async with aiohttp.ClientSession() as session:
         async with session.get(
-                f'http://api.uksivt.xyz/api/v1/teachers/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/') as res:
+                f'{API_URL}teachers/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/') as res:
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(await res.text())
 
     header = f"🎓 Расписание преподавателя {response.search_name}\n"
