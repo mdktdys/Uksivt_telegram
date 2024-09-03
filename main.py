@@ -7,10 +7,11 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 
 from callbacks import navigation, search
-from secrets import TOKEN
+from secrets import TOKEN, API_URL
 
 
 async def main() -> None:
+    print(f'{API_URL}teachers/day_schedule_formatted/1/1/')
     bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher()
 
