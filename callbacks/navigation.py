@@ -30,6 +30,7 @@ async def handle_group_callback(callback: types.CallbackQuery, callback_data: Se
     week_day = date.weekday()
 
     async with aiohttp.ClientSession() as session:
+        print(f'{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/')
         async with session.get(f'{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/') as res:
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(await res.text())
 
@@ -76,6 +77,7 @@ async def a(message: Message) -> None:
     week_day = date.weekday()
 
     async with aiohttp.ClientSession() as session:
+        print(f'{API_URL}groups/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/')
         async with session.get(
                 f'{API_URL}groups/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/') as res:
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(await res.text())
@@ -144,6 +146,7 @@ async def handle_group_callback(callback: types.CallbackQuery, callback_data: Se
     week_day = date.weekday()
 
     async with aiohttp.ClientSession() as session:
+        print(f'{API_URL}teachers/day_schedule_formatted/{group}/{callback_data.date}/')
         async with session.get(
                 f'{API_URL}teachers/day_schedule_formatted/{group}/{callback_data.date}/') as res:
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(await res.text())
@@ -216,6 +219,7 @@ async def a(message: Message) -> None:
     week_day = date.weekday()
 
     async with aiohttp.ClientSession() as session:
+        print(f'{API_URL}teachers/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/')
         async with session.get(
                 f'{API_URL}teachers/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/') as res:
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(await res.text())
