@@ -22,7 +22,5 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    print(os.environ)
-
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     asyncio.run(main())
