@@ -32,18 +32,19 @@ async def handle_group_callback(callback: types.CallbackQuery, callback_data: Se
     async with aiohttp.ClientSession(trust_env=True) as session:
         print(f'{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/')
         async with session.get(f'{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/') as res:
+            debug = res.headers['x-fastapi-cache']
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(await res.text())
 
 
     header = f"🎓 Расписание группы {response.search_name}\n"
     body = "\n".join(response.paras) if response.paras else '\n🎉 Нет пар'
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else '' }"
-
     await callback.message.edit_text(
                                      f"{header}"
                                      f"{body}"
                                      f"\n{calendar_footer}"
-                                     f"\n🏷️ {week_number_from_september(date)} Неделя {'- текущая' if choosed_week_is_current else ''}",
+                                     f"\n🏷️ {week_number_from_september(date)} Неделя {'- текущая' if choosed_week_is_current else ''}"
+                                     f"{debug}",
          reply_markup=InlineKeyboardMarkup(
             inline_keyboard=[
             [
@@ -80,6 +81,7 @@ async def a(message: Message) -> None:
         print(f'{API_URL}groups/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/')
         async with session.get(
                 f'{API_URL}groups/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/') as res:
+            debug = res.headers['x-fastapi-cache']
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(await res.text())
 
     header = f"🎓 Расписание группы {response.search_name}\n"
@@ -90,7 +92,8 @@ async def a(message: Message) -> None:
         f"{header}"
         f"{body}"
         f"\n{calendar_footer}"
-        f"\n🏷️ {week_number_from_september(date)} Неделя {'- текущая' if choosed_week_is_current else ''}",
+        f"\n🏷️ {week_number_from_september(date)} Неделя {'- текущая' if choosed_week_is_current else ''}"
+        f"{debug}",
         reply_markup=InlineKeyboardMarkup(
             inline_keyboard=[
                 [
