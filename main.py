@@ -5,21 +5,27 @@ import sys
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-
-from callbacks import navigation, search
+from callbacks import navigation, search, test, parser, events
+from callbacks.events import on_on, on_exit
 from secrets import TOKEN, API_URL
+
+dp = Dispatcher()
+bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
 
 async def main() -> None:
-    print(f'{API_URL}teachers/day_schedule_formatted/1/1/')
-    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-    dp = Dispatcher()
-
     dp.include_routers(
         navigation.router,
-        search.router
+        search.router,
+        # test.router,
+        parser.router,
+        events.router
     )
-    await dp.start_polling(bot)
+    try:
+        await on_on(bot=bot)
+        await dp.start_polling(bot)
+    finally:
+        await on_exit(bot=bot)
 
 
 if __name__ == "__main__":
