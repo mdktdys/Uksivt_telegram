@@ -7,7 +7,7 @@ from aiogram import Bot, F, Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
-from secrets import API_URL
+from secrets import API_URL, API_KEY
 import requests as req
 router = Router()
 
@@ -33,5 +33,6 @@ router = Router()
 
 @router.message(F.text,Command("auth"))
 async def test(message: Message):
-    response: list[dict] = req.get(f"http://fastapi:3000/auth/protected-route").json()
+    response: list[dict] = req.get(f"http://fastapi:3000/auth/protected-route",headers={'X-API-KEY':API_KEY}).json()
     print(response)
+    await message.answer(str(response))
