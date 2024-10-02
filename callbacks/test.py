@@ -32,6 +32,6 @@ router = Router()
 
 
 @router.message(F.text,Command("auth"))
-async def test():
+async def test(message: Message):
     response: list[dict] = req.get(f"http://fastapi:3000/auth/protected-route").json()
     print(response)
