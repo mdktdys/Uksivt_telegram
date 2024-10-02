@@ -17,7 +17,7 @@ async def main() -> None:
     dp.include_routers(
         navigation.router,
         search.router,
-        # test.router,
+        test.router,
         parser.router,
         events.router
     )
