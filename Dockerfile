@@ -11,4 +11,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD [ "python", "./main.py" ]
+CMD ["bash", "-c", "python ./main.py & celery -A telegram worker --loglevel=info --pool=solo"]
