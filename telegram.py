@@ -14,7 +14,7 @@ telegram_celery_app = Celery(
 
 @telegram_celery_app.task
 def send_message_via_bot(chat_id, data):
-    asyncio.run(send_message(chat_id, data))
+    send_message(chat_id, data)
 
 
 telegram_celery_app.autodiscover_tasks(force=True)
