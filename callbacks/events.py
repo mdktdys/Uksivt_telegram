@@ -22,7 +22,7 @@ def get_current_time():
 
 
 async def on_on(bot: Bot):
-    await bot.send_message(chat_id=DEBUG_CHANNEL, text='🟢 Включен')
+    await bot.send_message(chat_id=DEBUG_CHANNEL, text='🟢 Telegram Включен')
     keyboard = create_keyboard_with_logo()
     res = await bot.edit_message_text(
         f"🟢 🌊 uksivt.xyz\nПоиск по группам, преподам и кабинетам\nвключен {get_current_time()}",
@@ -30,7 +30,7 @@ async def on_on(bot: Bot):
 
 
 async def on_exit(bot: Bot):
-    await bot.send_message(chat_id=DEBUG_CHANNEL, text='💤 Выключен')
+    await bot.send_message(chat_id=DEBUG_CHANNEL, text='💤 Telegram Выключен')
     keyboard = create_keyboard_with_logo()
     res = await bot.edit_message_text(
         f"💤 🌊 uksivt.xyz\nПоиск по группам, преподам и кабинетам\nвыключен {get_current_time()}",
