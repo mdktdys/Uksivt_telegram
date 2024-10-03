@@ -30,3 +30,22 @@ async def my_handler(message: Message):
             error_body=error_body,
         )
 
+
+@router.message(F.text, Command("check"))
+async def my_handler(message: Message):
+    try:
+        # Lazy import inside the function
+        from telegram import telegram_celery_app
+        telegram_celery_app.send_task("parser.tasks.check_new",args=[])
+        await message.answer(f"Отправлено в очередь")
+    except Exception as e:
+        error_body = f"{str(e)}\n\n{traceback.format_exc()}"
+        from utils.sender import send_error_message
+        await send_error_message(
+            bot=message.bot,
+            chat_id=message.chat.id,
+            error_header="Ошибка",
+            application="Kronos",
+            time_=datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S %p"),
+            error_body=error_body,
+        )
