@@ -14,11 +14,10 @@ telegram_celery_app = Celery(
 
 @telegram_celery_app.task
 def send_message_via_bot(chat_id, data):
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(send_message(chat_id, data))
+    asyncio.run(send_message(chat_id, data))
 
 
-telegram_celery_app.autodiscover_tasks()
+telegram_celery_app.autodiscover_tasks(force=True)
 
 print("***")
 print(telegram_celery_app.tasks.keys())
