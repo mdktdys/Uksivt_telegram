@@ -4,3 +4,4 @@ requests==2.32.3
 aiohttp==3.9.5
 celery==5.4.0
 pytz==2024.2
+redis~=5.0.8
