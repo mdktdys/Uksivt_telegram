@@ -5,29 +5,32 @@ import traceback
 from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.types import Message
+from celery.result import AsyncResult
 
 router = Router()
 
 admins = [1283168392]
 
+from your_celery_app import get_latest_zamena_link  # Импортируйте вашу задачу
+import asyncio
+
 
 @router.message(F.text, Command("latest"))
 async def my_handler(message: Message):
     try:
-        # Lazy import inside the function
-        from telegram import telegram_celery_app
-
+        chat_id = message.chat.id
         # Отправляем задачу с использованием delay()
-        task = telegram_celery_app.send_task("parser.tasks.get_latest_zamena_link").delay()
+        task = get_latest_zamena_link.delay()  # Вызываем delay() на задаче
 
         # Функция для периодической проверки статуса задачи
-        async def check_task_result():
-            while not task.ready():
+        async def check_task_result(task_id):
+            result = AsyncResult(task_id)  # Создаем AsyncResult для проверки
+            while not result.ready():
                 await asyncio.sleep(1)  # Ждем 1 секунду перед следующей проверкой
-            return task.result  # Возвращаем результат, когда задача завершена
+            return result.result  # Возвращаем результат, когда задача завершена
 
         # Запускаем проверку в отдельной задаче
-        task_result = await check_task_result()
+        task_result = await check_task_result(task.id)
 
         await message.answer(f"{task_result}")
     except Exception as e:
@@ -41,4 +44,5 @@ async def my_handler(message: Message):
             time_=datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S %p"),
             error_body=error_body,
         )
+
 
