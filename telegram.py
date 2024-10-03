@@ -1,4 +1,5 @@
 import asyncio
+import functools
 
 from celery import Celery
 
@@ -12,10 +13,17 @@ telegram_celery_app = Celery(
 )
 
 
+def sync(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        return asyncio.get_event_loop().run_until_complete(f(*args, **kwargs))
+    return wrapper
+
+
 @telegram_celery_app.task
-def send_message_via_bot(chat_id, data):
-    loop = asyncio.get_running_loop()
-    loop.run_until_complete(send_message(chat_id, data))
+@sync
+async def send_message_via_bot(chat_id, data):
+    await send_message(chat_id, data)
 
 
 telegram_celery_app.autodiscover_tasks(force=True)
