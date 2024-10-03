@@ -4,7 +4,7 @@ from aiogram import Bot, Router
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from callbacks.parser import admins
-from secrets import MAIN_CHANNEL, MAIN_CHANNEL_ANCHOR_MESSAGE
+from secrets import MAIN_CHANNEL, MAIN_CHANNEL_ANCHOR_MESSAGE, DEBUG_CHANNEL
 
 router = Router()
 
@@ -22,7 +22,7 @@ def get_current_time():
 
 
 async def on_on(bot: Bot):
-    await bot.send_message(chat_id=admins[0], text='🟢 Включен')
+    await bot.send_message(chat_id=DEBUG_CHANNEL, text='🟢 Включен')
     keyboard = create_keyboard_with_logo()
     res = await bot.edit_message_text(
         f"🟢 🌊 uksivt.xyz\nПоиск по группам, преподам и кабинетам\nвключен {get_current_time()}",
@@ -30,7 +30,7 @@ async def on_on(bot: Bot):
 
 
 async def on_exit(bot: Bot):
-    await bot.send_message(chat_id=admins[0], text='💤 Выключен')
+    await bot.send_message(chat_id=DEBUG_CHANNEL, text='💤 Выключен')
     keyboard = create_keyboard_with_logo()
     res = await bot.edit_message_text(
         f"💤 🌊 uksivt.xyz\nПоиск по группам, преподам и кабинетам\nвыключен {get_current_time()}",
@@ -38,7 +38,7 @@ async def on_exit(bot: Bot):
 
 
 async def on_check(bot: Bot):
-    await bot.send_message(chat_id=admins[0], text='Проверил')
+    await bot.send_message(chat_id=DEBUG_CHANNEL, text='Проверил')
     keyboard = create_keyboard_with_logo()
     res = await bot.edit_message_text(
         f"🟢 Последняя проверка {get_current_time()}\nuksivt.xyz Поиск по группам, преподам и кабинетам",
