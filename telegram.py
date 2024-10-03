@@ -1,12 +1,14 @@
 import asyncio
 
 from celery import Celery
+
+from secrets import BROKER_URL, BACKEND_URL
 from utils.sender import send_message
 
 telegram_celery_app = Celery(
     'telegram_bot',
-    broker='amqp://guest:guest@127.0.0.1:5672//',  # Используйте 127.0.0.1 для RabbitMQ
-    backend='redis://127.0.0.1:6379/0'             # Используйте 127.0.0.1 для Redis
+    broker=BROKER_URL,
+    backend=BACKEND_URL,
 )
 
 

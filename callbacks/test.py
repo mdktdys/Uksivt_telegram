@@ -33,7 +33,5 @@ router = Router()
 
 @router.message(F.text,Command("auth"))
 async def test(message: Message):
-    print(API_KEY)
     response: list[dict] = req.get(f"http://fastapi:3000/auth/protected-route",headers={'X-API-KEY':API_KEY}).json()
-    print(response)
     await message.answer(str(response))

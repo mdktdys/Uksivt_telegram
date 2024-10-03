@@ -16,8 +16,8 @@ async def my_handler(message: Message):
         chat_id = message.chat.id
         # Lazy import inside the function
         from telegram import telegram_celery_app
-        telegram_celery_app.send_task("broker.get_latest_zamena_link", args=[chat_id])
-        await message.answer(f"Отправлено в очередь")
+        res = await telegram_celery_app.send_task("parser.tasks.get_latest_zamena_link")
+        await message.answer(f"{res}")
     except Exception as e:
         error_body = f"{str(e)}\n\n{traceback.format_exc()}"
         from utils.sender import send_error_message
@@ -25,7 +25,7 @@ async def my_handler(message: Message):
             bot=message.bot,
             chat_id=message.chat.id,
             error_header="Ошибка",
-            application="Parser",
+            application="Kronos",
             time_=datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S %p"),
             error_body=error_body,
         )
