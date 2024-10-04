@@ -4,7 +4,7 @@ from main import bot
 
 
 async def send_message(chat_id, message):
-    await bot.send_message(chat_id=str(chat_id), text=message)
+    await bot.send_message(chat_id=str(chat_id), text=str(message))
 
 
 async def send_error_message(bot: Bot, chat_id: int, error_header: str, application: str,
