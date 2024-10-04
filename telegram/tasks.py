@@ -13,6 +13,5 @@ def sync(f):
 
 
 @telegram_celery_app.task
-@sync
-async def send_message_via_bot(chat_id, data):
-    await send_message(chat_id, data)
+def send_message_via_bot(chat_id, data):
+    asyncio.run(send_message(chat_id, data))
