@@ -17,7 +17,7 @@ async def my_handler(message: Message):
     try:
         chat_id = message.chat.id
         # Lazy import inside the function
-        from telegram import telegram_celery_app
+        from telegram_celery import telegram_celery_app
         telegram_celery_app.send_task("parser.tasks.get_latest_zamena_link_telegram",args=[chat_id])
     except Exception as e:
         error_body = f"{str(e)}\n\n{traceback.format_exc()}"
@@ -36,7 +36,7 @@ async def my_handler(message: Message):
 async def my_handler(message: Message):
     try:
         # Lazy import inside the function
-        from telegram import telegram_celery_app
+        from telegram_celery import telegram_celery_app
         telegram_celery_app.send_task("parser.tasks.check_new",args=[])
     except Exception as e:
         error_body = f"{str(e)}\n\n{traceback.format_exc()}"
