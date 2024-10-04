@@ -11,4 +11,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["bash", "-c", "python ./main.py & celery worker -A telegram_celery -P celery_pool_asyncio:TaskPool --loglevel=info"]
+CMD ["bash", "-c", "python ./main.py & celery -A telegram_celery worker -P celery_pool_asyncio:TaskPool --loglevel=info"]
