@@ -2,7 +2,6 @@ import asyncio
 import functools
 from telegram_celery import telegram_celery_app
 from utils.sender import send_message
-import celery_pool_asyncio
 
 
 # def sync(f):

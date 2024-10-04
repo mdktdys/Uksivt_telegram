@@ -1,7 +1,6 @@
 from celery import Celery
 
 from secrets import BROKER_URL, BACKEND_URL
-import celery_pool_asyncio
 
 telegram_celery_app = Celery(
     "telegram_bot",
