@@ -12,7 +12,7 @@ async def send_message(chat_id, message: str):
         await send_error_message(
             bot=bot,
             chat_id=DEBUG_CHANNEL,
-            error_header="Ошибка",
+            error_header=f"Ошибка\nchat_id:{chat_id}\nmassage:{message}",
             application="Kronos",
             time_=str(datetime.datetime.now()),
             error_body=str(e),
