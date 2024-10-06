@@ -12,7 +12,6 @@ router = Router()
 
 admins = [1283168392]
 
-
 from celery.result import AsyncResult
 
 
@@ -20,8 +19,8 @@ from celery.result import AsyncResult
 async def my_handler(message: Message):
     from utils.sender import send_error_message
 
-    max_retries = 5  # Максимальное количество попыток
-    retries = 0  # Счетчик попыток
+    max_retries = 5
+    retries = 0
 
     try:
         chat_id = message.chat.id
