@@ -6,7 +6,8 @@ from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
-from callbacks.events import on_check, on_check_start
+# from callbacks.events import on_check, on_check_start
+from core.methods import check_new_zamena
 from secrets import DEBUG_CHANNEL
 
 router = Router()
@@ -103,17 +104,4 @@ async def rabbit(message: Message):
 
 @router.message(F.text, Command("check"))
 async def check_new(message: Message):
-    try:
-        await on_check_start(bot=message.bot)
-    except Exception as e:
-        error_body = f"{str(e)}\n\n{traceback.format_exc()}"
-        from utils.sender import send_error_message
-
-        await send_error_message(
-            bot=message.bot,
-            chat_id=DEBUG_CHANNEL,
-            error_header="Ошибка",
-            application="Kronos",
-            time_=datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S %p"),
-            error_body=error_body,
-        )
+    await check_new_zamena(bot=message.bot)

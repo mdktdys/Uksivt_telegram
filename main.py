@@ -7,7 +7,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from callbacks import navigation, search, test, parser, events
 from callbacks.events import on_on, on_exit
-from callbacks.parser import check_new
+from core.methods import check_new_zamena
 from secrets import TOKEN
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -20,7 +20,7 @@ bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 async def main() -> None:
     scheduler = AsyncIOScheduler()
     trigger = CronTrigger(minute="0/15", hour="2-17")
-    scheduler.add_job(check_new, trigger, args=(bot,))
+    scheduler.add_job(check_new_zamena, trigger, args=(bot,))
     scheduler.start()
 
     dp.include_routers(
@@ -28,7 +28,7 @@ async def main() -> None:
     )
     try:
         await on_on(bot=bot)
-        await check_new(bot=bot)
+        await check_new_zamena(bot=bot)
         await dp.start_polling(bot)
     finally:
         scheduler.shutdown()
