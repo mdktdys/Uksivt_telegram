@@ -3,13 +3,14 @@ import traceback
 
 from aiogram import Bot
 
-from callbacks.events import on_check_start
+from callbacks.events import on_check_start, on_check_end
 from secrets import DEBUG_CHANNEL
 
 
 async def check_new_zamena(bot: Bot):
     try:
         await on_check_start(bot=bot)
+        await on_check_end(bot=bot)
     except Exception as e:
         error_body = f"{str(e)}\n\n{traceback.format_exc()}"
         from utils.sender import send_error_message

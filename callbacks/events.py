@@ -43,7 +43,11 @@ async def on_exit(bot: Bot):
     )
 
 
-async def on_check(bot: Bot):
+async def on_check_start(bot: Bot):
+    await bot.send_message(chat_id=DEBUG_CHANNEL, text="Начал проверку")
+
+
+async def on_check_end(bot: Bot):
     keyboard = create_keyboard_with_logo()
     res = await bot.edit_message_text(
         f"🟢 Последняя проверка {get_current_time()}\nuksivt.xyz Поиск по группам, преподам и кабинетам",
@@ -52,7 +56,3 @@ async def on_check(bot: Bot):
         reply_markup=keyboard,
     )
     await bot.send_message(chat_id=DEBUG_CHANNEL, text="Проверил")
-
-
-async def on_check_start(bot: Bot):
-    await bot.send_message(chat_id=DEBUG_CHANNEL, text="Начал проверку")
