@@ -19,7 +19,7 @@ bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
 async def main() -> None:
     scheduler = AsyncIOScheduler()
-    trigger = CronTrigger(minute="0/2", hour="2-17")
+    trigger = CronTrigger(minute="0/2", hour="6-23", timezone="Asia/Yekaterinburg")
     scheduler.add_job(check_new_zamena, trigger, args=(bot,))
     scheduler.start()
 
