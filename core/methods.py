@@ -16,9 +16,11 @@ async def check_new_zamena(bot: Bot):
                 f"{API_URL}parser/check_new",
                 headers={"X-API-KEY": API_KEY},
             ) as res:
-                response = res
+                print(res)
+                print(await res.text())
+                response = await res.text()
 
-        await on_check_end(bot=bot,result=response)
+        await on_check_end(bot=bot, result=response)
 
     except Exception as e:
         error_body = f"{str(e)}\n\n{traceback.format_exc()}"

@@ -55,4 +55,4 @@ async def on_check_end(bot: Bot, result: dict) -> None:
         message_id=MAIN_CHANNEL_ANCHOR_MESSAGE,
         reply_markup=keyboard,
     )
-    await bot.send_message(chat_id=DEBUG_CHANNEL, text=f"Проверил {result}")
+    await bot.send_message(chat_id=DEBUG_CHANNEL, text=f"Проверил {str(result)}")
