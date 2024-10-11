@@ -1,6 +1,7 @@
 import asyncio
 import functools
-from telegram_celery import telegram_celery_app
+
+# from telegram_celery import telegram_celery_app
 from utils.sender import send_message
 
 
@@ -12,7 +13,6 @@ def sync(f):
     return wrapper
 
 
-@telegram_celery_app.task
-@sync
+# @telegram_celery_app.task
 async def send_message_via_bot(chat_id, data):
     await send_message(chat_id, data)
