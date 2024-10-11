@@ -17,7 +17,7 @@ async def check_new_zamena(bot: Bot):
                 headers={"X-API-KEY": API_KEY},
             ) as res:
                 print(res)
-                print(await res.text())
+                print(res.content)
                 response = await res.text()
 
         await on_check_end(bot=bot, result=response)
