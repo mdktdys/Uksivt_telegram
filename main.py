@@ -27,9 +27,9 @@ async def main() -> None:
         navigation.router, search.router, test.router, parser.router, events.router
     )
     try:
+        await dp.start_polling(bot)
         await on_on(bot=bot)
         await check_new_zamena(bot=bot)
-        await dp.start_polling(bot)
     finally:
         scheduler.shutdown()
         await on_exit(bot=bot)

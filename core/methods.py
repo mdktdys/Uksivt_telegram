@@ -18,8 +18,7 @@ async def check_new_zamena(bot: Bot):
             ) as res:
                 response = res
 
-        await on_check_end(bot=bot)
-        return response
+        await on_check_end(bot=bot,result=response)
 
     except Exception as e:
         error_body = f"{str(e)}\n\n{traceback.format_exc()}"
