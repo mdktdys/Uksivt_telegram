@@ -25,6 +25,7 @@ async def check_new_zamena(bot: Bot):
             ) as res:
                 try:
                     response: dict = await res.json()
+                    print(response)
                     match response["result"]:
                         case "FoundNew":
                             result = CheckResultFoundNew.parse_obj(response)
@@ -50,6 +51,7 @@ async def check_new_zamena(bot: Bot):
                                     await bot.send_media_group(
                                         MAIN_CHANNEL, media=media_group.build()
                                     )
+
                                     # subs = await r.lrange("subs", 0, -1)
                                     # for i in subs:
                                     #     try:
@@ -66,6 +68,8 @@ async def check_new_zamena(bot: Bot):
                             result = CheckResultFoundNew.parse_obj(response)
                             message = "Ошибка"
                             print(result)
+                        case "Checked":
+                            message = "Проверил"
 
                 except aiohttp.ContentTypeError:
                     print("Ответ не является JSON")
