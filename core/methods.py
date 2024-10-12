@@ -18,7 +18,13 @@ async def check_new_zamena(bot: Bot):
             ) as res:
                 print(res)
                 print(res.content)
+                print(dict(await res.text()))
                 response = await res.text()
+                try:
+                    response = await res.json()
+                    print(response)
+                except aiohttp.ContentTypeError:
+                    print("Ответ не является JSON")
 
         await on_check_end(bot=bot, result=(str(response)[0:300]))
 
