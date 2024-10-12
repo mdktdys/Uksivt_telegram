@@ -29,7 +29,7 @@ async def check_new_zamena(bot: Bot):
                             for zamena in result.checks:
                                 if zamena.result == "Failed":
                                     messages.append(
-                                        f"\nОшибка замены\n{zamena.link}\n{zamena.error}"
+                                        f"\nОшибка замены\n{zamena.error}"
                                     )
                             message.join(messages)
                         case "Failed":
