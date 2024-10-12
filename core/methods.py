@@ -16,11 +16,9 @@ async def check_new_zamena(bot: Bot):
                 f"{API_URL}parser/check_new",
                 headers={"X-API-KEY": API_KEY},
             ) as res:
-                response = await res.text()
                 try:
-                    response = await res.json()
-
-                    print(response)
+                    response: dict = await res.json()
+                    print(response.keys())
                 except aiohttp.ContentTypeError:
                     print("Ответ не является JSON")
 
