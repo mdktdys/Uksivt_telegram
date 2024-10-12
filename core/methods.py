@@ -18,7 +18,7 @@ async def check_new_zamena(bot: Bot):
             ) as res:
                 print(res)
                 print(res.content)
-                print(dict(await res.text()))
+                print((await res.text()))
                 response = await res.text()
                 try:
                     response = await res.json()
