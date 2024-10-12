@@ -9,6 +9,7 @@ from aiogram.types import Message
 
 from my_secrets import API_URL, API_KEY
 import requests as req
+
 router = Router()
 
 # from broker import telegram_celery_app
@@ -31,7 +32,9 @@ router = Router()
 #         )
 
 
-@router.message(F.text,Command("auth"))
+@router.message(F.text, Command("auth"))
 async def test(message: Message):
-    response: list[dict] = req.get(f"http://fastapi:3000/auth/protected-route",headers={'X-API-KEY':API_KEY}).json()
+    response: list[dict] = req.get(
+        f"http://fastapi:3000/auth/protected-route", headers={"X-API-KEY": API_KEY}
+    ).json()
     await message.answer(str(response))

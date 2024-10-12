@@ -28,7 +28,6 @@ async def check_new_zamena(bot: Bot):
                     match response["result"]:
                         case "FoundNew":
                             result = CheckResultFoundNew.parse_obj(response)
-                            message = "\n\nНовые замены\n"
                             messages = []
                             for zamena in result.checks:
                                 print(zamena)
@@ -42,7 +41,6 @@ async def check_new_zamena(bot: Bot):
                                     media_group = MediaGroupBuilder(
                                         caption=f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>  "
                                     )
-
                                     for image in zamena.images:
                                         image_data = base64.b64decode(image)
                                         img = BufferedInputFile(
@@ -52,12 +50,17 @@ async def check_new_zamena(bot: Bot):
                                     await bot.send_media_group(
                                         MAIN_CHANNEL, media=media_group.build()
                                     )
-                                    # for i in screenshot_paths:
-                                    #     image = FSInputFile(i)
-                                    #     media_group.add_photo(image)
-                                    # try:
-                                    #     # await bot.send_media_group(chat_id=admins[0], media=media_group.build())
-                                    #
+                                    # subs = await r.lrange("subs", 0, -1)
+                                    # for i in subs:
+                                    #     try:
+                                    #         await bot.send_media_group(i, media=media_group.build())
+                                    #     except Exception as error:
+                                    #         try:
+                                    #             await bot.send_message(
+                                    #                 chat_id=admins[0], text=str(error)
+                                    #             )
+                                    #         except:
+                                    #             continue
                             message = message.join(messages)
                         case "Failed":
                             result = CheckResultFoundNew.parse_obj(response)
