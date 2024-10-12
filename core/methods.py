@@ -3,12 +3,15 @@ import traceback
 
 from aiogram import Bot
 import aiohttp
+
+from DTOmodels.schemas import CheckResultFoundNew
 from callbacks.events import on_check_start, on_check_end
 from secrets import DEBUG_CHANNEL, API_URL, API_KEY
 
 
 async def check_new_zamena(bot: Bot):
     try:
+        message = ""
         await on_check_start(bot=bot)
 
         async with aiohttp.ClientSession(trust_env=True) as session:
@@ -18,11 +21,16 @@ async def check_new_zamena(bot: Bot):
             ) as res:
                 try:
                     response: dict = await res.json()
-                    print(response.keys())
+                    match response["result"]:
+                        case "NewFound":
+                            result = CheckResultFoundNew.parse_obj(response)
+                            message = "Новые замены"
+                            print(result)
+
                 except aiohttp.ContentTypeError:
                     print("Ответ не является JSON")
 
-        await on_check_end(bot=bot, result=(str(response["res"])[0:300]))
+        await on_check_end(bot=bot, result=(str(message[0:300])))
 
     except Exception as e:
         error_body = f"{str(e)}\n\n{traceback.format_exc()}"
