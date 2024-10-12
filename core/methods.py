@@ -32,6 +32,8 @@ async def check_new_zamena(bot: Bot):
                                     messages.append(
                                         f"\nОшибка замены\n{zamena.error[0:100]}"
                                     )
+                                if zamena.result == "Success":
+                                    messages.append(f"\nНайдена\n{zamena.link[0:100]}")
                             message.join(messages)
                         case "Failed":
                             result = CheckResultFoundNew.parse_obj(response)
