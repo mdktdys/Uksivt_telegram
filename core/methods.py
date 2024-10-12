@@ -22,9 +22,13 @@ async def check_new_zamena(bot: Bot):
                 try:
                     response: dict = await res.json()
                     match response["result"]:
-                        case "NewFound":
+                        case "FoundNew":
                             result = CheckResultFoundNew.parse_obj(response)
                             message = "Новые замены"
+                            print(result)
+                        case "Failed":
+                            result = CheckResultFoundNew.parse_obj(response)
+                            message = "Ошибка"
                             print(result)
 
                 except aiohttp.ContentTypeError:
