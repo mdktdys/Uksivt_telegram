@@ -16,17 +16,15 @@ async def check_new_zamena(bot: Bot):
                 f"{API_URL}parser/check_new",
                 headers={"X-API-KEY": API_KEY},
             ) as res:
-                print(res)
-                print(res.content)
-                print((await res.text()))
                 response = await res.text()
                 try:
                     response = await res.json()
+
                     print(response)
                 except aiohttp.ContentTypeError:
                     print("Ответ не является JSON")
 
-        await on_check_end(bot=bot, result=(str(response)[0:300]))
+        await on_check_end(bot=bot, result=(str(response["res"])[0:300]))
 
     except Exception as e:
         error_body = f"{str(e)}\n\n{traceback.format_exc()}"
