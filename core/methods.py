@@ -1,13 +1,17 @@
+import base64
 import datetime
 import html
+import io
 import traceback
 
 from aiogram import Bot
 import aiohttp
+from aiogram.types import FSInputFile, BufferedInputFile
+from aiogram.utils.media_group import MediaGroupBuilder
 
 from DTOmodels.schemas import CheckResultFoundNew
 from callbacks.events import on_check_start, on_check_end
-from secrets import DEBUG_CHANNEL, API_URL, API_KEY
+from secrets import DEBUG_CHANNEL, API_URL, API_KEY, MAIN_CHANNEL
 
 
 async def check_new_zamena(bot: Bot):
@@ -35,6 +39,26 @@ async def check_new_zamena(bot: Bot):
                                     )
                                 if zamena.result == "Success":
                                     messages.append(f"\nНайдена\n{zamena.link[0:100]}")
+
+                                    media_group = MediaGroupBuilder(
+                                        caption=f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>  "
+                                    )
+
+                                    for image in zamena.images:
+                                        image_data = base64.b64decode(image)
+                                        img = BufferedInputFile(
+                                            image_data, "temp_image.jpg"
+                                        )
+                                        media_group.add_photo(img)
+                                    await bot.send_media_group(
+                                        MAIN_CHANNEL, media=media_group.build()
+                                    )
+                                    # for i in screenshot_paths:
+                                    #     image = FSInputFile(i)
+                                    #     media_group.add_photo(image)
+                                    # try:
+                                    #     # await bot.send_media_group(chat_id=admins[0], media=media_group.build())
+                                    #
                             message = message.join(messages)
                         case "Failed":
                             result = CheckResultFoundNew.parse_obj(response)
