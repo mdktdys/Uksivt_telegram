@@ -24,8 +24,14 @@ async def check_new_zamena(bot: Bot):
                     match response["result"]:
                         case "FoundNew":
                             result = CheckResultFoundNew.parse_obj(response)
-                            message = "Новые замены"
-                            print(result)
+                            message = "\n\nНовые замены"
+                            messages = []
+                            for zamena in result["checks"]:
+                                if zamena["result"] == "Failed":
+                                    messages.append(
+                                        f"\nОшибка замены\n {zamena['error']}"
+                                    )
+                            message.join(messages)
                         case "Failed":
                             result = CheckResultFoundNew.parse_obj(response)
                             message = "Ошибка"
