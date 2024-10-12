@@ -25,13 +25,13 @@ async def check_new_zamena(bot: Bot):
                     match response["result"]:
                         case "FoundNew":
                             result = CheckResultFoundNew.parse_obj(response)
-                            message = "\n\nНовые замены"
+                            message = "\n\nНовые замены\n"
                             messages = []
                             for zamena in result.checks:
                                 print(zamena)
                                 if zamena.result == "Failed":
                                     messages.append(
-                                        f"\nОшибка замены\n{zamena.error[0:100]}"
+                                        f"\nОшибка замены\n{zamena.error[0:100]}\n{zamena.trace[0:100]}"
                                     )
                                 if zamena.result == "Success":
                                     messages.append(f"\nНайдена\n{zamena.link[0:100]}")
@@ -44,7 +44,7 @@ async def check_new_zamena(bot: Bot):
                 except aiohttp.ContentTypeError:
                     print("Ответ не является JSON")
 
-        await on_check_end(bot=bot, result=(str(html.escape(message[0:300]))))
+        await on_check_end(bot=bot, result=(str(html.escape(message[0:1000]))))
 
     except Exception as e:
         error_body = f"{str(e)}\n\n{traceback.format_exc()}"
