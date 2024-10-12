@@ -8,7 +8,7 @@ from aiogram.types import Message
 
 # from callbacks.events import on_check, on_check_start
 from core.methods import check_new_zamena
-from secrets import DEBUG_CHANNEL
+from my_secrets import DEBUG_CHANNEL
 
 router = Router()
 

@@ -7,7 +7,7 @@ from aiogram import Bot, F, Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
-from secrets import API_URL, API_KEY
+from my_secrets import API_URL, API_KEY
 import requests as req
 router = Router()
 

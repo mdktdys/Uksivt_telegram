@@ -8,7 +8,7 @@ from aiogram.enums import ParseMode
 from callbacks import navigation, search, test, parser, events
 from callbacks.events import on_on, on_exit
 from core.methods import check_new_zamena
-from secrets import TOKEN
+from my_secrets import TOKEN
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger

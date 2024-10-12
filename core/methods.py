@@ -1,7 +1,6 @@
 import base64
 import datetime
 import html
-import io
 import traceback
 
 from aiogram import Bot
@@ -11,7 +10,7 @@ from aiogram.utils.media_group import MediaGroupBuilder
 
 from DTOmodels.schemas import CheckResultFoundNew
 from callbacks.events import on_check_start, on_check_end
-from secrets import DEBUG_CHANNEL, API_URL, API_KEY, MAIN_CHANNEL
+from my_secrets import DEBUG_CHANNEL, API_URL, API_KEY, MAIN_CHANNEL
 
 
 async def check_new_zamena(bot: Bot):

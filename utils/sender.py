@@ -2,7 +2,7 @@ import datetime
 import html
 from aiogram import Bot
 from main import bot, dp
-from secrets import DEBUG_CHANNEL
+from my_secrets import DEBUG_CHANNEL
 
 
 async def send_message(chat_id, message: str):

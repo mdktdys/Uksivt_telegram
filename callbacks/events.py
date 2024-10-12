@@ -4,7 +4,7 @@ from aiogram import Bot, Router
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 # from callbacks.parser import admins
-from secrets import MAIN_CHANNEL, MAIN_CHANNEL_ANCHOR_MESSAGE, DEBUG_CHANNEL
+from my_secrets import MAIN_CHANNEL, MAIN_CHANNEL_ANCHOR_MESSAGE, DEBUG_CHANNEL
 
 router = Router()
 
