@@ -14,10 +14,6 @@ async def sub(message: Message):
     subscribtion = Subscription(
         chat_id=str(message.chat.id), target_id=-1, target_type=-1
     )
-    print(subscribtion.model_dump_json())
-    print(subscribtion.model_dump())
-    print(subscribtion.dict())
-    print(subscribtion.dict)
     try:
         async with aiohttp.ClientSession(trust_env=True) as session:
             async with session.post(
