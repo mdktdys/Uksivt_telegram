@@ -21,6 +21,7 @@ async def my_handlerr(message: Message):
                 headers={"X-API-KEY": API_KEY},
                 data=subscribtion.model_dump_json(),
             ) as res:
+                print(res)
                 if res.status == 201:
                     await message.answer("Подписан")
                 else:
@@ -41,6 +42,7 @@ async def my_handlers(message: Message):
                 headers={"X-API-KEY": API_KEY},
                 data=subscribtion.model_dump_json(),
             ) as res:
+                print(res)
                 if res.status == 201:
                     await message.answer("Отписан")
                 else:
