@@ -14,14 +14,6 @@ router = Router()
 
 admins = [1283168392]
 
-# from celery.result import AsyncResult
-
-
-@router.message(F.text, Command("rabbit"))
-async def rabbit(message: Message):
-    # send_message_to_rabbitmq(message.text)
-    await message.answer("Сообщение отправлено в очередь RabbitMQ!")
-
 
 #
 # @router.message(F.text, Command("latest"))

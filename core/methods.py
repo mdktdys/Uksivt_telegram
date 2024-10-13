@@ -55,7 +55,7 @@ async def check_new_zamena(bot: Bot):
                                 print(zamena)
                                 if zamena.result == "Failed":
                                     messages.append(
-                                        f"\nОшибка замены\n<pre>{zamena.error[0:200]}\n{zamena.trace[0:300]}</pre>"
+                                        f"\n⚠️ Ошибка замены\n<pre>{zamena.error[0:200]}\n{zamena.trace[0:300]}</pre>"
                                     )
                                 if zamena.result == "Success":
                                     messages.append(f"\nНайдена\n{zamena.link}")
