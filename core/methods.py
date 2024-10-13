@@ -54,12 +54,10 @@ async def check_new_zamena(bot: Bot):
                                 if zamena.result == "InvalidFormat":
                                     messages.append(f"\nНайдена\n{zamena.link[0:100]}")
 
-                                    media_group = MediaGroupBuilder(
-                                        caption=f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.file}'>Файлик</a>"
-                                    )
+                                    caption = f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.file}'>Файлик</a>"
 
-                                    await bot.send_media_group(
-                                        MAIN_CHANNEL, media=media_group.build()
+                                    await bot.send_message(
+                                        chat_id=MAIN_CHANNEL, text=caption
                                     )
 
                                     # subs = await r.lrange("subs", 0, -1)
