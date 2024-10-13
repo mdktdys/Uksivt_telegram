@@ -51,6 +51,16 @@ async def check_new_zamena(bot: Bot):
                                     await bot.send_media_group(
                                         MAIN_CHANNEL, media=media_group.build()
                                     )
+                                if zamena.result == "InvalidFormat":
+                                    messages.append(f"\nНайдена\n{zamena.link[0:100]}")
+
+                                    media_group = MediaGroupBuilder(
+                                        caption=f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.link}'>Файлик</a>"
+                                    )
+
+                                    await bot.send_media_group(
+                                        MAIN_CHANNEL, media=media_group.build()
+                                    )
 
                                     # subs = await r.lrange("subs", 0, -1)
                                     # for i in subs:
@@ -69,7 +79,7 @@ async def check_new_zamena(bot: Bot):
                             message = "Ошибка"
                             print(result)
                         case "Checked":
-                            message = "Проверил"
+                            message = "Ничего нового"
 
                 except aiohttp.ContentTypeError:
                     print("Ответ не является JSON")
