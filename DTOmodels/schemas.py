@@ -81,3 +81,10 @@ class CheckResultCheckExisting(BaseModel):
         | CheckZamenaResultInvalidFormat
         | CheckZamenaResultFailedDownload
     ] = []
+
+
+class Subscription(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    chat_id: str
+    target_type: int
+    target_id: int
