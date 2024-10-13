@@ -2,16 +2,33 @@ import base64
 import datetime
 import html
 import traceback
+from typing import List
 
 import requests
 from aiogram import Bot
 import aiohttp
 from aiogram.types import FSInputFile, BufferedInputFile
 from aiogram.utils.media_group import MediaGroupBuilder
-
+from supabase import create_client, Client
 from DTOmodels.schemas import CheckResultFoundNew, CheckResultCheckExisting
 from callbacks.events import on_check_start, on_check_end
-from my_secrets import DEBUG_CHANNEL, API_URL, API_KEY, MAIN_CHANNEL
+from my_secrets import (
+    DEBUG_CHANNEL,
+    API_URL,
+    API_KEY,
+    MAIN_CHANNEL,
+    SCHEDULER_SUPABASE_URL,
+    SCHEDULER_SUPABASE_ANON_KEY,
+)
+
+key = SCHEDULER_SUPABASE_ANON_KEY
+url = SCHEDULER_SUPABASE_URL
+supabase_connect: Client = create_client(url, key)
+
+
+def get_subscribers(target_type: int, target_id: int) -> List[str]:
+    res = supabase_connect.table("Subscribers").select('chat_id').eq('target_type',target_type).eq('target_id',target_id).execute()
+    return [item['chat_id'] for item in res.data]
 
 
 def get_file_extension(url):
@@ -72,12 +89,22 @@ async def check_new_zamena(bot: Bot):
                                     await bot.send_media_group(
                                         MAIN_CHANNEL, media=media_group.build()
                                     )
+                                    try:
+                                        for sub in get_subscribers(target_id=-1,target_type=-1):
+                                            await bot.send_media_group(chat_id=sub,media=media_group.build())
+                                    except:
+                                        pass
                                 if zamena.result == "FailedDownload":
                                     messages.append(f"\nНайдена\n{zamena.link}")
                                     caption = f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.link}'>Ссылка</a>"
                                     await bot.send_message(
                                         chat_id=MAIN_CHANNEL, text=caption
                                     )
+                                    try:
+                                        for sub in get_subscribers(target_id=-1,target_type=-1):
+                                            await bot.send_message(chat_id=sub,text=caption)
+                                    except:
+                                        pass
                                 if zamena.result == "InvalidFormat":
                                     messages.append(f"\nНайдена\n{zamena.link}")
                                     caption = f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.file}'>Ссылка на файлик</a>"
@@ -100,6 +127,11 @@ async def check_new_zamena(bot: Bot):
                                     await bot.send_media_group(
                                         chat_id=MAIN_CHANNEL, media=media_group.build()
                                     )
+                                    try:
+                                        for sub in get_subscribers(target_id=-1,target_type=-1):
+                                            await bot.send_media_group(chat_id=sub,media=media_group.build())
+                                    except:
+                                        pass
                             message = message.join(messages)
                         case "Failed":
                             result = CheckResultFoundNew.parse_obj(response)
@@ -133,6 +165,11 @@ async def check_new_zamena(bot: Bot):
                                     await bot.send_media_group(
                                         MAIN_CHANNEL, media=media_group.build()
                                     )
+                                    try:
+                                        for sub in get_subscribers(target_id=-1,target_type=-1):
+                                            await bot.send_media_group(chat_id=sub,media=media_group.build())
+                                    except:
+                                        pass
                                 if zamena.result == "FailedDownload":
                                     messages.append(
                                         f"\nОбнаружен перезалив\n{zamena.link}"
@@ -141,6 +178,11 @@ async def check_new_zamena(bot: Bot):
                                     await bot.send_message(
                                         chat_id=MAIN_CHANNEL, text=caption
                                     )
+                                    try:
+                                        for sub in get_subscribers(target_id=-1,target_type=-1):
+                                            await bot.send_message(chat_id=sub,text=caption)
+                                    except:
+                                        pass
                                 if zamena.result == "InvalidFormat":
                                     messages.append(
                                         f"\nОбнаружен перезалив\n{zamena.link}"
@@ -165,6 +207,11 @@ async def check_new_zamena(bot: Bot):
                                     await bot.send_media_group(
                                         chat_id=MAIN_CHANNEL, media=media_group.build()
                                     )
+                                    try:
+                                        for sub in get_subscribers(target_id=-1,target_type=-1):
+                                            await bot.send_media_group(chat_id=sub,media=media_group.build())
+                                    except:
+                                        pass
                             message = message.join(messages)
                         case "Checked":
                             message = "\nНичего нового"
