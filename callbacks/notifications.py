@@ -28,8 +28,8 @@ async def sub(message: Message):
                 print(res)
                 if res.status == 201:
                     await message.answer("Подписан")
-                else:
-                    await message.answer((await res.text()))
+                if res.status == 202:
+                    await message.answer("Вы уже подписаны")
     except Exception as error:
         await message.answer(f"Ошибка подписки\n{error}")
 
