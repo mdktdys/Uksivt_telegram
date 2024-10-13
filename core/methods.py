@@ -78,7 +78,6 @@ async def check_new_zamena(bot: Bot):
                                     await bot.send_message(
                                         chat_id=MAIN_CHANNEL, text=caption
                                     )
-
                                 if zamena.result == "InvalidFormat":
                                     messages.append(f"\nНайдена\n{zamena.link}")
                                     caption = f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.file}'>Ссылка на файлик</a>"
@@ -101,18 +100,6 @@ async def check_new_zamena(bot: Bot):
                                     await bot.send_media_group(
                                         chat_id=MAIN_CHANNEL, media=media_group.build()
                                     )
-
-                                    # subs = await r.lrange("subs", 0, -1)
-                                    # for i in subs:
-                                    #     try:
-                                    #         await bot.send_media_group(i, media=media_group.build())
-                                    #     except Exception as error:
-                                    #         try:
-                                    #             await bot.send_message(
-                                    #                 chat_id=admins[0], text=str(error)
-                                    #             )
-                                    #         except:
-                                    #             continue
                             message = message.join(messages)
                         case "Failed":
                             result = CheckResultFoundNew.parse_obj(response)
@@ -128,6 +115,55 @@ async def check_new_zamena(bot: Bot):
                                     print("da")
                                     messages.append(
                                         f"\n⚠️ Ошибка проверки замены\n<pre>{zamena.error[0:200]}\n{zamena.trace[0:300]}</pre>"
+                                    )
+                                if zamena.result == "Success":
+                                    messages.append(
+                                        f"\nОбнаружен перезалив\n{zamena.link}"
+                                    )
+
+                                    media_group = MediaGroupBuilder(
+                                        caption=f"Обнаружен перезалив на <a href='{zamena.link}'>{zamena.date}</a>  "
+                                    )
+                                    for image in zamena.images:
+                                        image_data = base64.b64decode(image)
+                                        img = BufferedInputFile(
+                                            image_data, "temp_image.jpg"
+                                        )
+                                        media_group.add_photo(img)
+                                    await bot.send_media_group(
+                                        MAIN_CHANNEL, media=media_group.build()
+                                    )
+                                if zamena.result == "FailedDownload":
+                                    messages.append(
+                                        f"\nОбнаружен перезалив\n{zamena.link}"
+                                    )
+                                    caption = f"Обнаружен перезалив на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.link}'>Ссылка</a>"
+                                    await bot.send_message(
+                                        chat_id=MAIN_CHANNEL, text=caption
+                                    )
+                                if zamena.result == "InvalidFormat":
+                                    messages.append(
+                                        f"\nОбнаружен перезалив\n{zamena.link}"
+                                    )
+                                    caption = f"Обнаружен перезалив на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.file}'>Ссылка на файлик</a>"
+
+                                    media_group = MediaGroupBuilder(caption=caption)
+
+                                    file_extension = get_file_extension(zamena.link)
+                                    file_name = f"{zamena.date}.{file_extension}"
+                                    download_file(
+                                        link=zamena.link,
+                                        filename=file_name,
+                                    )
+                                    media_group.add_document(
+                                        FSInputFile(
+                                            path=file_name,
+                                            filename=f"{zamena.date}.{file_extension}",
+                                        )
+                                    )
+
+                                    await bot.send_media_group(
+                                        chat_id=MAIN_CHANNEL, media=media_group.build()
                                     )
                             message = message.join(messages)
                         case "Checked":
