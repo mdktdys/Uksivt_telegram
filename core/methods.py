@@ -74,7 +74,7 @@ async def check_new_zamena(bot: Bot):
                                     )
                                 if zamena.result == "InvalidFormat":
                                     messages.append(f"\nНайдена\n{zamena.link[0:100]}")
-                                    caption = f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.file}'>Файлик</a>"
+                                    caption = f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.file}'>Ссылка на файлик</a>"
 
                                     media_group = MediaGroupBuilder(caption=caption)
 
@@ -82,12 +82,10 @@ async def check_new_zamena(bot: Bot):
                                     file_name = f"{zamena.date}.{file_extension}"
                                     download_file(
                                         link=zamena.link,
-                                        filename=f"{file_name}.{file_extension}",
+                                        filename=file_name,
                                     )
                                     media_group.add_document(
-                                        FSInputFile(
-                                            path=file_name, filename=file_name
-                                        )
+                                        FSInputFile(path=file_name, filename=f"Замена.{file_extension}")
                                     )
 
                                     await bot.send_media_group(
