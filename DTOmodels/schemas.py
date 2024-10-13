@@ -27,6 +27,14 @@ class CheckZamenaResultFailed(BaseModel):
     trace: str
 
 
+class CheckZamenaResultInvalidFormat(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    result: str = "InvalidFormat"
+    link: str
+    file: str
+    date: datetime.date
+
+
 class CheckZamenaResultSuccess(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     result: str
@@ -39,5 +47,8 @@ class CheckResultFoundNew(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     result: str = "FoundNew"
     checks: List[
-        CheckZamenaResult | CheckZamenaResultSuccess | CheckZamenaResultFailed
+        CheckZamenaResult
+        | CheckZamenaResultSuccess
+        | CheckZamenaResultFailed
+        | CheckZamenaResultInvalidFormat
     ] = []

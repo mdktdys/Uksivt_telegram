@@ -55,7 +55,7 @@ async def check_new_zamena(bot: Bot):
                                     messages.append(f"\nНайдена\n{zamena.link[0:100]}")
 
                                     media_group = MediaGroupBuilder(
-                                        caption=f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.link}'>Файлик</a>"
+                                        caption=f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.file}'>Файлик</a>"
                                     )
 
                                     await bot.send_media_group(
