@@ -19,7 +19,7 @@ async def sub(message: Message):
             async with session.post(
                 f"{API_URL}telegram/subscribe_zamena_notifications",
                 headers={"X-API-KEY": API_KEY},
-                json=subscribtion.model_dump_json(),
+                json=subscribtion,
             ) as res:
                 print(res)
                 if res.status == 201:
@@ -40,7 +40,7 @@ async def unsub(message: Message):
             async with session.post(
                 f"{API_URL}telegram/unsubscribe_zamena_notifications",
                 headers={"X-API-KEY": API_KEY},
-                json=subscribtion.model_dump_json(),
+                json=subscribtion,
             ) as res:
                 print(res)
                 if res.status == 201:
