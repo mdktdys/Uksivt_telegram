@@ -57,7 +57,7 @@ async def on_check_end(bot: Bot, result: dict) -> None:
     keyboard = create_keyboard_with_logo()
     await bot.send_message(
         chat_id=DEBUG_CHANNEL,
-        text=f"Проверил {html.escape(str(result))}",
+        text=f"Проверил {result}",
         parse_mode="html",
     )
     try:

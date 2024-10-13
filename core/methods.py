@@ -136,7 +136,7 @@ async def check_new_zamena(bot: Bot):
                 except aiohttp.ContentTypeError:
                     print("Ответ не является JSON")
 
-        await on_check_end(bot=bot, result=(str(html.escape(message[0:1000]))))
+        await on_check_end(bot=bot, result=message[0:2000])
 
     except Exception as e:
         error_body = f"{str(e)}\n\n{traceback.format_exc()}"
