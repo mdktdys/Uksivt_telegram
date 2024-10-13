@@ -55,10 +55,10 @@ async def check_new_zamena(bot: Bot):
                                 print(zamena)
                                 if zamena.result == "Failed":
                                     messages.append(
-                                        f"\nОшибка замены\n{zamena.error[0:100]}\n{zamena.trace[0:100]}"
+                                        f"\nОшибка замены\n<pre>{zamena.error[0:200]}\n{zamena.trace[0:300]}</pre>"
                                     )
                                 if zamena.result == "Success":
-                                    messages.append(f"\nНайдена\n{zamena.link[0:100]}")
+                                    messages.append(f"\nНайдена\n{zamena.link}")
 
                                     media_group = MediaGroupBuilder(
                                         caption=f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>  "
@@ -72,8 +72,15 @@ async def check_new_zamena(bot: Bot):
                                     await bot.send_media_group(
                                         MAIN_CHANNEL, media=media_group.build()
                                     )
+                                if zamena.result == "FailedDownload":
+                                    messages.append(f"\nНайдена\n{zamena.link}")
+                                    caption = f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.link}'>Ссылка</a>"
+                                    await bot.send_message(
+                                        chat_id=MAIN_CHANNEL, text=caption
+                                    )
+
                                 if zamena.result == "InvalidFormat":
-                                    messages.append(f"\nНайдена\n{zamena.link[0:100]}")
+                                    messages.append(f"\nНайдена\n{zamena.link}")
                                     caption = f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.file}'>Ссылка на файлик</a>"
 
                                     media_group = MediaGroupBuilder(caption=caption)
@@ -85,7 +92,10 @@ async def check_new_zamena(bot: Bot):
                                         filename=file_name,
                                     )
                                     media_group.add_document(
-                                        FSInputFile(path=file_name, filename=f"{zamena.date}.{file_extension}")
+                                        FSInputFile(
+                                            path=file_name,
+                                            filename=f"{zamena.date}.{file_extension}",
+                                        )
                                     )
 
                                     await bot.send_media_group(

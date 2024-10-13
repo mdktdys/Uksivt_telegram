@@ -27,6 +27,13 @@ class CheckZamenaResultFailed(BaseModel):
     trace: str
 
 
+class CheckZamenaResultFailedDownload(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    result: str = "FailedDownload"
+    link: str
+    date: datetime.date
+
+
 class CheckZamenaResultInvalidFormat(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     result: str = "InvalidFormat"
@@ -51,4 +58,5 @@ class CheckResultFoundNew(BaseModel):
         | CheckZamenaResultSuccess
         | CheckZamenaResultFailed
         | CheckZamenaResultInvalidFormat
+        | CheckZamenaResultFailedDownload
     ] = []
