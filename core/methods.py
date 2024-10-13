@@ -85,7 +85,7 @@ async def check_new_zamena(bot: Bot):
                                         filename=file_name,
                                     )
                                     media_group.add_document(
-                                        FSInputFile(path=file_name, filename=f"Замена.{file_extension}")
+                                        FSInputFile(path=file_name, filename=f"{zamena.date}.{file_extension}")
                                     )
 
                                     await bot.send_media_group(
