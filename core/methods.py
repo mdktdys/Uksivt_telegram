@@ -127,7 +127,7 @@ async def check_new_zamena(bot: Bot):
                                 if zamena.result == "Failed":
                                     print("da")
                                     messages.append(
-                                        f"\nОшибка проверки замены\n<pre>{zamena.error[0:200]}\n{zamena.trace[0:300]}</pre>"
+                                        f"\n⚠️ Ошибка проверки замены\n<pre>{zamena.error[0:200]}\n{zamena.trace[0:300]}</pre>"
                                     )
                             message = message.join(messages)
                         case "Checked":
