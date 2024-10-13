@@ -9,7 +9,7 @@ import aiohttp
 from aiogram.types import FSInputFile, BufferedInputFile
 from aiogram.utils.media_group import MediaGroupBuilder
 
-from DTOmodels.schemas import CheckResultFoundNew
+from DTOmodels.schemas import CheckResultFoundNew, CheckResultCheckExisting
 from callbacks.events import on_check_start, on_check_end
 from my_secrets import DEBUG_CHANNEL, API_URL, API_KEY, MAIN_CHANNEL
 
@@ -118,6 +118,16 @@ async def check_new_zamena(bot: Bot):
                             result = CheckResultFoundNew.parse_obj(response)
                             message = "Ошибка"
                             print(result)
+                        case "CheckExisting":
+                            result = CheckResultCheckExisting.parse_obj(response)
+                            message = "Ошибка"
+                            messages = []
+                            for zamena in result.checks:
+                                print(zamena)
+                                if zamena.result == "Failed":
+                                    messages.append(
+                                        f"\nОшибка проверки замены\n<pre>{zamena.error[0:200]}\n{zamena.trace[0:300]}</pre>"
+                                    )
                         case "Checked":
                             message = "Ничего нового"
 
