@@ -116,14 +116,13 @@ async def check_new_zamena(bot: Bot):
                             message = message.join(messages)
                         case "Failed":
                             result = CheckResultFoundNew.parse_obj(response)
-                            message.join(["\nОшибка"])
+                            message = "\nОшибка"
                             print(result)
                         case "CheckExisting":
                             print("HERE")
                             result = CheckResultCheckExisting.parse_obj(response)
-                            message.join(["\nОшибка"])
+                            message = "\nОшибка"
                             messages = []
-                            print("2")
                             for zamena in result.checks:
                                 print(zamena)
                                 if zamena.result == "Failed":
@@ -132,7 +131,7 @@ async def check_new_zamena(bot: Bot):
                                     )
                             message.join(messages)
                         case "Checked":
-                            message.join(["\nНичего нового"])
+                            message = "\nНичего нового"
 
                 except aiohttp.ContentTypeError:
                     print("Ответ не является JSON")
