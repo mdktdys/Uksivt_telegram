@@ -7,7 +7,7 @@ from typing import List
 import requests
 from aiogram import Bot
 import aiohttp
-from aiogram.types import FSInputFile, BufferedInputFile
+from aiogram.types import FSInputFile, BufferedInputFile, Message
 from aiogram.utils.media_group import MediaGroupBuilder
 from supabase import create_client, Client
 from DTOmodels.schemas import CheckResultFoundNew, CheckResultCheckExisting
@@ -27,8 +27,14 @@ supabase_connect: Client = create_client(url, key)
 
 
 def get_subscribers(target_type: int, target_id: int) -> List[str]:
-    res = supabase_connect.table("Subscribers").select('chat_id').eq('target_type',target_type).eq('target_id',target_id).execute()
-    return [item['chat_id'] for item in res.data]
+    res = (
+        supabase_connect.table("Subscribers")
+        .select("chat_id")
+        .eq("target_type", target_type)
+        .eq("target_id", target_id)
+        .execute()
+    )
+    return [item["chat_id"] for item in res.data]
 
 
 def get_file_extension(url):
@@ -86,23 +92,44 @@ async def check_new_zamena(bot: Bot):
                                             image_data, "temp_image.jpg"
                                         )
                                         media_group.add_photo(img)
-                                    await bot.send_media_group(
+                                    res: List[Message] = await bot.send_media_group(
                                         MAIN_CHANNEL, media=media_group.build()
                                     )
+                                    print(res)
                                     try:
-                                        for sub in get_subscribers(target_id=-1,target_type=-1):
-                                            await bot.send_media_group(chat_id=sub,media=media_group.build())
+                                        for sub in get_subscribers(
+                                            target_id=-1, target_type=-1
+                                        ):
+                                            await bot.forward_messages(
+                                                chat_id=sub,
+                                                from_chat_id=MAIN_CHANNEL,
+                                                message_ids=[
+                                                    msg.message_id for msg in res
+                                                ],
+                                            )
+                                            # await bot.send_media_group(
+                                            #     chat_id=sub, media=media_group.build()
+                                            # )
                                     except:
                                         pass
                                 if zamena.result == "FailedDownload":
                                     messages.append(f"\nНайдена\n{zamena.link}")
                                     caption = f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.link}'>Ссылка</a>"
-                                    await bot.send_message(
+                                    res: Message = await bot.send_message(
                                         chat_id=MAIN_CHANNEL, text=caption
                                     )
                                     try:
-                                        for sub in get_subscribers(target_id=-1,target_type=-1):
-                                            await bot.send_message(chat_id=sub,text=caption)
+                                        for sub in get_subscribers(
+                                            target_id=-1, target_type=-1
+                                        ):
+                                            # await bot.send_message(
+                                            #     chat_id=sub, text=caption
+                                            # )
+                                            await bot.forward_message(
+                                                chat_id=sub,
+                                                from_chat_id=MAIN_CHANNEL,
+                                                message_id=res.message_id,
+                                            )
                                     except:
                                         pass
                                 if zamena.result == "InvalidFormat":
@@ -124,12 +151,23 @@ async def check_new_zamena(bot: Bot):
                                         )
                                     )
 
-                                    await bot.send_media_group(
+                                    res: List[Message] = await bot.send_media_group(
                                         chat_id=MAIN_CHANNEL, media=media_group.build()
                                     )
                                     try:
-                                        for sub in get_subscribers(target_id=-1,target_type=-1):
-                                            await bot.send_media_group(chat_id=sub,media=media_group.build())
+                                        for sub in get_subscribers(
+                                            target_id=-1, target_type=-1
+                                        ):
+                                            await bot.forward_messages(
+                                                chat_id=sub,
+                                                from_chat_id=MAIN_CHANNEL,
+                                                message_ids=[
+                                                    msg.message_id for msg in res
+                                                ],
+                                            )
+                                            # await bot.send_media_group(
+                                            #     chat_id=sub, media=media_group.build()
+                                            # )
                                     except:
                                         pass
                             message = message.join(messages)
@@ -162,12 +200,23 @@ async def check_new_zamena(bot: Bot):
                                             image_data, "temp_image.jpg"
                                         )
                                         media_group.add_photo(img)
-                                    await bot.send_media_group(
+                                    res: List[Message] = await bot.send_media_group(
                                         MAIN_CHANNEL, media=media_group.build()
                                     )
                                     try:
-                                        for sub in get_subscribers(target_id=-1,target_type=-1):
-                                            await bot.send_media_group(chat_id=sub,media=media_group.build())
+                                        for sub in get_subscribers(
+                                            target_id=-1, target_type=-1
+                                        ):
+                                            await bot.forward_messages(
+                                                chat_id=sub,
+                                                from_chat_id=MAIN_CHANNEL,
+                                                message_ids=[
+                                                    msg.message_id for msg in res
+                                                ],
+                                            )
+                                            # await bot.send_media_group(
+                                            #     chat_id=sub, media=media_group.build()
+                                            # )
                                     except:
                                         pass
                                 if zamena.result == "FailedDownload":
@@ -175,12 +224,21 @@ async def check_new_zamena(bot: Bot):
                                         f"\nОбнаружен перезалив\n{zamena.link}"
                                     )
                                     caption = f"Обнаружен перезалив на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.link}'>Ссылка</a>"
-                                    await bot.send_message(
+                                    res: Message = await bot.send_message(
                                         chat_id=MAIN_CHANNEL, text=caption
                                     )
                                     try:
-                                        for sub in get_subscribers(target_id=-1,target_type=-1):
-                                            await bot.send_message(chat_id=sub,text=caption)
+                                        for sub in get_subscribers(
+                                            target_id=-1, target_type=-1
+                                        ):
+                                            await bot.forward_message(
+                                                chat_id=sub,
+                                                from_chat_id=MAIN_CHANNEL,
+                                                message_id=res.message_id,
+                                            )
+                                            # await bot.send_message(
+                                            #     chat_id=sub, text=caption
+                                            # )
                                     except:
                                         pass
                                 if zamena.result == "InvalidFormat":
@@ -204,12 +262,20 @@ async def check_new_zamena(bot: Bot):
                                         )
                                     )
 
-                                    await bot.send_media_group(
+                                    res: List[Message] = await bot.send_media_group(
                                         chat_id=MAIN_CHANNEL, media=media_group.build()
                                     )
                                     try:
-                                        for sub in get_subscribers(target_id=-1,target_type=-1):
-                                            await bot.send_media_group(chat_id=sub,media=media_group.build())
+                                        for sub in get_subscribers(
+                                            target_id=-1, target_type=-1
+                                        ):
+                                            await bot.forward_messages(
+                                                chat_id=sub,
+                                                from_chat_id=MAIN_CHANNEL,
+                                                message_ids=[
+                                                    msg.message_id for msg in res
+                                                ],
+                                            )
                                     except:
                                         pass
                             message = message.join(messages)
