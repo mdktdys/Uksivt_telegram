@@ -1,4 +1,6 @@
 import datetime
+import html
+
 import pytz
 from aiogram import Bot, Router
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -53,13 +55,18 @@ async def on_check_start(bot: Bot):
 
 async def on_check_end(bot: Bot, result: dict) -> None:
     keyboard = create_keyboard_with_logo()
-    await bot.send_message(chat_id=DEBUG_CHANNEL, text=f"Проверил {str(result)}")
+    await bot.send_message(
+        chat_id=DEBUG_CHANNEL,
+        text=f"Проверил {html.escape(str(result))}",
+        parse_mode="html",
+    )
     try:
         res = await bot.edit_message_text(
             f"🟢 Последняя проверка {get_current_time()}\nuksivt.xyz Поиск по группам, преподам и кабинетам",
             chat_id=MAIN_CHANNEL,
             message_id=MAIN_CHANNEL_ANCHOR_MESSAGE,
             reply_markup=keyboard,
+            parse_mode="html",
         )
         pass
     except:
