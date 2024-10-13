@@ -25,7 +25,7 @@ async def sub(message: Message):
                 if res.status == 201:
                     await message.answer("Подписан")
                 else:
-                    await message.answer("Вы уже подписаны")
+                    await message.answer((await res.text()))
     except Exception as error:
         await message.answer(f"Ошибка подписки\n{error}")
 
@@ -46,6 +46,6 @@ async def unsub(message: Message):
                 if res.status == 201:
                     await message.answer("Отписан")
                 else:
-                    await message.answer("Ошибка отписки")
+                    await message.answer((await res.text()))
     except Exception as error:
         await message.answer(f"Ошибка отписки\n{error}")
