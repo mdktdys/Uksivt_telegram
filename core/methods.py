@@ -81,7 +81,7 @@ async def check_new_zamena(bot: Bot):
                                     file_extension = get_file_extension(zamena.link)
                                     file_name = f"temp.{file_extension}"
                                     download_file(link=zamena.link, filename=file_name)
-                                    media_group.add_document(file_name)
+                                    media_group.add_document(FSInputFile(path=file_name,filename=f"{zamena.date}"))
 
                                     await bot.send_media_group(
                                         chat_id=MAIN_CHANNEL, media=media_group.build()
