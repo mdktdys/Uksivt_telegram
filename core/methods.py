@@ -3,6 +3,7 @@ import datetime
 import html
 import traceback
 
+import requests
 from aiogram import Bot
 import aiohttp
 from aiogram.types import FSInputFile, BufferedInputFile
@@ -11,6 +12,26 @@ from aiogram.utils.media_group import MediaGroupBuilder
 from DTOmodels.schemas import CheckResultFoundNew
 from callbacks.events import on_check_start, on_check_end
 from my_secrets import DEBUG_CHANNEL, API_URL, API_KEY, MAIN_CHANNEL
+
+
+def get_file_extension(url):
+    parts = url.split("/")
+    file_name = parts[-1]
+    file_parts = file_name.split(".")
+    if len(file_parts) > 1:
+        return file_parts[-1]
+    else:
+        return ""
+
+
+def download_file(link: str, filename: str):
+    response = requests.get(link)
+    if response.status_code == 200:
+        with open(filename, "wb") as file:
+            file.write(response.content)
+        print(f"File '{filename}' has been downloaded successfully.")
+    else:
+        print("Failed to download the file.")
 
 
 async def check_new_zamena(bot: Bot):
@@ -53,11 +74,17 @@ async def check_new_zamena(bot: Bot):
                                     )
                                 if zamena.result == "InvalidFormat":
                                     messages.append(f"\nНайдена\n{zamena.link[0:100]}")
-
                                     caption = f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.file}'>Файлик</a>"
 
-                                    await bot.send_message(
-                                        chat_id=MAIN_CHANNEL, text=caption
+                                    media_group = MediaGroupBuilder(caption=caption)
+
+                                    file_extension = get_file_extension(zamena.link)
+                                    file_name = f"temp.{file_extension}"
+                                    download_file(link=zamena.link, filename=file_name)
+                                    media_group.add_document(file_name)
+
+                                    await bot.send_media_group(
+                                        chat_id=MAIN_CHANNEL, media=media_group.build()
                                     )
 
                                     # subs = await r.lrange("subs", 0, -1)
