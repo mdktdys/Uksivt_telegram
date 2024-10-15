@@ -155,9 +155,10 @@ async def handle_group_callback(
 
 @router.message(Command("group"))
 async def a(message: Message) -> None:
-    await message.bot.delete_message(
-        chat_id=message.chat.id, message_id=message.message_id
-    )
+    try:
+        await message.bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+    except:
+        await message.bot.send_message(chat_id=message.chat.id,text="Я не могу удалять сообщения за собой(\nВыдайте полную админку пж((")
     group = message.text.split(" ")[1]
     date: datetime.datetime = datetime.datetime.fromtimestamp(
         float(message.text.split(" ")[2])
@@ -424,9 +425,10 @@ async def handle_group_callback(
 
 @router.message(Command("teacher"))
 async def a(message: Message) -> None:
-    await message.bot.delete_message(
-        chat_id=message.chat.id, message_id=message.message_id
-    )
+    try:
+        await message.bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+    except:
+        await message.bot.send_message(chat_id=message.chat.id,text="Я не могу удалять сообщения за собой(\nВыдайте полную админку пж((")
     group = message.text.split(" ")[1]
     date: datetime.datetime = datetime.datetime.fromtimestamp(
         float(message.text.split(" ")[2])
