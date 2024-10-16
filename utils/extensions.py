@@ -32,7 +32,7 @@ def month_name(date: datetime) -> str:
     return months[date.month - 1]
 
 
-def get_current_week_number():
+def week_number_from_september():
     today = datetime.today()
 
     year = today.year

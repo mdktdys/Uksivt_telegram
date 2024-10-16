@@ -1,22 +1,17 @@
 import datetime
 from aiogram import Router, F
 from aiogram.filters import Command
-from aiogram.filters.callback_data import CallbackData
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
+from aiogram.types import Message
 import aiohttp
 from aiogram import types
 
+from keyboards.schedule_keyboad import build_keyboard
+from models.search_result_callback import Search
 from my_secrets import API_URL, API_KEY
 from models.search_result import DayScheduleFormatted
-from utils.extensions import weekday_name, week_number_from_september, month_name
+from utils.extensions import weekday_name, month_name, week_number_from_september
 
 router = Router()
-
-
-class Search(CallbackData, prefix="my_callback"):
-    type: str
-    search_id: int
-    date: str
 
 
 @router.callback_query(Search.filter(F.type == "group"))
@@ -53,101 +48,12 @@ async def handle_group_callback(
         f"\n{calendar_footer}"
         f"\n🏷️ {week_number} Неделя {'- текущая' if choosed_week_is_current else ''}"
         f"{debug}",
-        reply_markup=InlineKeyboardMarkup(
-            inline_keyboard=[
-                [
-                    InlineKeyboardButton(
-                        text="ПН" + (" 🟢" if week_day == 0 else ""),
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=monday_date.strftime("%Y-%m-%d"),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="ВТ" + (" 🟢" if week_day == 1 else ""),
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=1)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="СР" + (" 🟢" if week_day == 2 else ""),
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=2)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                ],
-                [
-                    InlineKeyboardButton(
-                        text="ЧТ" + (" 🟢" if week_day == 3 else ""),
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=3)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="ПТ" + (" 🟢" if week_day == 4 else ""),
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=4)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="СБ" + (" 🟢" if week_day == 5 else ""),
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=5)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                ],
-                [
-                    InlineKeyboardButton(
-                        text="Пред.неделя⬅️",
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=(date - datetime.timedelta(days=7)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="Сегодня",
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=(datetime.datetime.now()).strftime("%Y-%m-%d"),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="След.неделя➡️",
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=(date + datetime.timedelta(days=7)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                ],
-            ]
+        reply_markup=build_keyboard(
+            date=date,
+            monday_date=monday_date,
+            search_id=int(group),
+            week_day=week_day,
+            search_type="group",
         ),
     )
 
@@ -198,101 +104,12 @@ async def a(message: Message) -> None:
         f"\n{calendar_footer}"
         f"\n🏷️ {week_number} Неделя {'- текущая' if choosed_week_is_current else ''}"
         f"{debug}",
-        reply_markup=InlineKeyboardMarkup(
-            inline_keyboard=[
-                [
-                    InlineKeyboardButton(
-                        text="ПН" + (" 🟢" if week_day == 0 else ""),
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=monday_date.strftime("%Y-%m-%d"),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="ВТ" + (" 🟢" if week_day == 1 else ""),
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=1)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="СР" + (" 🟢" if week_day == 2 else ""),
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=2)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                ],
-                [
-                    InlineKeyboardButton(
-                        text="ЧТ" + (" 🟢" if week_day == 3 else ""),
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=3)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="ПТ" + (" 🟢" if week_day == 4 else ""),
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=4)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="СБ" + (" 🟢" if week_day == 5 else ""),
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=5)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                ],
-                [
-                    InlineKeyboardButton(
-                        text="Пред.неделя⬅️",
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=(date - datetime.timedelta(days=7)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="Сегодня",
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=(datetime.datetime.now()).strftime("%Y-%m-%d"),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="След.неделя➡️",
-                        callback_data=Search(
-                            type="group",
-                            search_id=int(group),
-                            date=(date + datetime.timedelta(days=7)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                ],
-            ]
+        reply_markup=build_keyboard(
+            date=date,
+            monday_date=monday_date,
+            search_id=int(group),
+            week_day=week_day,
+            search_type="group",
         ),
     )
 
@@ -328,104 +145,14 @@ async def handle_group_callback(
         f"{body}"
         f"\n{calendar_footer}"
         f"\n🏷️ {week_number_from_september()} Неделя {'- текущая' if choosed_week_is_current else ''}",
-        reply_markup=InlineKeyboardMarkup(
-            inline_keyboard=[
-                [
-                    InlineKeyboardButton(
-                        text="ПН" + (" 🟢" if week_day == 0 else ""),
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=monday_date.strftime("%Y-%m-%d"),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="ВТ" + (" 🟢" if week_day == 1 else ""),
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=1)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="СР" + (" 🟢" if week_day == 2 else ""),
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=2)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                ],
-                [
-                    InlineKeyboardButton(
-                        text="ЧТ" + (" 🟢" if week_day == 3 else ""),
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=3)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="ПТ" + (" 🟢" if week_day == 4 else ""),
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=4)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="СБ" + (" 🟢" if week_day == 5 else ""),
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=5)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                ],
-                [
-                    InlineKeyboardButton(
-                        text="Пред.неделя⬅️",
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=(date - datetime.timedelta(days=7)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="Сегодня",
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=(datetime.datetime.now()).strftime("%Y-%m-%d"),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="След.неделя➡️",
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=(date + datetime.timedelta(days=7)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                ],
-            ]
+        reply_markup=build_keyboard(
+            date=date,
+            monday_date=monday_date,
+            search_id=int(group),
+            week_day=week_day,
+            search_type="teacher",
         ),
     )
-
     await callback.answer()
 
 
@@ -471,100 +198,11 @@ async def a(message: Message) -> None:
         f"{body}"
         f"\n{calendar_footer}"
         f"\n🏷️ {week_number_from_september()} Неделя {'- текущая' if choosed_week_is_current else ''}",
-        reply_markup=InlineKeyboardMarkup(
-            inline_keyboard=[
-                [
-                    InlineKeyboardButton(
-                        text="ПН" + (" 🟢" if week_day == 0 else ""),
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=monday_date.strftime("%Y-%m-%d"),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="ВТ" + (" 🟢" if week_day == 1 else ""),
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=1)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="СР" + (" 🟢" if week_day == 2 else ""),
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=2)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                ],
-                [
-                    InlineKeyboardButton(
-                        text="ЧТ" + (" 🟢" if week_day == 3 else ""),
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=3)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="ПТ" + (" 🟢" if week_day == 4 else ""),
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=4)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="СБ" + (" 🟢" if week_day == 5 else ""),
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=(monday_date + datetime.timedelta(days=5)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                ],
-                [
-                    InlineKeyboardButton(
-                        text="Пред.неделя⬅️",
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=(date - datetime.timedelta(days=7)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="Сегодня",
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=(datetime.datetime.now()).strftime("%Y-%m-%d"),
-                        ).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text="След.неделя➡️",
-                        callback_data=Search(
-                            type="teacher",
-                            search_id=int(group),
-                            date=(date + datetime.timedelta(days=7)).strftime(
-                                "%Y-%m-%d"
-                            ),
-                        ).pack(),
-                    ),
-                ],
-            ]
+        reply_markup=build_keyboard(
+            date=date,
+            monday_date=monday_date,
+            search_id=int(group),
+            week_day=week_day,
+            search_type="teacher",
         ),
     )
