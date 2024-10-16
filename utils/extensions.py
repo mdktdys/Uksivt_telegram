@@ -1,7 +1,7 @@
-import datetime
+from datetime import datetime, timedelta
 
 
-def weekday_name(date: datetime.datetime) -> str:
+def weekday_name(date: datetime) -> str:
     days = [
         "Понедельник",
         "Вторник",
@@ -14,7 +14,7 @@ def weekday_name(date: datetime.datetime) -> str:
     return days[date.weekday()]
 
 
-def month_name(date: datetime.datetime) -> str:
+def month_name(date: datetime) -> str:
     months = [
         "Январь",
         "Февраль",
@@ -32,18 +32,19 @@ def month_name(date: datetime.datetime) -> str:
     return months[date.month - 1]
 
 
-def week_number_from_september(today: datetime.datetime) -> int | None:
+def get_current_week_number():
+    today = datetime.today()
 
     year = today.year
-    start_date = datetime.date(year, 9, 1)
-    end_date = datetime.date(year + 1, 6, 30)
+    start_date = datetime(year, 9, 1)
+    end_date = datetime(year + 1, 6, 30)
 
     if today.month in [7, 8]:
         return None
 
     if today.month < 9:
-        start_date = datetime.datetime(year - 1, 9, 1)
-        end_date = datetime.date(year, 6, 30)
+        start_date = datetime(year - 1, 9, 1)
+        end_date = datetime(year, 6, 30)
 
     week_number = (today - start_date).days // 7 + 1
     return week_number

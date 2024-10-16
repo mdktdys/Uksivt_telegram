@@ -46,7 +46,7 @@ async def handle_group_callback(
     header = f"🎓 Расписание группы {response.search_name}\n"
     body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else '' }"
-    week_number = week_number_from_september(date)
+    week_number = week_number_from_september()
     await callback.message.edit_text(
         f"{header}"
         f"{body}"
@@ -191,7 +191,7 @@ async def a(message: Message) -> None:
     header = f"🎓 Расписание группы {response.search_name}\n"
     body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else ''}"
-    week_number = week_number_from_september(date)
+    week_number = week_number_from_september()
     await message.answer(
         f"{header}"
         f"{body}"
@@ -327,7 +327,7 @@ async def handle_group_callback(
         f"{header}"
         f"{body}"
         f"\n{calendar_footer}"
-        f"\n🏷️ {week_number_from_september(date)} Неделя {'- текущая' if choosed_week_is_current else ''}",
+        f"\n🏷️ {week_number_from_september()} Неделя {'- текущая' if choosed_week_is_current else ''}",
         reply_markup=InlineKeyboardMarkup(
             inline_keyboard=[
                 [
@@ -470,7 +470,7 @@ async def a(message: Message) -> None:
         f"{header}"
         f"{body}"
         f"\n{calendar_footer}"
-        f"\n🏷️ {week_number_from_september(date)} Неделя {'- текущая' if choosed_week_is_current else ''}",
+        f"\n🏷️ {week_number_from_september()} Неделя {'- текущая' if choosed_week_is_current else ''}",
         reply_markup=InlineKeyboardMarkup(
             inline_keyboard=[
                 [
