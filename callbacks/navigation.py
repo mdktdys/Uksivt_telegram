@@ -46,11 +46,12 @@ async def handle_group_callback(
     header = f"🎓 Расписание группы {response.search_name}\n"
     body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else '' }"
+    week_number = week_number_from_september(date)
     await callback.message.edit_text(
         f"{header}"
         f"{body}"
         f"\n{calendar_footer}"
-        f"\n🏷️ {week_number_from_september(date)} Неделя {'- текущая' if choosed_week_is_current else ''}"
+        f"\n🏷️ {week_number} Неделя {'- текущая' if choosed_week_is_current else ''}"
         f"{debug}",
         reply_markup=InlineKeyboardMarkup(
             inline_keyboard=[
@@ -156,9 +157,14 @@ async def handle_group_callback(
 @router.message(Command("group"))
 async def a(message: Message) -> None:
     try:
-        await message.bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+        await message.bot.delete_message(
+            chat_id=message.chat.id, message_id=message.message_id
+        )
     except:
-        await message.bot.send_message(chat_id=message.chat.id,text="Я не могу удалять сообщения за собой(\nВыдайте полную админку пж((")
+        await message.bot.send_message(
+            chat_id=message.chat.id,
+            text="Я не могу удалять сообщения за собой(\nВыдайте полную админку пж((",
+        )
     group = message.text.split(" ")[1]
     date: datetime.datetime = datetime.datetime.fromtimestamp(
         float(message.text.split(" ")[2])
@@ -185,12 +191,12 @@ async def a(message: Message) -> None:
     header = f"🎓 Расписание группы {response.search_name}\n"
     body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else ''}"
-
+    week_number = week_number_from_september(date)
     await message.answer(
         f"{header}"
         f"{body}"
         f"\n{calendar_footer}"
-        f"\n🏷️ {week_number_from_september(date)} Неделя {'- текущая' if choosed_week_is_current else ''}"
+        f"\n🏷️ {week_number} Неделя {'- текущая' if choosed_week_is_current else ''}"
         f"{debug}",
         reply_markup=InlineKeyboardMarkup(
             inline_keyboard=[
@@ -426,9 +432,14 @@ async def handle_group_callback(
 @router.message(Command("teacher"))
 async def a(message: Message) -> None:
     try:
-        await message.bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+        await message.bot.delete_message(
+            chat_id=message.chat.id, message_id=message.message_id
+        )
     except:
-        await message.bot.send_message(chat_id=message.chat.id,text="Я не могу удалять сообщения за собой(\nВыдайте полную админку пж((")
+        await message.bot.send_message(
+            chat_id=message.chat.id,
+            text="Я не могу удалять сообщения за собой(\nВыдайте полную админку пж((",
+        )
     group = message.text.split(" ")[1]
     date: datetime.datetime = datetime.datetime.fromtimestamp(
         float(message.text.split(" ")[2])
