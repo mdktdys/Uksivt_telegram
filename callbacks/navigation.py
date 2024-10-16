@@ -23,7 +23,7 @@ async def handle_group_callback(
     monday_date = date.date() - datetime.timedelta(days=date.weekday())
     group = callback_data.search_id
     now_date = datetime.datetime.now()
-    choosed_week_is_current = week_number_from_september(now_date) == date
+    choosed_week_is_current = week_number_from_september() == date
     choosed_day_is_current = True if date == now_date else False
     week_day = date.weekday()
 
@@ -77,7 +77,7 @@ async def a(message: Message) -> None:
     )
     monday_date = date.date() - datetime.timedelta(days=date.weekday())
     now_date = datetime.datetime.now()
-    choosed_week_is_current = week_number_from_september(now_date) == date
+    choosed_week_is_current = week_number_from_september() == date
     choosed_day_is_current = True if date == now_date else False
     week_day = date.weekday()
 
@@ -122,7 +122,7 @@ async def handle_group_callback(
     monday_date = date.date() - datetime.timedelta(days=date.weekday())
     group = callback_data.search_id
     now_date = datetime.datetime.now()
-    choosed_week_is_current = week_number_from_september(now_date) == date
+    choosed_week_is_current = week_number_from_september() == date
     choosed_day_is_current = True if date == now_date else False
     week_day = date.weekday()
 
@@ -173,7 +173,7 @@ async def a(message: Message) -> None:
     )
     monday_date = date.date() - datetime.timedelta(days=date.weekday())
     now_date = datetime.datetime.now()
-    choosed_week_is_current = week_number_from_september(now_date) == date
+    choosed_week_is_current = week_number_from_september() == date
     choosed_day_is_current = True if date == now_date else False
     week_day = date.weekday()
 
