@@ -12,7 +12,6 @@ from aiogram.utils.media_group import MediaGroupBuilder
 from supabase import create_client, Client
 from DTOmodels.schemas import CheckResultFoundNew, CheckResultCheckExisting
 from callbacks.events import on_check_start, on_check_end
-from callbacks.parser import admins
 from my_secrets import (
     DEBUG_CHANNEL,
     API_URL,
