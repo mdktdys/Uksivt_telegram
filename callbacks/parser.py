@@ -1,14 +1,11 @@
-import asyncio
 import datetime
-import html
-import traceback
+
 from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
 # from callbacks.events import on_check, on_check_start
-from core.methods import check_new_zamena
-from my_secrets import DEBUG_CHANNEL
+from core.methods import check_new_zamena, parse_zamena
 
 router = Router()
 
@@ -97,3 +94,11 @@ admins = [1283168392]
 @router.message(F.text, Command("check"))
 async def check_new(message: Message):
     await check_new_zamena(bot=message.bot)
+
+
+@router.message(F.text, Command("zamena"))
+async def zamena(message: Message):
+    url = message.split(" ")[1]
+    raw_date = message.split(" ")[2].split(".")
+    date = datetime.datetime(year=raw_date[0], month=raw_date[1], day=raw_date[2])
+    await parse_zamena(bot=message.bot, date=date, url=url)
