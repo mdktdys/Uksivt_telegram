@@ -77,7 +77,7 @@ async def parse_zamena(bot: Bot, url: str, date: datetime.date):
                         if response["error"] == "Not found items":
                             message = "Ошибка парсинга\n\n"
                             messages = []
-                            result = ZamenaParseFailedNotFoundItems.parse_obj(res)
+                            result = ZamenaParseFailedNotFoundItems.parse_obj(response)
                             for e in result.items:
                                 messages.append(e)
                             message = message.join(messages)
