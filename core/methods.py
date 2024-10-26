@@ -16,6 +16,7 @@ from DTOmodels.schemas import (
     ZamenaParseFailedNotFoundItems,
 )
 from callbacks.events import on_check_start, on_check_end
+from callbacks.tools import send_large_text
 from my_secrets import (
     DEBUG_CHANNEL,
     API_URL,
@@ -81,8 +82,10 @@ async def parse_zamena(bot: Bot, url: str, date: datetime.date):
                             for e in result.items:
                                 messages.append(e)
                             message = message.join(messages)
-
-                await bot.send_message(chat_id=DEBUG_CHANNEL, text=message)
+                await send_large_text(
+                    bot=bot, chat_id=DEBUG_CHANNEL, text=message, max_length=3000
+                )
+                # await bot.send_message(chat_id=DEBUG_CHANNEL, text=message)
             except Exception as e:
                 error_body = f"{str(e)}\n\n{traceback.format_exc()}"
                 from utils.sender import send_error_message
