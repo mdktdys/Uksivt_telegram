@@ -62,7 +62,7 @@ async def parse_zamena(bot: Bot, url: str, date: datetime.datetime):
         async with session.post(
             f"{API_URL}parser/parse_zamena",
             headers={"X-API-KEY": API_KEY},
-            data={"url": f"{url}", "date": f"{date}"},
+            json={'url':f'{url}','date':f'{date}'},
         ) as res:
             try:
                 response: dict = await res.json()
