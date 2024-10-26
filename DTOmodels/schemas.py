@@ -88,3 +88,21 @@ class Subscription(BaseModel):
     chat_id: str
     target_type: int
     target_id: int
+
+
+class ZamenaParseResult(BaseModel):
+    model_config = ConfigDict()
+    result: str
+
+
+class ZamenaParseFailed(ZamenaParseResult):
+    error: str
+    trace: str
+
+
+class ZamenaParseFailedNotFoundItems(ZamenaParseFailed):
+    items: List[str]
+
+
+class ZamenaParseSucess(ZamenaParseResult):
+    result: str = "ok"

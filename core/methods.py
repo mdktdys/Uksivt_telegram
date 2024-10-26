@@ -10,7 +10,11 @@ import aiohttp
 from aiogram.types import FSInputFile, BufferedInputFile, Message
 from aiogram.utils.media_group import MediaGroupBuilder
 from supabase import create_client, Client
-from DTOmodels.schemas import CheckResultFoundNew, CheckResultCheckExisting
+from DTOmodels.schemas import (
+    CheckResultFoundNew,
+    CheckResultCheckExisting,
+    ZamenaParseFailedNotFoundItems,
+)
 from callbacks.events import on_check_start, on_check_end
 from my_secrets import (
     DEBUG_CHANNEL,
@@ -57,17 +61,28 @@ def download_file(link: str, filename: str):
         print("Failed to download the file.")
 
 
-async def parse_zamena(bot: Bot, url: str, date: datetime.datetime):
+async def parse_zamena(bot: Bot, url: str, date: datetime.date):
+    message = ""
     async with aiohttp.ClientSession(trust_env=True) as session:
         async with session.post(
             f"{API_URL}parser/parse_zamena",
             headers={"X-API-KEY": API_KEY},
-            json={'url':f'{url}','date':f'{date}'},
+            json={"url": f"{url}", "date": f"{date}"},
         ) as res:
             try:
                 response: dict = await res.json()
                 print(response)
-                await bot.send_message(chat_id=DEBUG_CHANNEL, text=str(response))
+                match response["result"]:
+                    case "error":
+                        if response["error"] == "Not found items":
+                            message = "Ошибка парсинга\n\n"
+                            messages = []
+                            result = ZamenaParseFailedNotFoundItems.parse_obj(res)
+                            for e in result.items:
+                                messages.append(e)
+                            message = message.join(messages)
+
+                await bot.send_message(chat_id=DEBUG_CHANNEL, text=message)
             except Exception as e:
                 error_body = f"{str(e)}\n\n{traceback.format_exc()}"
                 from utils.sender import send_error_message
