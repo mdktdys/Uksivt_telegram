@@ -98,7 +98,7 @@ async def check_new(message: Message):
 
 @router.message(F.text, Command("zamena"))
 async def zamena(message: Message):
-    url = message.split(" ")[1]
-    raw_date = message.split(" ")[2].split(".")
-    date = datetime.datetime(year=raw_date[0], month=raw_date[1], day=raw_date[2])
+    url = message.text.split(" ")[1]
+    raw_date = message.text.split(" ")[2].split(".")
+    date = datetime.datetime(year=int(raw_date[0]), month=int(raw_date[1]), day=int(raw_date[2]))
     await parse_zamena(bot=message.bot, date=date, url=url)
