@@ -76,9 +76,7 @@ async def parse_zamena(bot: Bot, url: str, date: datetime.date):
                 match response["result"]:
                     case "error":
                         if response["error"] == "Not found items":
-                            message = (
-                                f"⚠️ Ошибка парсинга замен\n\n{response['trace']}\n\nна {date}"
-                            )
+                            message = f"⚠️ Ошибка парсинга замен\n\n{response['trace']}\n\nна {date}"
                             result = ZamenaParseFailedNotFoundItems.parse_obj(response)
                             for e in result.items:
                                 message = message + f"\n{e}\n"
@@ -115,6 +113,7 @@ async def check_new_zamena(bot: Bot):
                 try:
                     response: dict = await res.json()
                     print(response)
+                    zamenas: List[(str, datetime)] = []
                     match response["result"]:
                         case "FoundNew":
                             result = CheckResultFoundNew.parse_obj(response)
@@ -155,8 +154,10 @@ async def check_new_zamena(bot: Bot):
                                             # await bot.send_media_group(
                                             #     chat_id=sub, media=media_group.build()
                                             # )
-                                    except:
+                                    except Exception as e:
+                                        print(e)
                                         pass
+                                    zamenas.append((zamena.link, zamena.date))
                                 if zamena.result == "FailedDownload":
                                     messages.append(f"\nНайдена\n{zamena.link}")
                                     caption = f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.link}'>Ссылка</a>"
@@ -175,7 +176,8 @@ async def check_new_zamena(bot: Bot):
                                                 from_chat_id=MAIN_CHANNEL,
                                                 message_id=res.message_id,
                                             )
-                                    except:
+                                    except Exception as e:
+                                        print(e)
                                         pass
                                 if zamena.result == "InvalidFormat":
                                     messages.append(f"\nНайдена\n{zamena.link}")
@@ -213,7 +215,8 @@ async def check_new_zamena(bot: Bot):
                                             # await bot.send_media_group(
                                             #     chat_id=sub, media=media_group.build()
                                             # )
-                                    except:
+                                    except Exception as e:
+                                        print(e)
                                         pass
                             message = message.join(messages)
                         case "Failed":
@@ -262,8 +265,10 @@ async def check_new_zamena(bot: Bot):
                                             # await bot.send_media_group(
                                             #     chat_id=sub, media=media_group.build()
                                             # )
-                                    except:
+                                    except Exception as e:
+                                        print(e)
                                         pass
+                                    zamenas.append((zamena.link, zamena.date))
                                 if zamena.result == "FailedDownload":
                                     messages.append(
                                         f"\nОбнаружен перезалив\n{zamena.link}"
@@ -331,6 +336,12 @@ async def check_new_zamena(bot: Bot):
                     print("Ответ не является JSON")
 
         await on_check_end(bot=bot, result=message[0:2000])
+        try:
+            for zam in zamenas:
+                await parse_zamena(bot=bot, date=zam[1], url=zam[0])
+        except Exception as e:
+            print(e)
+            await bot.send_message(chat_id=DEBUG_CHANNEL, text=str(e))
 
     except Exception as e:
         error_body = f"{str(e)}\n\n{traceback.format_exc()}"
