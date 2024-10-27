@@ -76,11 +76,10 @@ async def parse_zamena(bot: Bot, url: str, date: datetime.date):
                 match response["result"]:
                     case "error":
                         if response["error"] == "Not found items":
-                            messages = []
+                            message = f"Ошибка парсинга замен\n\n{response['trace']}\n"
                             result = ZamenaParseFailedNotFoundItems.parse_obj(response)
                             for e in result.items:
-                                messages.append(f"\n{e}\n")
-                            message = message.join(messages)
+                                message = message + f"\n{e}\n"
                 await send_large_text(
                     bot=bot, chat_id=DEBUG_CHANNEL, text=message, max_length=3000
                 )
