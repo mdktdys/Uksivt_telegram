@@ -17,6 +17,7 @@ from DTOmodels.schemas import (
 )
 from callbacks.events import on_check_start, on_check_end
 from callbacks.tools import send_large_text
+from models.search_result import DayScheduleFormatted
 from my_secrets import (
     DEBUG_CHANNEL,
     API_URL,
@@ -25,6 +26,7 @@ from my_secrets import (
     SCHEDULER_SUPABASE_URL,
     SCHEDULER_SUPABASE_ANON_KEY,
 )
+from utils.extensions import weekday_name, month_name
 
 key = SCHEDULER_SUPABASE_ANON_KEY
 url = SCHEDULER_SUPABASE_URL
@@ -39,6 +41,23 @@ supabase_connect: Client = create_client(url, key)
 #             from_chat_id=MAIN_CHANNEL,
 #             message_ids=res,
 #         )
+async def send_zamena_alert(
+    bot: Bot, target_id: int, date, chat_id: int, target_type: str
+):
+    async with aiohttp.ClientSession(trust_env=True) as session:
+        async with session.get(
+            f'{API_URL}{target_type}/day_schedule_formatted/{target_id}/{datetime.datetime.now().strftime("%Y-%m-%d")}/',
+            headers={"X-API-KEY": API_KEY},
+        ) as res:
+            response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(
+                await res.text()
+            )
+    header = f"🎓 Расписание {response.search_name}\n"
+    body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
+    calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}"
+    await bot.send_message(
+        chat_id=chat_id, text=f"{header}" f"{body}" f"\n{calendar_footer}"
+    )
 
 
 def get_subscribers(target_type: int, target_id: int) -> List[str]:

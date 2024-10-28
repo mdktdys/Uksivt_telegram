@@ -5,7 +5,8 @@ from aiogram.filters import Command
 from aiogram.types import Message
 
 # from callbacks.events import on_check, on_check_start
-from core.methods import check_new_zamena, parse_zamena
+from core.methods import check_new_zamena, parse_zamena, send_zamena_alert
+from my_secrets import DEBUG_CHANNEL
 
 router = Router()
 
@@ -89,9 +90,15 @@ admins = [1283168392]
 #         )
 #
 #
-# @router.message(F.text, Command("fix"))
-# async def myalert(message: Message):
-#     await alert(bot=message.bot)
+@router.message(F.text, Command("fix"))
+async def myalert(message: Message):
+    await send_zamena_alert(
+        bot=message.bot,
+        chat_id=DEBUG_CHANNEL,
+        date=datetime.date(2024, 10, 29),
+        target_id=2778,
+        target_type="groups",
+    )
 
 
 @router.message(F.text, Command("check"))
