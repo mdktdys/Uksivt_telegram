@@ -32,13 +32,13 @@ supabase_connect: Client = create_client(url, key)
 
 
 async def alert(bot: Bot):
-    res = [382,383]
-    # for sub in get_subscribers(target_id=-1, target_type=-1):
-    await bot.forward_messages(
-        chat_id=DEBUG_CHANNEL,
-        from_chat_id=MAIN_CHANNEL,
-        message_ids=res,
-    )
+    res = [382, 383]
+    for sub in get_subscribers(target_id=-1, target_type=-1):
+        await bot.forward_messages(
+            chat_id=sub,
+            from_chat_id=MAIN_CHANNEL,
+            message_ids=res,
+        )
 
 
 def get_subscribers(target_type: int, target_id: int) -> List[str]:
