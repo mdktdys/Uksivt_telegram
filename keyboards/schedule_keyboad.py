@@ -76,5 +76,5 @@ def build_keyboard(
     ]
 
     return InlineKeyboardMarkup(
-        inline_keyboard=notification_buttons + [day_buttons_rows] + [navigation_buttons]
+        inline_keyboard=[notification_buttons] + day_buttons_rows + [navigation_buttons]
     )
