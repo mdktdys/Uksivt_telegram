@@ -2,7 +2,7 @@ import datetime
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from models.search_result_callback import Search
+from models.search_result_callback import Search, Notification
 
 
 def build_keyboard(
@@ -11,7 +11,27 @@ def build_keyboard(
     search_id: int,
     search_type: str,
     date: datetime.date,
+    is_subscribed: bool,
 ):
+
+    if search_type != "teacher" and search_type != "group":
+        return
+    if search_type == "teacher":
+        target_type_id = 2
+    if search_type == "group":
+        target_type_id = 1
+
+    notification_buttons = [
+        InlineKeyboardButton(
+            text="Уведы " + "🔔" if is_subscribed else "🔕",
+            callback_data=Notification(
+                target_type=target_type_id,
+                target_id=search_id,
+                is_subscribe=is_subscribed,
+            ).pack(),
+        )
+    ]
+
     days = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"]
 
     day_buttons = [
@@ -55,4 +75,6 @@ def build_keyboard(
         ),
     ]
 
-    return InlineKeyboardMarkup(inline_keyboard=day_buttons_rows + [navigation_buttons])
+    return InlineKeyboardMarkup(
+        inline_keyboard=notification_buttons + [day_buttons_rows] + [navigation_buttons]
+    )

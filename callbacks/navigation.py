@@ -54,6 +54,7 @@ async def handle_group_callback(
             search_id=int(group),
             week_day=week_day,
             search_type="group",
+            is_subscribed=False,
         ),
     )
 
@@ -110,6 +111,7 @@ async def a(message: Message) -> None:
             search_id=int(group),
             week_day=week_day,
             search_type="group",
+            is_subscribed=False,
         ),
     )
 
@@ -151,6 +153,7 @@ async def handle_group_callback(
             search_id=int(group),
             week_day=week_day,
             search_type="teacher",
+            is_subscribed=False,
         ),
     )
     await callback.answer()
@@ -204,5 +207,6 @@ async def a(message: Message) -> None:
             search_id=int(group),
             week_day=week_day,
             search_type="teacher",
+            is_subscribed=False,
         ),
     )
