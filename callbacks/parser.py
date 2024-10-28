@@ -89,9 +89,9 @@ admins = [1283168392]
 #         )
 #
 #
-@router.message(F.text, Command("fix"))
-async def myalert(message: Message):
-    await alert(bot=message.bot)
+# @router.message(F.text, Command("fix"))
+# async def myalert(message: Message):
+#     await alert(bot=message.bot)
 
 
 @router.message(F.text, Command("check"))
