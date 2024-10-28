@@ -42,11 +42,17 @@ supabase_connect: Client = create_client(url, key)
 #             message_ids=res,
 #         )
 async def send_zamena_alert(
-    bot: Bot, target_id: int, date, chat_id: int, target_type: str
+    bot: Bot, target_id: int, date, chat_id: int, target_type: int
 ):
+    if target_type != 1 and target_type != 2:
+        return
+    if target_type == 1:
+        target_type_named = "groups"
+    if target_type == 2:
+        target_type_named = "teachers"
     async with aiohttp.ClientSession(trust_env=True) as session:
         async with session.get(
-            f'{API_URL}{target_type}/day_schedule_formatted/{target_id}/{datetime.datetime.now().strftime("%Y-%m-%d")}/',
+            f'{API_URL}{target_type_named}/day_schedule_formatted/{target_id}/{datetime.datetime.now().strftime("%Y-%m-%d")}/',
             headers={"X-API-KEY": API_KEY},
         ) as res:
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(

@@ -97,7 +97,7 @@ async def myalert(message: Message):
         chat_id=DEBUG_CHANNEL,
         date=datetime.date(2024, 10, 29),
         target_id=2778,
-        target_type="groups",
+        target_type=1,
     )
 
 
