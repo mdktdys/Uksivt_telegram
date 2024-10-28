@@ -5,7 +5,7 @@ from aiogram.filters import Command
 from aiogram.types import Message
 
 # from callbacks.events import on_check, on_check_start
-from core.methods import check_new_zamena, parse_zamena, alert
+from core.methods import check_new_zamena, parse_zamena
 
 router = Router()
 
