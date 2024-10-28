@@ -52,7 +52,7 @@ async def send_zamena_alert(
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(
                 await res.text()
             )
-    header = f"🎓 Расписание {response.search_name}\n"
+    header = f"🎓 Изменения в расписании {response.search_name} по новым заменам\n"
     body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}"
     await bot.send_message(
