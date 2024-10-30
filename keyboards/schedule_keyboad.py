@@ -25,6 +25,8 @@ def build_keyboard(
         InlineKeyboardButton(
             text="Уведы " + "🔔" if is_subscribed else "🔕",
             callback_data=Notification(
+                search_id=search_id,
+                type=search_type,
                 target_type=target_type_id,
                 target_id=search_id,
                 is_subscribe=is_subscribed,

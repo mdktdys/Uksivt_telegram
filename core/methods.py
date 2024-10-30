@@ -41,6 +41,8 @@ supabase_connect: Client = create_client(url, key)
 #             from_chat_id=MAIN_CHANNEL,
 #             message_ids=res,
 #         )
+
+
 async def send_zamena_alert(
     bot: Bot, target_id: int, date, chat_id: int, target_type: int
 ):
@@ -138,8 +140,8 @@ async def parse_zamena(bot: Bot, url: str, date: datetime.date):
 async def check_new_zamena(bot: Bot):
     try:
         message = ""
+        zamenas: List[(str, datetime)] = []
         await on_check_start(bot=bot)
-
         async with aiohttp.ClientSession(trust_env=True) as session:
             async with session.get(
                 f"{API_URL}parser/check_new",
@@ -148,7 +150,7 @@ async def check_new_zamena(bot: Bot):
                 try:
                     response: dict = await res.json()
                     print(response)
-                    zamenas: List[(str, datetime)] = []
+
                     match response["result"]:
                         case "FoundNew":
                             result = CheckResultFoundNew.parse_obj(response)
@@ -214,6 +216,7 @@ async def check_new_zamena(bot: Bot):
                                     except Exception as e:
                                         print(e)
                                         pass
+                                    zamenas.append((zamena.link, zamena.date))
                                 if zamena.result == "InvalidFormat":
                                     messages.append(f"\nНайдена\n{zamena.link}")
                                     caption = f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.file}'>Ссылка на файлик</a>"
@@ -253,6 +256,7 @@ async def check_new_zamena(bot: Bot):
                                     except Exception as e:
                                         print(e)
                                         pass
+                                    zamenas.append((zamena.link, zamena.date))
                             message = message.join(messages)
                         case "Failed":
                             result = CheckResultFoundNew.parse_obj(response)
@@ -326,6 +330,7 @@ async def check_new_zamena(bot: Bot):
                                             # )
                                     except:
                                         pass
+                                    zamenas.append((zamena.link, zamena.date))
                                 if zamena.result == "InvalidFormat":
                                     messages.append(
                                         f"\nОбнаружен перезалив\n{zamena.link}"
@@ -363,6 +368,7 @@ async def check_new_zamena(bot: Bot):
                                             )
                                     except:
                                         pass
+                                    zamenas.append((zamena.link, zamena.date))
                             message = message.join(messages)
                         case "Checked":
                             message = "\nНичего нового"

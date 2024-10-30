@@ -1,9 +1,10 @@
 import aiohttp
-from aiogram import Router
+from aiogram import Router, types, F
 from aiogram.filters import Command
 from aiogram.types import Message
 
 from DTOmodels.schemas import Subscription
+from models.search_result_callback import Notification
 from my_secrets import API_URL, API_KEY
 
 router = Router()
