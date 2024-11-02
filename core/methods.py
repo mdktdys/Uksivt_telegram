@@ -150,13 +150,11 @@ async def check_new_zamena(bot: Bot):
                 try:
                     response: dict = await res.json()
                     print(response)
-
                     match response["result"]:
                         case "FoundNew":
                             result = CheckResultFoundNew.parse_obj(response)
                             messages = []
                             for zamena in result.checks:
-                                print(zamena)
                                 if zamena.result == "Failed":
                                     messages.append(
                                         f"\n⚠️ Ошибка замены\n<pre>{zamena.error[0:200]}\n{zamena.trace[0:300]}</pre>"
@@ -176,11 +174,10 @@ async def check_new_zamena(bot: Bot):
                                     res: List[Message] = await bot.send_media_group(
                                         MAIN_CHANNEL, media=media_group.build()
                                     )
-                                    print(res)
-                                    try:
-                                        for sub in get_subscribers(
-                                            target_id=-1, target_type=-1
-                                        ):
+                                    for sub in get_subscribers(
+                                        target_id=-1, target_type=-1
+                                    ):
+                                        try:
                                             await bot.forward_messages(
                                                 chat_id=sub,
                                                 from_chat_id=MAIN_CHANNEL,
@@ -188,12 +185,8 @@ async def check_new_zamena(bot: Bot):
                                                     msg.message_id for msg in res
                                                 ],
                                             )
-                                            # await bot.send_media_group(
-                                            #     chat_id=sub, media=media_group.build()
-                                            # )
-                                    except Exception as e:
-                                        print(e)
-                                        pass
+                                        except Exception as e:
+                                            print(e)
                                     zamenas.append((zamena.link, zamena.date))
                                 if zamena.result == "FailedDownload":
                                     messages.append(f"\nНайдена\n{zamena.link}")
@@ -201,21 +194,17 @@ async def check_new_zamena(bot: Bot):
                                     res: Message = await bot.send_message(
                                         chat_id=MAIN_CHANNEL, text=caption
                                     )
-                                    try:
-                                        for sub in get_subscribers(
-                                            target_id=-1, target_type=-1
-                                        ):
-                                            # await bot.send_message(
-                                            #     chat_id=sub, text=caption
-                                            # )
+                                    for sub in get_subscribers(
+                                        target_id=-1, target_type=-1
+                                    ):
+                                        try:
                                             await bot.forward_message(
                                                 chat_id=sub,
                                                 from_chat_id=MAIN_CHANNEL,
                                                 message_id=res.message_id,
                                             )
-                                    except Exception as e:
-                                        print(e)
-                                        pass
+                                        except Exception as e:
+                                            print(e)
                                     zamenas.append((zamena.link, zamena.date))
                                 if zamena.result == "InvalidFormat":
                                     messages.append(f"\nНайдена\n{zamena.link}")
@@ -239,10 +228,10 @@ async def check_new_zamena(bot: Bot):
                                     res: List[Message] = await bot.send_media_group(
                                         chat_id=MAIN_CHANNEL, media=media_group.build()
                                     )
-                                    try:
-                                        for sub in get_subscribers(
-                                            target_id=-1, target_type=-1
-                                        ):
+                                    for sub in get_subscribers(
+                                        target_id=-1, target_type=-1
+                                    ):
+                                        try:
                                             await bot.forward_messages(
                                                 chat_id=sub,
                                                 from_chat_id=MAIN_CHANNEL,
@@ -250,12 +239,8 @@ async def check_new_zamena(bot: Bot):
                                                     msg.message_id for msg in res
                                                 ],
                                             )
-                                            # await bot.send_media_group(
-                                            #     chat_id=sub, media=media_group.build()
-                                            # )
-                                    except Exception as e:
-                                        print(e)
-                                        pass
+                                        except Exception as e:
+                                            print(e)
                                     zamenas.append((zamena.link, zamena.date))
                             message = message.join(messages)
                         case "Failed":
@@ -290,10 +275,10 @@ async def check_new_zamena(bot: Bot):
                                     res: List[Message] = await bot.send_media_group(
                                         MAIN_CHANNEL, media=media_group.build()
                                     )
-                                    try:
-                                        for sub in get_subscribers(
-                                            target_id=-1, target_type=-1
-                                        ):
+                                    for sub in get_subscribers(
+                                        target_id=-1, target_type=-1
+                                    ):
+                                        try:
                                             await bot.forward_messages(
                                                 chat_id=sub,
                                                 from_chat_id=MAIN_CHANNEL,
@@ -301,12 +286,8 @@ async def check_new_zamena(bot: Bot):
                                                     msg.message_id for msg in res
                                                 ],
                                             )
-                                            # await bot.send_media_group(
-                                            #     chat_id=sub, media=media_group.build()
-                                            # )
-                                    except Exception as e:
-                                        print(e)
-                                        pass
+                                        except Exception as e:
+                                            print(e)
                                     zamenas.append((zamena.link, zamena.date))
                                 if zamena.result == "FailedDownload":
                                     messages.append(
@@ -316,20 +297,18 @@ async def check_new_zamena(bot: Bot):
                                     res: Message = await bot.send_message(
                                         chat_id=MAIN_CHANNEL, text=caption
                                     )
-                                    try:
-                                        for sub in get_subscribers(
-                                            target_id=-1, target_type=-1
-                                        ):
+                                    for sub in get_subscribers(
+                                        target_id=-1, target_type=-1
+                                    ):
+                                        try:
                                             await bot.forward_message(
                                                 chat_id=sub,
                                                 from_chat_id=MAIN_CHANNEL,
                                                 message_id=res.message_id,
                                             )
-                                            # await bot.send_message(
-                                            #     chat_id=sub, text=caption
-                                            # )
-                                    except:
-                                        pass
+                                        except Exception as e:
+                                            print(e)
+                                            pass
                                     zamenas.append((zamena.link, zamena.date))
                                 if zamena.result == "InvalidFormat":
                                     messages.append(
@@ -355,10 +334,10 @@ async def check_new_zamena(bot: Bot):
                                     res: List[Message] = await bot.send_media_group(
                                         chat_id=MAIN_CHANNEL, media=media_group.build()
                                     )
-                                    try:
-                                        for sub in get_subscribers(
-                                            target_id=-1, target_type=-1
-                                        ):
+                                    for sub in get_subscribers(
+                                        target_id=-1, target_type=-1
+                                    ):
+                                        try:
                                             await bot.forward_messages(
                                                 chat_id=sub,
                                                 from_chat_id=MAIN_CHANNEL,
@@ -366,8 +345,8 @@ async def check_new_zamena(bot: Bot):
                                                     msg.message_id for msg in res
                                                 ],
                                             )
-                                    except:
-                                        pass
+                                        except Exception as e:
+                                            print(e)
                                     zamenas.append((zamena.link, zamena.date))
                             message = message.join(messages)
                         case "Checked":
