@@ -5,6 +5,7 @@ from aiogram.types import Message
 import aiohttp
 from aiogram import types
 
+from DTOmodels.schemas import Subscription
 from keyboards.schedule_keyboad import build_keyboard
 from models.search_result_callback import Search, Notification
 from my_secrets import API_URL, API_KEY
@@ -27,7 +28,34 @@ async def handle_notification_callback(
     week_day = date.weekday()
 
     async with aiohttp.ClientSession(trust_env=True) as session:
-        print(f"{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/")
+        if callback_data.is_subscribe:
+            async with session.post(
+                f"{API_URL}telegram/subscribe_zamena_notifications",
+                headers={"X-API-KEY": API_KEY},
+                data=Subscription(
+                    chat_id=str(callback.message.chat.id),
+                    target_type=1,
+                    target_id=callback_data.search_id,
+                ),
+            ) as res:
+                debug = res.headers["x-fastapi-cache"]
+                response: str = await res.text()
+                print(response)
+        else:
+            async with session.post(
+                f"{API_URL}telegram/unsubscribe_zamena_notifications",
+                headers={"X-API-KEY": API_KEY},
+                data=Subscription(
+                    chat_id=str(callback.message.chat.id),
+                    target_type=1,
+                    target_id=callback_data.search_id,
+                ),
+            ) as res:
+                debug = res.headers["x-fastapi-cache"]
+                response: str = await res.text()
+                print(response)
+
+    async with aiohttp.ClientSession(trust_env=True) as session:
         async with session.get(
             f"{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/{callback.message.chat.id}/",
             headers={"X-API-KEY": API_KEY},
