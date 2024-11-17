@@ -102,8 +102,8 @@ async def handle_group_callback(
     callback: types.CallbackQuery, callback_data: Search
 ) -> None:
 
-    date = datetime.datetime.fromisoformat(callback_data.date)
-    monday_date = date.date() - datetime.timedelta(days=date.weekday())
+    date = callback_data.date
+    monday_date = date - datetime.timedelta(days=date.weekday())
     group = callback_data.search_id
     now_date = datetime.datetime.now()
     choosed_week_is_current = week_number_from_september() == date
@@ -211,8 +211,8 @@ async def a(message: Message) -> None:
 async def handle_group_callback(
     callback: types.CallbackQuery, callback_data: Search
 ) -> None:
-    date = datetime.datetime.fromisoformat(callback_data.date)
-    monday_date = date.date() - datetime.timedelta(days=date.weekday())
+    date = callback_data.date
+    monday_date = date - datetime.timedelta(days=date.weekday())
     group = callback_data.search_id
     now_date = datetime.datetime.now()
     choosed_week_is_current = week_number_from_september() == date
