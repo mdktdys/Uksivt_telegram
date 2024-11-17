@@ -262,10 +262,8 @@ async def a(message: Message) -> None:
             text="Я не могу удалять сообщения за собой(\nВыдайте полную админку пж((",
         )
     group = message.text.split(" ")[1]
-    date: datetime.datetime = datetime.datetime.fromtimestamp(
-        float(message.text.split(" ")[2])
-    )
-    monday_date = date.date() - datetime.timedelta(days=date.weekday())
+    date: datetime.date = datetime.date.fromtimestamp(float(message.text.split(" ")[2]))
+    monday_date = date - datetime.timedelta(days=date.weekday())
     now_date = datetime.datetime.now()
     choosed_week_is_current = week_number_from_september() == date
     choosed_day_is_current = True if date == now_date else False
