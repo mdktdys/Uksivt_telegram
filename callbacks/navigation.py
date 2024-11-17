@@ -88,6 +88,14 @@ async def handle_notification_callback(
     )
 
     await callback.answer()
+    if response.subscribed:
+        await callback.bot.answer_callback_query(
+            callback.id, "🔔 Уведомления о заменах включены", show_alert=True
+        )
+    else:
+        await callback.bot.answer_callback_query(
+            callback.id, "🔕 Уведомления о заменах выключены", show_alert=True
+        )
 
 
 @router.callback_query(Search.filter(F.type == "group"))
