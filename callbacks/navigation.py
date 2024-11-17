@@ -32,11 +32,13 @@ async def handle_notification_callback(
             async with session.post(
                 f"{API_URL}telegram/subscribe_zamena_notifications",
                 headers={"X-API-KEY": API_KEY},
-                data=Subscription(
-                    chat_id=str(callback.message.chat.id),
-                    target_type=1,
-                    target_id=callback_data.search_id,
-                ),
+                json = (
+                    {
+                        "chat_id": str(callback.message.chat.id),
+                        "target_type": 1,
+                        "target_id": callback_data.search_id,
+                    },
+                )
             ) as res:
                 debug = res.headers["x-fastapi-cache"]
                 response: str = await res.text()
