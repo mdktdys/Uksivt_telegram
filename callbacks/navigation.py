@@ -18,8 +18,8 @@ router = Router()
 async def handle_notification_callback(
     callback: types.CallbackQuery, callback_data: Notification
 ) -> None:
-    date = datetime.datetime.fromisoformat(callback_data.date)
-    monday_date = date.date() - datetime.timedelta(days=date.weekday())
+    date: datetime.date = callback_data.date
+    monday_date = date - datetime.timedelta(days=date.weekday())
     group = callback_data.search_id
     now_date = datetime.datetime.now()
     choosed_week_is_current = week_number_from_september() == date
