@@ -18,9 +18,6 @@ router = Router()
 async def handle_notification_callback(
     callback: types.CallbackQuery, callback_data: Notification
 ) -> None:
-
-    is_subscribed = not callback_data.is_subscribe
-
     date: datetime.date = callback_data.date
     monday_date = date - datetime.timedelta(days=date.weekday())
     group = callback_data.search_id
@@ -60,7 +57,7 @@ async def handle_notification_callback(
             search_id=int(group),
             week_day=week_day,
             search_type="group",
-            is_subscribed=is_subscribed,
+            is_subscribed=response.subscribed,
         ),
     )
 
@@ -111,7 +108,7 @@ async def handle_group_callback(
             search_id=int(group),
             week_day=week_day,
             search_type="group",
-            is_subscribed=False,
+            is_subscribed=response.subscribed,
         ),
     )
 
@@ -172,7 +169,7 @@ async def a(message: Message) -> None:
             search_id=int(group),
             week_day=week_day,
             search_type="group",
-            is_subscribed=False,
+            is_subscribed=response.subscribed,
         ),
     )
 
@@ -216,7 +213,7 @@ async def handle_group_callback(
             search_id=int(group),
             week_day=week_day,
             search_type="teacher",
-            is_subscribed=False,
+            is_subscribed=response.subscribed,
         ),
     )
     await callback.answer()
@@ -270,6 +267,6 @@ async def a(message: Message) -> None:
             search_id=int(group),
             week_day=week_day,
             search_type="teacher",
-            is_subscribed=False,
+            is_subscribed=response.subscribed,
         ),
     )
