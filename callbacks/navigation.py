@@ -97,6 +97,7 @@ async def handle_group_callback(
         (
             f"{header}"
             f"\n{full_zamena if full_zamena else ''}"
+            f"{body}"
             f"\n{calendar_footer}"
             f"\n🏷️ {week_number} Неделя {'- текущая' if choosed_week_is_current else ''}"
             f"{debug}"
@@ -157,6 +158,7 @@ async def a(message: Message) -> None:
         (
             f"{header}"
             f"\n{full_zamena if full_zamena else ''}"
+            f"{body}"
             f"\n{calendar_footer}"
             f"\n🏷️ {week_number} Неделя {'- текущая' if choosed_week_is_current else ''}"
             f"{debug}"
