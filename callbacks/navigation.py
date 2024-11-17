@@ -38,7 +38,6 @@ async def handle_notification_callback(
                     "target_id": callback_data.search_id,
                 },
             ) as res:
-                debug = res.headers["x-fastapi-cache"]
                 response: str = await res.text()
                 print(response)
         else:
@@ -51,7 +50,6 @@ async def handle_notification_callback(
                     "target_id": callback_data.search_id,
                 },
             ) as res:
-                debug = res.headers["x-fastapi-cache"]
                 response: str = await res.text()
                 print(response)
 
