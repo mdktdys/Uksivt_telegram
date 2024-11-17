@@ -28,7 +28,7 @@ async def handle_notification_callback(
     week_day = date.weekday()
 
     async with aiohttp.ClientSession(trust_env=True) as session:
-        if callback_data.is_subscribe:
+        if not callback_data.is_subscribe:
             async with session.post(
                 f"{API_URL}telegram/subscribe_zamena_notifications",
                 headers={"X-API-KEY": API_KEY},
