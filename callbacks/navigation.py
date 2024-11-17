@@ -299,3 +299,83 @@ async def a(message: Message) -> None:
             is_subscribed=response.subscribed,
         ),
     )
+
+
+@router.callback_query(Notification.filter(F.type == "teacher"))
+async def handle_notification_callback(
+    callback: types.CallbackQuery, callback_data: Notification
+) -> None:
+    date: datetime.date = callback_data.date
+    monday_date = date - datetime.timedelta(days=date.weekday())
+    group = callback_data.search_id
+    now_date = datetime.datetime.now()
+    choosed_week_is_current = week_number_from_september() == date
+    choosed_day_is_current = True if date == now_date else False
+    week_day = date.weekday()
+
+    async with aiohttp.ClientSession(trust_env=True) as session:
+        if not callback_data.is_subscribe:
+            async with session.post(
+                f"{API_URL}telegram/subscribe_zamena_notifications",
+                headers={"X-API-KEY": API_KEY},
+                json={
+                    "chat_id": str(callback.message.chat.id),
+                    "target_type": 2,
+                    "target_id": callback_data.search_id,
+                },
+            ) as res:
+                response: str = await res.text()
+                print(response)
+        else:
+            async with session.post(
+                f"{API_URL}telegram/unsubscribe_zamena_notifications",
+                headers={"X-API-KEY": API_KEY},
+                json={
+                    "chat_id": str(callback.message.chat.id),
+                    "target_type": 2,
+                    "target_id": callback_data.search_id,
+                },
+            ) as res:
+                response: str = await res.text()
+                print(response)
+
+    async with aiohttp.ClientSession(trust_env=True) as session:
+        print(
+            f"{API_URL}teachers/day_schedule_formatted/{group}/{callback_data.date}/{callback.message.chat.id}/"
+        )
+        async with session.get(
+            f"{API_URL}teachers/day_schedule_formatted/{group}/{callback_data.date}/{callback.message.chat.id}/",
+            headers={"X-API-KEY": API_KEY},
+        ) as res:
+            response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(
+                await res.text()
+            )
+
+    header = f"🎓 Расписание преподавателя {response.search_name}"
+    body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
+    calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else ''}"
+
+    await callback.message.edit_text(
+        f"{header}"
+        f"{body}"
+        f"\n{calendar_footer}"
+        f"\n🏷️ {week_number_from_september()} Неделя {'- текущая' if choosed_week_is_current else ''}",
+        reply_markup=build_keyboard(
+            date=date,
+            monday_date=monday_date,
+            search_id=int(group),
+            week_day=week_day,
+            search_type="teacher",
+            is_subscribed=response.subscribed,
+        ),
+    )
+    await callback.answer()
+    if response.subscribed:
+        await callback.bot.answer_callback_query(
+            callback.id, "🔔 Уведомления о заменах включены", show_alert=True
+        )
+    else:
+        await callback.bot.answer_callback_query(
+            callback.id, "🔕 Уведомления о заменах выключены", show_alert=True
+        )
+    await callback.answer()
