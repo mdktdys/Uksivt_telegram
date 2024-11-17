@@ -38,7 +38,13 @@ async def handle_notification_callback(
             )
 
     header = f"🎓 Расписание группы {response.search_name}\n"
-    body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
+    body = (
+        ("\n".join("Полная замена 🔁") if response.full_zamena else "").join(
+            response.paras
+        )
+        if response.paras
+        else "\n🎉 Нет пар"
+    )
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else '' }"
     week_number = week_number_from_september()
     await callback.message.edit_text(
@@ -85,7 +91,11 @@ async def handle_group_callback(
             )
 
     header = f"🎓 Расписание группы {response.search_name}\n"
-    body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
+    body = (
+    ("\n".join("Полная замена 🔁") if response.full_zamena else "").join(response.paras)
+    if response.paras
+    else "\n🎉 Нет пар"
+)
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else '' }"
     week_number = week_number_from_september()
     await callback.message.edit_text(
@@ -142,7 +152,11 @@ async def a(message: Message) -> None:
             )
 
     header = f"🎓 Расписание группы {response.search_name}\n"
-    body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
+    body = (
+    ("\n".join("Полная замена 🔁") if response.full_zamena else "").join(response.paras)
+    if response.paras
+    else "\n🎉 Нет пар"
+)
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else ''}"
     week_number = week_number_from_september()
     await message.answer(

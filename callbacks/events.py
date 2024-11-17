@@ -41,7 +41,7 @@ async def on_on(bot: Bot):
 async def on_exit(bot: Bot):
     await bot.send_message(chat_id=DEBUG_CHANNEL, text="💤 Telegram Выключен")
     keyboard = create_keyboard_with_logo()
-    res = await bot.edit_message_text(
+    await bot.edit_message_text(
         f"💤 uksivt.xyz\nПоиск по группам, преподам и кабинетам\nвыключен {get_current_time()}",
         chat_id=MAIN_CHANNEL,
         reply_markup=keyboard,
@@ -61,13 +61,13 @@ async def on_check_end(bot: Bot, result: dict) -> None:
         parse_mode="html",
     )
     try:
-        res = await bot.edit_message_text(
+        await bot.edit_message_text(
             f"❄️ Проверено {get_current_time()}\nuksivt.xyz Поиск по группам, преподам и кабинетам",
             chat_id=MAIN_CHANNEL,
             message_id=MAIN_CHANNEL_ANCHOR_MESSAGE,
             reply_markup=keyboard,
             parse_mode="html",
         )
-        pass
-    except:
+    except Exception as e:
+        print(e)
         pass
