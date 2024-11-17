@@ -1,3 +1,5 @@
+import datetime
+
 from aiogram.filters.callback_data import CallbackData
 
 
@@ -13,3 +15,4 @@ class Notification(CallbackData, prefix="my_callback"):
     target_type: int
     target_id: int
     is_subscribe: bool
+    date: datetime.date

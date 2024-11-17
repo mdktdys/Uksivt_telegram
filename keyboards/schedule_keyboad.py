@@ -23,8 +23,9 @@ def build_keyboard(
 
     notification_buttons = [
         InlineKeyboardButton(
-            text="Уведы " + "🔔" if is_subscribed else "🔕",
+            text="🔔" if is_subscribed else "🔕",
             callback_data=Notification(
+                date=date,
                 search_id=search_id,
                 type=search_type,
                 target_type=target_type_id,
