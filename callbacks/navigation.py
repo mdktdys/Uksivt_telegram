@@ -38,21 +38,20 @@ async def handle_notification_callback(
             )
 
     header = f"🎓 Расписание группы {response.search_name}\n"
-    body = (
-        ("\n".join("Полная замена 🔁") if response.full_zamena else "").join(
-            response.paras
-        )
-        if response.paras
-        else "\n🎉 Нет пар"
-    )
+    full_zamena = "\nПолная замена 🔁" if response.full_zamena else None
+    body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else '' }"
     week_number = week_number_from_september()
     await callback.message.edit_text(
-        f"{header}"
-        f"{body}"
-        f"\n{calendar_footer}"
-        f"\n🏷️ {week_number} Неделя {'- текущая' if choosed_week_is_current else ''}"
-        f"{debug}",
+        (
+            f"{header}" + full_zamena
+            if full_zamena
+            else ""
+            f"{body}"
+            f"\n{calendar_footer}"
+            f"\n🏷️ {week_number} Неделя {'- текущая' if choosed_week_is_current else ''}"
+            f"{debug}"
+        ),
         reply_markup=build_keyboard(
             date=date,
             monday_date=monday_date,
@@ -91,15 +90,14 @@ async def handle_group_callback(
             )
 
     header = f"🎓 Расписание группы {response.search_name}\n"
-    body = (
-    ("\n".join("Полная замена 🔁") if response.full_zamena else "").join(response.paras)
-    if response.paras
-    else "\n🎉 Нет пар"
-)
+    full_zamena = "\nПолная замена 🔁" if response.full_zamena else None
+    body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else '' }"
     week_number = week_number_from_september()
     await callback.message.edit_text(
         f"{header}"
+        if full_zamena
+        else ""
         f"{body}"
         f"\n{calendar_footer}"
         f"\n🏷️ {week_number} Неделя {'- текущая' if choosed_week_is_current else ''}"
@@ -152,15 +150,14 @@ async def a(message: Message) -> None:
             )
 
     header = f"🎓 Расписание группы {response.search_name}\n"
-    body = (
-    ("\n".join("Полная замена 🔁") if response.full_zamena else "").join(response.paras)
-    if response.paras
-    else "\n🎉 Нет пар"
-)
+    full_zamena = "\nПолная замена 🔁" if response.full_zamena else None
+    body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else ''}"
     week_number = week_number_from_september()
     await message.answer(
         f"{header}"
+        if full_zamena
+        else ""
         f"{body}"
         f"\n{calendar_footer}"
         f"\n🏷️ {week_number} Неделя {'- текущая' if choosed_week_is_current else ''}"
