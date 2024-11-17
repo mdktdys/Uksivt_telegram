@@ -32,7 +32,7 @@ async def handle_notification_callback(
     async with aiohttp.ClientSession(trust_env=True) as session:
         print(f"{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/")
         async with session.get(
-            f"{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/",
+            f"{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/{callback.message.chat.id}/",
             headers={"X-API-KEY": API_KEY},
         ) as res:
             debug = res.headers["x-fastapi-cache"]
@@ -83,7 +83,7 @@ async def handle_group_callback(
     async with aiohttp.ClientSession(trust_env=True) as session:
         print(f"{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/")
         async with session.get(
-            f"{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/",
+            f"{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/{callback.message.chat.id}/",
             headers={"X-API-KEY": API_KEY},
         ) as res:
             debug = res.headers["x-fastapi-cache"]
@@ -144,7 +144,7 @@ async def a(message: Message) -> None:
             f'{API_URL}groups/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/'
         )
         async with session.get(
-            f'{API_URL}groups/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/',
+            f'{API_URL}groups/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/{message.chat.id}/',
             headers={"X-API-KEY": API_KEY},
         ) as res:
             debug = res.headers["x-fastapi-cache"]
@@ -190,9 +190,11 @@ async def handle_group_callback(
     week_day = date.weekday()
 
     async with aiohttp.ClientSession(trust_env=True) as session:
-        print(f"{API_URL}teachers/day_schedule_formatted/{group}/{callback_data.date}/")
+        print(
+            f"{API_URL}teachers/day_schedule_formatted/{group}/{callback_data.date}/{callback.message.chat.id}/"
+        )
         async with session.get(
-            f"{API_URL}teachers/day_schedule_formatted/{group}/{callback_data.date}/",
+            f"{API_URL}teachers/day_schedule_formatted/{group}/{callback_data.date}/{callback.message.chat.id}/",
             headers={"X-API-KEY": API_KEY},
         ) as res:
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(
@@ -246,7 +248,7 @@ async def a(message: Message) -> None:
             f'{API_URL}teachers/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/'
         )
         async with session.get(
-            f'{API_URL}teachers/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/',
+            f'{API_URL}teachers/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/{message.chat.id}/',
             headers={"X-API-KEY": API_KEY},
         ) as res:
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(
