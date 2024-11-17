@@ -44,9 +44,9 @@ async def handle_notification_callback(
     week_number = week_number_from_september()
     await callback.message.edit_text(
         (
-            f"{header}" + full_zamena
-            if full_zamena
-            else "" + f"{body}"
+            f"{header}"
+            f"\n{full_zamena if full_zamena else ''}"
+            f"{body}"
             f"\n{calendar_footer}"
             f"\n🏷️ {week_number} Неделя {'- текущая' if choosed_week_is_current else ''}"
             f"{debug}"
@@ -95,9 +95,8 @@ async def handle_group_callback(
     week_number = week_number_from_september()
     await callback.message.edit_text(
         (
-            f"{header}" + full_zamena
-            if full_zamena
-            else "" + f"{body}"
+            f"{header}"
+            f"\n{full_zamena if full_zamena else ''}"
             f"\n{calendar_footer}"
             f"\n🏷️ {week_number} Неделя {'- текущая' if choosed_week_is_current else ''}"
             f"{debug}"
@@ -156,9 +155,8 @@ async def a(message: Message) -> None:
     week_number = week_number_from_september()
     await message.answer(
         (
-            f"{header}" + full_zamena
-            if full_zamena
-            else "" + f"{body}"
+            f"{header}"
+            f"\n{full_zamena if full_zamena else ''}"
             f"\n{calendar_footer}"
             f"\n🏷️ {week_number} Неделя {'- текущая' if choosed_week_is_current else ''}"
             f"{debug}"
