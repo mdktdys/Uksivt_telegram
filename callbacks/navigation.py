@@ -37,7 +37,7 @@ async def handle_notification_callback(
                 await res.text()
             )
 
-    header = f"🎓 Расписание группы {response.search_name}\n"
+    header = f"🎓 Расписание группы {response.search_name}"
     full_zamena = "\nПолная замена 🔁" if response.full_zamena else None
     body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else '' }"
@@ -88,7 +88,7 @@ async def handle_group_callback(
                 await res.text()
             )
 
-    header = f"🎓 Расписание группы {response.search_name}\n"
+    header = f"🎓 Расписание группы {response.search_name}"
     full_zamena = "\nПолная замена 🔁" if response.full_zamena else None
     body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else '' }"
@@ -149,7 +149,7 @@ async def a(message: Message) -> None:
                 await res.text()
             )
 
-    header = f"🎓 Расписание группы {response.search_name}\n"
+    header = f"🎓 Расписание группы {response.search_name}"
     full_zamena = "\nПолная замена 🔁" if response.full_zamena else None
     body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else ''}"
@@ -196,7 +196,7 @@ async def handle_group_callback(
                 await res.text()
             )
 
-    header = f"🎓 Расписание преподавателя {response.search_name}\n"
+    header = f"🎓 Расписание преподавателя {response.search_name}"
     body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else ''}"
 
@@ -250,7 +250,7 @@ async def a(message: Message) -> None:
                 await res.text()
             )
 
-    header = f"🎓 Расписание преподавателя {response.search_name}\n"
+    header = f"🎓 Расписание преподавателя {response.search_name}"
     body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
     calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}{' - сегодня' if choosed_day_is_current else ''}"
 
