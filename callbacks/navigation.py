@@ -369,7 +369,6 @@ async def handle_notification_callback(
             is_subscribed=response.subscribed,
         ),
     )
-    await callback.answer()
     if response.subscribed:
         await callback.bot.answer_callback_query(
             callback.id, "🔔 Уведомления о заменах включены", show_alert=True
