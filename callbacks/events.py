@@ -3,7 +3,7 @@ import html
 
 import pytz
 from aiogram import Bot, Router
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 
 # from callbacks.parser import admins
 from my_secrets import MAIN_CHANNEL, MAIN_CHANNEL_ANCHOR_MESSAGE, DEBUG_CHANNEL
@@ -13,7 +13,13 @@ router = Router()
 
 def create_keyboard_with_logo():
     return InlineKeyboardMarkup(
-        inline_keyboard=[[InlineKeyboardButton(text="🐋", url="https://uksivt.xyz/")]]
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="🐋", web_app=WebAppInfo(url="https://uksivt.xyz/")
+                )
+            ]
+        ]
     )
 
 
