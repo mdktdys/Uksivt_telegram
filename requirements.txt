@@ -1,5 +1,5 @@
 pydantic==2.8.2
-aiogram==3.10.0
+aiogram==3.15.0
 requests==2.32.3
 aiohttp==3.9.5
 celery==5.4.0
