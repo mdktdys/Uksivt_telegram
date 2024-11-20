@@ -16,7 +16,10 @@ def create_keyboard_with_logo():
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text="🐋", web_app=WebAppInfo(url="https://uksivt.xyz/")
+                    text="🐋",
+                    web_app=WebAppInfo(
+                        url="https://t.me/UksivtZameny_bot/zameny_uksivt/"
+                    ),
                 )
             ]
         ]
