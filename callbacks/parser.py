@@ -110,7 +110,7 @@ async def check_new(message: Message):
 async def nikita(message: Message):
     # -4536719993
     await message.bot.forward_messages(
-        from_chat_id=-1002035415883, chat_id=DEBUG_CHANNEL, message_ids=[504, 505, 506]
+        from_chat_id=-1002035415883, chat_id=-4536719993, message_ids=[504, 505, 506, 507]
     )
 
 
