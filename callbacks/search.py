@@ -30,7 +30,7 @@ async def handle(query: InlineQuery):
         )
     response: list[dict] = req.get(
         f"{API_URL}search/search/{filter_text}", headers={"X-API-KEY": API_KEY}
-    ).json()
+    )
     if len(response) == 0:
         return query.answer(
             [
