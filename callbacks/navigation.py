@@ -6,6 +6,7 @@ import aiohttp
 from aiogram import types
 
 from DTOmodels.schemas import Subscription
+from data.schedule_api import ScheduleApi
 from keyboards.schedule_keyboad import build_keyboard
 from models.search_result_callback import Search, Notification
 from my_secrets import API_URL, API_KEY
@@ -19,7 +20,7 @@ router = Router()
 async def handle_notification_callback(
     callback: types.CallbackQuery, callback_data: Notification
 ) -> None:
-    date: datetime.date = callback_data.date
+    date: datetime.date = datetime.datetime.fromisoformat(callback_data.date).date()
     monday_date = date - datetime.timedelta(days=date.weekday())
     group = callback_data.search_id
     now_date = datetime.datetime.now()
@@ -58,7 +59,6 @@ async def handle_notification_callback(
             f"{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/{callback.message.chat.id}/",
             headers={"X-API-KEY": API_KEY},
         ) as res:
-            debug = res.headers["x-fastapi-cache"]
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(
                 await res.text()
             )
@@ -75,7 +75,6 @@ async def handle_notification_callback(
             f"{body}"
             f"\n{calendar_footer}"
             f"\n🏷️ {week_number} Неделя {'- текущая' if choosed_week_is_current else ''}"
-            f"{debug}"
         ),
         reply_markup=build_keyboard(
             date=date,
@@ -87,22 +86,18 @@ async def handle_notification_callback(
         ),
     )
     if response.subscribed:
-        await callback.bot.answer_callback_query(
-            callback.id, "🔔 Уведомления о заменах включены", show_alert=True
-        )
+        await callback.bot.answer_callback_query(callback.id, "🔔 Уведомления о заменах включены", show_alert=True)
     else:
-        await callback.bot.answer_callback_query(
-            callback.id, "🔕 Уведомления о заменах выключены", show_alert=True
-        )
+        await callback.bot.answer_callback_query(callback.id, "🔕 Уведомления о заменах выключены", show_alert=True)
     await callback.answer()
 
 
 @router.callback_query(Search.filter(F.type == "group"))
 async def handle_group_callback(
-    callback: types.CallbackQuery, callback_data: Search
+    callback: types.CallbackQuery, callback_data: Search, api: ScheduleApi
 ) -> None:
 
-    date = callback_data.date
+    date: datetime.date = datetime.datetime.fromisoformat(callback_data.date).date()
     monday_date = date - datetime.timedelta(days=date.weekday())
     group = callback_data.search_id
     now_date = datetime.datetime.now()
@@ -110,16 +105,11 @@ async def handle_group_callback(
     choosed_day_is_current = True if date == now_date else False
     week_day = date.weekday()
 
-    async with aiohttp.ClientSession(trust_env=True) as session:
-        print(f"{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/")
-        async with session.get(
-            f"{API_URL}groups/day_schedule_formatted/{group}/{callback_data.date}/{callback.message.chat.id}/",
-            headers={"X-API-KEY": API_KEY},
-        ) as res:
-            debug = res.headers["x-fastapi-cache"]
-            response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(
-                await res.text()
-            )
+    try:
+        response: DayScheduleFormatted = await api.get_group_schedule_formatted(group, date, callback.message.chat.id)
+    except Exception:
+        await callback.answer()
+        return
 
     header = f"🎓 Расписание группы {response.search_name}"
     full_zamena = "\nПолная замена 🔁" if response.full_zamena else None
@@ -133,7 +123,7 @@ async def handle_group_callback(
             f"{body}"
             f"\n{calendar_footer}"
             f"\n🏷️ {week_number} Неделя {'- текущая' if choosed_week_is_current else ''}"
-            f"{debug}"
+            # f"{debug}"
         ),
         reply_markup=build_keyboard(
             date=date,
@@ -168,14 +158,11 @@ async def a(message: Message) -> None:
     week_day = date.weekday()
 
     async with aiohttp.ClientSession(trust_env=True) as session:
-        print(
-            f'{API_URL}groups/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/'
-        )
         async with session.get(
             f'{API_URL}groups/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/{message.chat.id}/',
             headers={"X-API-KEY": API_KEY},
         ) as res:
-            debug = res.headers["x-fastapi-cache"]
+            # debug = res.headers["x-fastapi-cache"]
             response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(
                 await res.text()
             )
@@ -192,7 +179,7 @@ async def a(message: Message) -> None:
             f"{body}"
             f"\n{calendar_footer}"
             f"\n🏷️ {week_number} Неделя {'- текущая' if choosed_week_is_current else ''}"
-            f"{debug}"
+            # f"{debug}"
         ),
         reply_markup=build_keyboard(
             date=date,
@@ -218,16 +205,11 @@ async def handle_group_callback(
     week_day = date.weekday()
 
     async with aiohttp.ClientSession(trust_env=True) as session:
-        print(
-            f"{API_URL}teachers/day_schedule_formatted/{group}/{callback_data.date}/{callback.message.chat.id}/"
-        )
         async with session.get(
             f"{API_URL}teachers/day_schedule_formatted/{group}/{callback_data.date}/{callback.message.chat.id}/",
             headers={"X-API-KEY": API_KEY},
         ) as res:
-            response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(
-                await res.text()
-            )
+            response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(await res.text())
 
     header = f"🎓 Расписание преподавателя {response.search_name}"
     body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"

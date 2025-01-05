@@ -5,9 +5,10 @@ import traceback
 import requests
 from aiogram import Bot, F, Router
 from aiogram.filters import Command
-from aiogram.types import Message
+from aiogram.types import Message, ChatPhoto, File
 
-from my_secrets import API_URL, API_KEY
+from core.methods import get_subscribers
+from my_secrets import API_URL, API_KEY, TOKEN
 import requests as req
 
 router = Router()

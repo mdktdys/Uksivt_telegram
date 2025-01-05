@@ -25,7 +25,7 @@ def build_keyboard(
         InlineKeyboardButton(
             text="🔔" if is_subscribed else "🔕",
             callback_data=Notification(
-                date=date,
+                date=date.strftime("%Y-%m-%d"),
                 search_id=search_id,
                 type=search_type,
                 target_type=target_type_id,
