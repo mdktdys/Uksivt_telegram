@@ -22,7 +22,7 @@ class CheckZamenaResult(BaseModel):
 
 class CheckZamenaResultFailed(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-    result: str = "Failed"
+    result: str = "Error"
     error: str
     trace: str
 

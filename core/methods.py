@@ -243,8 +243,8 @@ async def check_new_zamena(bot: Bot):
                                             print(e)
                                     zamenas.append((zamena.link, zamena.date))
                             message = message.join(messages)
-                        case "Failed":
-                            result = CheckResultFoundNew.parse_obj(response)
+                        case "Error":
+                            result = CheckZamenaResultFailed.parse_obj(response)
                             message = "\nОшибка"
                             print(result)
                         case "CheckExisting":
