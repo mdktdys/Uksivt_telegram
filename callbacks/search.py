@@ -93,7 +93,7 @@ async def handle(query: InlineQuery):
                 title=search_item.search_name,
                 url="uksivt.xyz",
                 input_message_content=InputTextMessageContent(
-                    message_text=f"/{search_item.search_type} {search_item.search_id} {datetime.datetime.now().strftime("%Y-%m-%d")}",
+                    message_text=f'/{search_item.search_type} {search_item.search_id} {datetime.datetime.now().strftime("%Y-%m-%d")}',
                 ),
                 thumbnail_url=search_item.search_image,
             )
