@@ -7,7 +7,6 @@ from models.search_model import SearchResult
 
 router = Router()
 
-
 @router.inline_query()
 async def handle(query: InlineQuery):
     filter_text = query.query
@@ -28,10 +27,29 @@ async def handle(query: InlineQuery):
             cache_time=1,
             is_personal=True,
         )
-    response: list[dict] = req.get(
-        f"{API_URL}search/search/{filter_text}", headers={"X-API-KEY": API_KEY}
-    ).json()
-    print(response)
+    try:
+        response: list[dict] = req.get(
+            f"{API_URL}search/search/{filter_text}", headers={"X-API-KEY": API_KEY}
+        ).json()
+        print(response)
+    except Exception as e:
+        print(e)
+        return query.answer(
+            [
+                InlineQueryResultArticle(
+                    id=str(-1),
+                    title="Сервер недоступен(",
+                    description="попробуй позже",
+                    url="uksivt.xyz",
+                    thumbnail_url="https://ojbsikxdqcbuvamygezd.supabase.co/storage/v1/object/sign/zamenas/00020_3223582996_Cyber_Whale__blue__gradient_background._4k._realistic._Technologt__cyberpunk._photo_realistic__Neomorphism._Beatiful_whale_arrow.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ6YW1lbmFzLzAwMDIwXzMyMjM1ODI5OTZfQ3liZXJfV2hhbGVfX2JsdWVfX2dyYWRpZW50X2JhY2tncm91bmQuXzRrLl9yZWFsaXN0aWMuX1RlY2hub2xvZ3RfX2N5YmVycHVuay5fcGhvdG9fcmVhbGlzdGljX19OZW9tb3JwaGlzbS5fQmVhdGlmdWxfd2hhbGVfYXJyb3cuanBnIiwiaWF0IjoxNzIwMzg5NDc3LCJleHAiOjE3NTE5MjU0Nzd9.OVlPHGRQT0cKQHoIf2q5W7BHUmIbGeMO5k1kyUoIntc&t=2024-07-07T21%3A57%3A56.837Z",
+                    input_message_content=InputTextMessageContent(
+                        message_text="uksivt.xyz",
+                    ),
+                )
+            ],
+            cache_time=1,
+            is_personal=True,
+        )
     if len(response) == 0:
         return query.answer(
             [
@@ -66,9 +84,7 @@ async def handle(query: InlineQuery):
             cache_time=1,
             is_personal=True,
         )
-    search_items: list[SearchResult] = [
-        SearchResult(**search_item) for search_item in response
-    ]
+    search_items: list[SearchResult] = [SearchResult(**search_item) for search_item in response]
     results = []
     for search_item in search_items:
         results.append(
@@ -77,7 +93,7 @@ async def handle(query: InlineQuery):
                 title=search_item.search_name,
                 url="uksivt.xyz",
                 input_message_content=InputTextMessageContent(
-                    message_text=f"/{search_item.search_type} {search_item.search_id} {datetime.datetime.now().timestamp()}",
+                    message_text=f"/{search_item.search_type} {search_item.search_id} {datetime.datetime.now().strftime("%Y-%m-%d")}",
                 ),
                 thumbnail_url=search_item.search_image,
             )

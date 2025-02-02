@@ -13,7 +13,7 @@ from supabase import create_client, Client
 from DTOmodels.schemas import (
     CheckResultFoundNew,
     CheckResultCheckExisting,
-    ZamenaParseFailedNotFoundItems,
+    ZamenaParseFailedNotFoundItems, CheckZamenaResultFailed,
 )
 from callbacks.events import on_check_start, on_check_end
 from callbacks.tools import send_large_text

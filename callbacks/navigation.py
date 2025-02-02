@@ -150,7 +150,7 @@ async def a(message: Message) -> None:
             text="Я не могу удалять сообщения за собой(\nВыдайте полную админку пж((",
         )
     group = message.text.split(" ")[1]
-    date: datetime.date = datetime.date.fromtimestamp(float(message.text.split(" ")[2]))
+    date: datetime.date = datetime.date.fromisoformat(message.text.split(" ")[2])
     monday_date = date - datetime.timedelta(days=date.weekday())
     now_date = datetime.datetime.now()
     choosed_week_is_current = week_number_from_september() == date
@@ -196,7 +196,7 @@ async def a(message: Message) -> None:
 async def handle_group_callback(
     callback: types.CallbackQuery, callback_data: Search
 ) -> None:
-    date = callback_data.date
+    date = datetime.date.fromisoformat(callback_data.date)
     monday_date = date - datetime.timedelta(days=date.weekday())
     group = callback_data.search_id
     now_date = datetime.datetime.now()
@@ -244,7 +244,7 @@ async def a(message: Message) -> None:
             text="Я не могу удалять сообщения за собой(\nВыдайте полную админку пж((",
         )
     group = message.text.split(" ")[1]
-    date: datetime.date = datetime.date.fromtimestamp(float(message.text.split(" ")[2]))
+    date: datetime.date = datetime.date.fromisoformat(message.text.split(" ")[2])
     monday_date = date - datetime.timedelta(days=date.weekday())
     now_date = datetime.datetime.now()
     choosed_week_is_current = week_number_from_september() == date
