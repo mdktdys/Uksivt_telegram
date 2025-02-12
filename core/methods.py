@@ -245,18 +245,18 @@ async def check_new_zamena(bot: Bot):
                             message = message.join(messages)
                         case "Error":
                             result = CheckZamenaResultFailed.parse_obj(response)
-                            message = "\nОшибка"
+                            message = "\n⛔ Ошибка"
                             print(result)
                         case "CheckExisting":
                             print("HERE")
                             result = CheckResultCheckExisting.parse_obj(response)
-                            message = "\nОшибка"
+                            message = "\n⛔ Ошибка"
                             messages = []
                             for zamena in result.checks:
                                 if zamena.result == "Failed":
                                     print("da")
                                     messages.append(
-                                        f"\n⚠️ Ошибка проверки замены\n<pre>{zamena.error[0:200]}\n{zamena.trace[0:300]}</pre>"
+                                        f"\n⛔ Ошибка проверки замены\n<pre>{zamena.error[0:200]}\n{zamena.trace[0:300]}</pre>"
                                     )
                                 if zamena.result == "Success":
                                     messages.append(
