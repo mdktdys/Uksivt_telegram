@@ -1,4 +1,5 @@
 import datetime
+from dataclasses import field
 from typing import List
 from pydantic import BaseModel, ConfigDict
 
@@ -59,7 +60,7 @@ class CheckResultFoundNew(BaseModel):
         | CheckZamenaResultFailed
         | CheckZamenaResultInvalidFormat
         | CheckZamenaResultFailedDownload
-    ] = []
+    ] = field(default_factory = list)
 
 
 class CheckZamenaResultHashChanged(BaseModel):
@@ -80,7 +81,7 @@ class CheckResultCheckExisting(BaseModel):
         | CheckZamenaResultHashChanged
         | CheckZamenaResultInvalidFormat
         | CheckZamenaResultFailedDownload
-    ] = []
+    ] = field(default_factory = list)
 
 
 class Subscription(BaseModel):

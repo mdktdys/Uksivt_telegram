@@ -33,14 +33,15 @@ async def on_on(bot: Bot):
     await bot.send_message(chat_id=DEBUG_CHANNEL, text="🟢 Telegram Включен")
     keyboard = create_keyboard_with_logo()
     try:
-        res = await bot.edit_message_text(
+        await bot.edit_message_text(
             f"❄️ uksivt.xyz\nПоиск по группам, преподам и кабинетам\nвключен {get_current_time()}",
             chat_id=MAIN_CHANNEL,
             message_id=MAIN_CHANNEL_ANCHOR_MESSAGE,
             reply_markup=keyboard,
         )
         pass
-    except:
+    except Exception as e:
+        print(e)
         pass
 
 
@@ -59,7 +60,7 @@ async def on_check_start(bot: Bot):
     await bot.send_message(chat_id=DEBUG_CHANNEL, text="Начал проверку")
 
 
-async def on_check_end(bot: Bot, result: dict) -> None:
+async def on_check_end(bot: Bot, result: str) -> None:
     keyboard = create_keyboard_with_logo()
     await bot.send_message(
         chat_id=DEBUG_CHANNEL,
