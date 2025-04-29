@@ -60,7 +60,7 @@ async def on_check_start(bot: Bot):
     await bot.send_message(chat_id=DEBUG_CHANNEL, text="Начал проверку")
 
 
-async def on_check_end(bot: Bot, result: dict) -> None:
+async def on_check_end(bot: Bot, result: str) -> None:
     keyboard = create_keyboard_with_logo()
     await bot.send_message(
         chat_id=DEBUG_CHANNEL,

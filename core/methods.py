@@ -344,7 +344,7 @@ async def check_new_zamena(bot: Bot):
             print(e)
             print("Ответ не является JSON")
 
-        await on_check_end(bot=bot, result=message[0:2000])
+        await on_check_end(bot=bot, result=res.text[0:2000])
         try:
             for zam in zamenas:
                 await parse_zamena(bot=bot, date=zam[1], url_=zam[0], notify= True)
