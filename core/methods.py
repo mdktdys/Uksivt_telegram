@@ -240,103 +240,104 @@ async def check_new_zamena(bot: Bot):
                     message = "\nОшибка"
                     print(result)
                 case "CheckExisting":
-                    print("HERE")
                     result = CheckResultCheckExisting.model_validate_json(res.text)
-                    message = "\nОшибка"
                     messages = []
-                    for zamena in result.checks:
-                        if zamena.result == "Failed":
-                            print("da")
-                            messages.append(
-                                f"\n⚠️ Ошибка проверки замены\n<pre>{zamena.error[0:200]}\n{zamena.trace[0:300]}</pre>"
-                            )
-                        if zamena.result == "Success":
-                            messages.append(
-                                f"\nОбнаружен перезалив\n{zamena.link}"
-                            )
 
-                            media_group = MediaGroupBuilder(
-                                caption=f"Обнаружен перезалив на <a href='{zamena.link}'>{zamena.date}</a>  "
-                            )
-                            for image in zamena.images:
-                                image_data = base64.b64decode(image)
-                                img = BufferedInputFile(
-                                    image_data, "temp_image.jpg"
+                    if len(result.checks) == 0:
+                        message = "\nНичего нового"
+                    else:
+                        for zamena in result.checks:
+                            if zamena.result == "Failed":
+                                messages.append(
+                                    f"\n⚠️ Ошибка проверки замены\n<pre>{zamena.error[0:200]}\n{zamena.trace[0:300]}</pre>"
                                 )
-                                media_group.add_photo(img)
-                            res: List[Message] = await bot.send_media_group(
-                                MAIN_CHANNEL, media=media_group.build()
-                            )
-                            for sub in get_subscribers(
-                                target_id=-1, target_type=-1
-                            ):
-                                try:
-                                    await bot.forward_messages(
-                                        chat_id=sub,
-                                        from_chat_id=MAIN_CHANNEL,
-                                        message_ids=[
-                                            msg.message_id for msg in res
-                                        ],
-                                    )
-                                except Exception as e:
-                                    print(e)
-                            zamenas.append((zamena.link, zamena.date))
-                        if zamena.result == "FailedDownload":
-                            messages.append(
-                                f"\nОбнаружен перезалив\n{zamena.link}"
-                            )
-                            caption = f"Обнаружен перезалив на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.link}'>Ссылка</a>"
-                            res: Message = await bot.send_message(
-                                chat_id=MAIN_CHANNEL, text=caption
-                            )
-                            for sub in get_subscribers(
-                                target_id=-1, target_type=-1
-                            ):
-                                try:
-                                    await bot.forward_message(
-                                        chat_id=sub,
-                                        from_chat_id=MAIN_CHANNEL,
-                                        message_id=res.message_id,
-                                    )
-                                except Exception as e:
-                                    print(e)
-                                    pass
-                            zamenas.append((zamena.link, zamena.date))
-                        if zamena.result == "InvalidFormat":
-                            messages.append(
-                                f"\nОбнаружен перезалив\n{zamena.link}"
-                            )
-                            caption = f"Обнаружен перезалив на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.file}'>Ссылка на файлик</a>"
-
-                            media_group = MediaGroupBuilder(caption=caption)
-
-                            file_extension = get_file_extension(zamena.link)
-                            file_name = f"{zamena.date}.{file_extension}"
-                            download_file(
-                                link=zamena.link,
-                                filename=file_name,
-                            )
-                            media_group.add_document(
-                                FSInputFile(
-                                    path=file_name,
-                                    filename=f"{zamena.date}.{file_extension}",
+                            if zamena.result == "Success":
+                                messages.append(
+                                    f"\nОбнаружен перезалив\n{zamena.link}"
                                 )
-                            )
 
-                            res: List[Message] = await bot.send_media_group(chat_id=MAIN_CHANNEL, media=media_group.build())
-                            for sub in get_subscribers(target_id=-1, target_type=-1):
-                                try:
-                                    await bot.forward_messages(
-                                        chat_id=sub,
-                                        from_chat_id=MAIN_CHANNEL,
-                                        message_ids=[
-                                            msg.message_id for msg in res
-                                        ],
+                                media_group = MediaGroupBuilder(
+                                    caption=f"Обнаружен перезалив на <a href='{zamena.link}'>{zamena.date}</a>  "
+                                )
+                                for image in zamena.images:
+                                    image_data = base64.b64decode(image)
+                                    img = BufferedInputFile(
+                                        image_data, "temp_image.jpg"
                                     )
-                                except Exception as e:
-                                    print(e)
-                            zamenas.append((zamena.link, zamena.date))
-                    message = message.join(messages)
+                                    media_group.add_photo(img)
+                                res: List[Message] = await bot.send_media_group(
+                                    MAIN_CHANNEL, media=media_group.build()
+                                )
+                                for sub in get_subscribers(
+                                    target_id=-1, target_type=-1
+                                ):
+                                    try:
+                                        await bot.forward_messages(
+                                            chat_id=sub,
+                                            from_chat_id=MAIN_CHANNEL,
+                                            message_ids=[
+                                                msg.message_id for msg in res
+                                            ],
+                                        )
+                                    except Exception as e:
+                                        print(e)
+                                zamenas.append((zamena.link, zamena.date))
+                            if zamena.result == "FailedDownload":
+                                messages.append(
+                                    f"\nОбнаружен перезалив\n{zamena.link}"
+                                )
+                                caption = f"Обнаружен перезалив на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.link}'>Ссылка</a>"
+                                res: Message = await bot.send_message(
+                                    chat_id=MAIN_CHANNEL, text=caption
+                                )
+                                for sub in get_subscribers(
+                                    target_id=-1, target_type=-1
+                                ):
+                                    try:
+                                        await bot.forward_message(
+                                            chat_id=sub,
+                                            from_chat_id=MAIN_CHANNEL,
+                                            message_id=res.message_id,
+                                        )
+                                    except Exception as e:
+                                        print(e)
+                                        pass
+                                zamenas.append((zamena.link, zamena.date))
+                            if zamena.result == "InvalidFormat":
+                                messages.append(
+                                    f"\nОбнаружен перезалив\n{zamena.link}"
+                                )
+                                caption = f"Обнаружен перезалив на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.file}'>Ссылка на файлик</a>"
+
+                                media_group = MediaGroupBuilder(caption=caption)
+
+                                file_extension = get_file_extension(zamena.link)
+                                file_name = f"{zamena.date}.{file_extension}"
+                                download_file(
+                                    link=zamena.link,
+                                    filename=file_name,
+                                )
+                                media_group.add_document(
+                                    FSInputFile(
+                                        path=file_name,
+                                        filename=f"{zamena.date}.{file_extension}",
+                                    )
+                                )
+
+                                res: List[Message] = await bot.send_media_group(chat_id=MAIN_CHANNEL, media=media_group.build())
+                                for sub in get_subscribers(target_id=-1, target_type=-1):
+                                    try:
+                                        await bot.forward_messages(
+                                            chat_id=sub,
+                                            from_chat_id=MAIN_CHANNEL,
+                                            message_ids=[
+                                                msg.message_id for msg in res
+                                            ],
+                                        )
+                                    except Exception as e:
+                                        print(e)
+                                zamenas.append((zamena.link, zamena.date))
+                        message = message.join(messages)
                 case "Checked":
                     message = "\nНичего нового"
 
@@ -344,7 +345,8 @@ async def check_new_zamena(bot: Bot):
             print(e)
             print("Ответ не является JSON")
 
-        await on_check_end(bot=bot, result=res.text[0:2000])
+        await on_check_end(bot=bot, result = message[0:2000])
+
         try:
             for zam in zamenas:
                 await parse_zamena(bot=bot, date=zam[1], url_=zam[0], notify= True)

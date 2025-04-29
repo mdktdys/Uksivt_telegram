@@ -62,11 +62,13 @@ async def on_check_start(bot: Bot):
 
 async def on_check_end(bot: Bot, result: str) -> None:
     keyboard = create_keyboard_with_logo()
+
     await bot.send_message(
         chat_id=DEBUG_CHANNEL,
         text=f"Проверил {result}",
         parse_mode="html",
     )
+
     try:
         await bot.edit_message_text(
             f"❄️ Проверено {get_current_time()}\nuksivt.xyz Поиск по группам, преподам и кабинетам",
