@@ -10,12 +10,12 @@ from callbacks.events import on_on, on_exit
 from core.methods import check_new_zamena
 from data.schedule_api import ScheduleApi
 from my_secrets import (
+    CHECK_ZAMENA_INTERVAL_START_HOUR,
+    CHECK_ZAMENA_INTERVAL_END_HOUR,
+    CHECK_ZAMENA_INTERVAL_MINUTES,
     API_KEY,
     API_URL,
     TOKEN,
-    CHECK_ZAMENA_INTERVAL_MINUTES,
-    CHECK_ZAMENA_INTERVAL_END_HOUR,
-    CHECK_ZAMENA_INTERVAL_START_HOUR,
 )
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
