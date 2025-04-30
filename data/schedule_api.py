@@ -2,7 +2,6 @@ import datetime
 import logging
 import aiohttp
 from models.search_result import DayScheduleFormatted
-from my_secrets import API_URL
 
 
 class ScheduleApi:

@@ -1,7 +1,7 @@
 import datetime
 import html
 from aiogram import Bot
-from main import bot, dp
+from main import bot
 from my_secrets import DEBUG_CHANNEL
 
 

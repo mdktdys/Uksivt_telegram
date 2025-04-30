@@ -5,27 +5,29 @@ from typing import List
 
 import requests
 from aiogram import Bot
-from aiogram.types import FSInputFile, BufferedInputFile, Message
+from aiogram.types import BufferedInputFile, FSInputFile, Message
 from aiogram.utils.media_group import MediaGroupBuilder
 from requests import Response
-from supabase import create_client, Client
-from DTOmodels.schemas import (
-    CheckResultFoundNew,
-    CheckResultCheckExisting,
-    ZamenaParseFailedNotFoundItems, CheckZamenaResultFailed,
-)
-from callbacks.events import on_check_start, on_check_end
+from supabase import Client, create_client
+
+from callbacks.events import on_check_end, on_check_start
 from callbacks.tools import send_large_text
+from DTOmodels.schemas import (
+    CheckResultCheckExisting,
+    CheckResultFoundNew,
+    CheckZamenaResultFailed,
+    ZamenaParseFailedNotFoundItems,
+)
 from models.search_result import DayScheduleFormatted
 from my_secrets import (
-    DEBUG_CHANNEL,
-    API_URL,
     API_KEY,
+    API_URL,
+    DEBUG_CHANNEL,
     MAIN_CHANNEL,
-    SCHEDULER_SUPABASE_URL,
     SCHEDULER_SUPABASE_ANON_KEY,
+    SCHEDULER_SUPABASE_URL,
 )
-from utils.extensions import weekday_name, month_name
+from utils.extensions import month_name, weekday_name
 
 key: str = SCHEDULER_SUPABASE_ANON_KEY
 url: str = SCHEDULER_SUPABASE_URL
