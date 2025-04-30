@@ -5,7 +5,6 @@
     <option name="enabledOnSave" value="true" />
     <option name="executionMode" value="BINARY" />
     <option name="pathToExecutable" value="C:\Users\Danil\AppData\Local\Programs\Python\Python311\Scripts\black.exe" />
-    <option name="sdkName" value="Python 3.12 (Uksivt_telegram)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12 (Uksivt_telegram)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (kronos)" project-jdk-type="Python SDK" />
 </project>
