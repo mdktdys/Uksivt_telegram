@@ -12,8 +12,9 @@ def build_keyboard(
     search_type: str,
     date: datetime.date,
     is_subscribed: bool,
-):
+) -> None | InlineKeyboardMarkup:
 
+    target_type_id: int = 1
     if search_type != "teacher" and search_type != "group":
         return
     if search_type == "teacher":
@@ -21,7 +22,7 @@ def build_keyboard(
     if search_type == "group":
         target_type_id = 1
 
-    notification_buttons = [
+    notification_buttons: list[InlineKeyboardButton] = [
         InlineKeyboardButton(
             text="🔔" if is_subscribed else "🔕",
             callback_data=Notification(
@@ -35,9 +36,9 @@ def build_keyboard(
         )
     ]
 
-    days = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"]
+    days: list[str] = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"]
 
-    day_buttons = [
+    day_buttons: list[InlineKeyboardButton] = [
         InlineKeyboardButton(
             text=day + (" 🟢" if week_day == idx else ""),
             callback_data=Search(
@@ -49,9 +50,9 @@ def build_keyboard(
         for idx, day in enumerate(days)
     ]
 
-    day_buttons_rows = [day_buttons[i : i + 3] for i in range(0, len(day_buttons), 3)]
+    day_buttons_rows: list[list[InlineKeyboardButton]] = [day_buttons[i : i + 3] for i in range(0, len(day_buttons), 3)]
 
-    navigation_buttons = [
+    navigation_buttons: list[InlineKeyboardButton] = [
         InlineKeyboardButton(
             text="Пред.неделя⬅️",
             callback_data=Search(

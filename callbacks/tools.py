@@ -1,7 +1,7 @@
 from aiogram import Bot
 
 
-async def send_large_text(bot: Bot, chat_id: int, text: str, max_length: int = 4096):
+async def send_large_text(bot: Bot, chat_id: int | str, text: str, max_length: int = 4096):
     """
     Отправляет большой текст, разбивая его на части, если он превышает максимальную длину сообщения.
 
