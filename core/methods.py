@@ -116,7 +116,7 @@ async def parse_zamena(bot: Bot, url_: str, date: datetime.date, notify: bool):
                     for e in result.items:
                         message = message + f"\n{e}\n"
             case "ok":
-                message = f"✅ Успешно спарсил замену\n\n{url_} на\n\n{date}"
+                message = f"✅ Успешно спарсил замену\n\n{url_} на {date}"
         await send_large_text(bot=bot, chat_id=DEBUG_CHANNEL, text=message, max_length=3000)
         # await bot.send_message(chat_id=DEBUG_CHANNEL, text=message)
     except Exception as e:
