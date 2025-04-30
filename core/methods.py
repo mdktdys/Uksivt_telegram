@@ -342,7 +342,7 @@ async def check_new_zamena(bot: Bot):
                     message = "\nНичего нового"
 
         except Exception as e:
-            message = f"\n⛔⛔⛔АШИБКА АЛАРМ {e}"
+            message = f"\n⛔⛔⛔АШИБКА АЛАРМ {e} {e.__traceback__}"
             print(e)
             print("Ответ не является JSON")
 
