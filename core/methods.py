@@ -107,7 +107,7 @@ async def parse_zamena(bot: Bot, url_: str, date: datetime.date, notify: bool):
         }
     )
     try:
-        response: dict = await res.json()
+        response: dict = res.json()
         match response["result"]:
             case "error":
                 if response["error"] == "Not found items":
@@ -140,7 +140,7 @@ async def check_new_zamena(bot: Bot):
         await on_check_start(bot=bot)
         res: Response = requests.get(f"{API_URL}parser/check_new", headers={"X-API-KEY": API_KEY})
         try:
-            response: dict = await res.json()
+            response: dict = res.json()
             print(response)
             match response["result"]:
                 case "FoundNew":
@@ -342,10 +342,20 @@ async def check_new_zamena(bot: Bot):
                     message = "\nНичего нового"
 
         except Exception as e:
-            message = f"\n⛔⛔⛔АШИБКА АЛАРМ \n{e} {traceback.format_exc()}"
+            error_body = f"{str(e)}\n\n{traceback.format_exc()}"
+            from utils.sender import send_error_message
+
+            await send_error_message(
+                bot=bot,
+                chat_id=DEBUG_CHANNEL,
+                error_header="Ошибка",
+                application="Kronos",
+                time_=datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S %p"),
+                error_body=error_body,
+            )
+            message = f"\n \n{e} {traceback.format_exc()}"
             print(e)
             print(traceback.format_exc())
-            print("Ответ не является JSON")
 
         await on_check_end(bot=bot, result = message[0:2000])
 
