@@ -69,7 +69,7 @@ async def on_check_end(bot: Bot, result: str) -> None:
 
     try:
         await bot.edit_message_text(
-            f"❄️ Проверено {get_current_time()}\nuksivt.xyz Поиск по группам, преподам и кабинетам",
+            f"Проверено {get_current_time()}\nuksivt.xyz Поиск по группам, преподам и кабинетам",
             chat_id=MAIN_CHANNEL,
             message_id=MAIN_CHANNEL_ANCHOR_MESSAGE,
             reply_markup=keyboard,
