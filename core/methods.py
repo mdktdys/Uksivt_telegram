@@ -10,7 +10,7 @@ from aiogram.utils.media_group import MediaGroupBuilder
 from requests import Response
 from supabase import Client, create_client
 
-from callbacks.events import on_cheаck_end, on_check_start
+from callbacks.events import on_check_end, on_check_start
 from callbacks.tools import send_large_text
 from DTOmodels.schemas import (
     CheckResultCheckExisting,
