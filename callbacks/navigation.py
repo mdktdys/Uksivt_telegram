@@ -284,7 +284,7 @@ async def a(message: Message) -> None:
 
 
 @router.callback_query(Notification.filter(F.type == "teacher"))
-async def handle_notification_callback(
+async def handle_notification_callback_teacher(
     callback: types.CallbackQuery, callback_data: Notification
 ) -> None:
     date: datetime.date = datetime.date.fromisoformat(callback_data.date)
