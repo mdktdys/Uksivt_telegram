@@ -107,3 +107,5 @@ class ZamenaParseFailedNotFoundItems(ZamenaParseFailed):
 
 class ZamenaParseSucess(ZamenaParseResult):
     result: str = "ok"
+    affected_teachers: list[int]
+    affected_groups: list[int]

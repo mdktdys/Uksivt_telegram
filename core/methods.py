@@ -1,34 +1,41 @@
 import base64
 import datetime
 import traceback
-from typing import List
-
 import requests
+
+from typing import List
 from aiogram import Bot
-from aiogram.types import FSInputFile, BufferedInputFile, Message
-from aiogram.utils.media_group import MediaGroupBuilder
 from requests import Response
+from aiogram.utils.media_group import MediaGroupBuilder
+from aiogram.types import FSInputFile, BufferedInputFile, Message
+from models.search_result import DayScheduleFormatted
 from supabase import create_client, Client
-from DTOmodels.schemas import (
-    CheckResultFoundNew,
-    CheckResultCheckExisting,
-    ZamenaParseFailedNotFoundItems, CheckZamenaResultFailed,
-)
 from callbacks.events import on_check_start, on_check_end
 from callbacks.tools import send_large_text
-from models.search_result import DayScheduleFormatted
-from my_secrets import (
-    DEBUG_CHANNEL,
-    API_URL,
-    API_KEY,
-    MAIN_CHANNEL,
-    SCHEDULER_SUPABASE_URL,
-    SCHEDULER_SUPABASE_ANON_KEY,
-)
 from utils.extensions import weekday_name, month_name
 
-key = SCHEDULER_SUPABASE_ANON_KEY
-url = SCHEDULER_SUPABASE_URL
+from my_secrets import (
+    SCHEDULER_SUPABASE_ANON_KEY,
+    SCHEDULER_SUPABASE_URL,
+    
+    API_URL,
+    API_KEY,
+    
+    DEBUG_CHANNEL,
+    MAIN_CHANNEL,
+)
+
+from DTOmodels.schemas import (
+    ZamenaParseFailedNotFoundItems,
+    ZamenaParseSucess,
+    
+    CheckResultCheckExisting,
+    CheckZamenaResultFailed,
+    CheckResultFoundNew,
+)
+
+key: str = SCHEDULER_SUPABASE_ANON_KEY
+url: str = SCHEDULER_SUPABASE_URL
 supabase_connect: Client = create_client(url, key)
 
 
@@ -53,16 +60,18 @@ async def send_zamena_alert(
     if target_type == 2:
         target_type_named = "teachers"
 
-    res = requests.get(
+    res: Response = requests.get(
         f'{API_URL}{target_type_named}/day_schedule_formatted/{target_id}/{datetime.datetime.now().strftime("%Y-%m-%d")}/',
         headers={"X-API-KEY": API_KEY}
     )
+    
     response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(res.text)
-    header = f"🎓 Изменения в расписании {response.search_name} по новым заменам\n"
-    body = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
-    calendar_footer = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}"
+    header: str = f"🎓 Изменения в расписании {response.search_name} по новым заменам\n"
+    body: str = "\n".join(response.paras) if response.paras else "\n🎉 Нет пар"
+    calendar_footer: str = f"\n📅 {weekday_name(date)}, {date.day} {month_name(date)}"
     await bot.send_message(
-        chat_id=chat_id, text=f"{header}" f"{body}" f"\n{calendar_footer}"
+        chat_id=chat_id,
+        text=f"{header}" f"{body}" f"\n{calendar_footer}"
     )
 
 
@@ -75,6 +84,11 @@ def get_subscribers(target_type: int, target_id: int) -> List[str]:
         .execute()
     )
     return [item["chat_id"] for item in res.data]
+
+
+def get_targetIds_subscribers(target_ids: list[int], target_type: int) -> List[str]:
+    result = (supabase_connect.table('Subscribers').select('chat_id').eq('target_type', target_type).in_('target_id', target_ids).execute())
+    return [item['chat_id'] for item in result.data]
 
 
 def get_file_extension(url_: str):
@@ -98,9 +112,9 @@ def download_file(link: str, filename: str):
 
 
 async def parse_zamena(bot: Bot, url_: str, date: datetime.date, notify: bool):
-    message = ""
+    message: str = ""
     res: Response = requests.post(f"{API_URL}parser/parse_zamena", headers={"X-API-KEY": API_KEY},
-        json={
+        json = {
             'url': f'{url_}',
             'date': f'{date}',
             'notify': notify
@@ -116,20 +130,41 @@ async def parse_zamena(bot: Bot, url_: str, date: datetime.date, notify: bool):
                     for e in result.items:
                         message = message + f"\n{e}\n"
             case "ok":
+                result_success: ZamenaParseSucess = ZamenaParseSucess.model_validate_json(res.text)
+                group_subscribers: list[str] = get_targetIds_subscribers(
+                    target_ids= result_success.affected_groups,
+                    target_type = 1
+                )
+                teacher_subscribers: list[str] = get_targetIds_subscribers(
+                    target_ids = result_success.affected_teachers,
+                    target_type = 2
+                )
+                from utils.sender import send_multicast_message
+                await send_multicast_message(
+                    chat_ids = group_subscribers + teacher_subscribers,
+                    message = "<a href='{url_}'>Появились замены для тебя! на {date}</a>" 
+                )
                 message = f"✅ Успешно спарсил замену\n\n{url_} на {date}"
-        await send_large_text(bot=bot, chat_id=DEBUG_CHANNEL, text=message, max_length=3000)
+
+                
+        await send_large_text(
+            bot=bot,
+            chat_id = DEBUG_CHANNEL,
+            text = message,
+            max_length = 3000
+        )
         # await bot.send_message(chat_id=DEBUG_CHANNEL, text=message)
     except Exception as e:
         error_body = f"{str(e)}\n\n{traceback.format_exc()}"
         from utils.sender import send_error_message
 
         await send_error_message(
-            bot=bot,
-            chat_id=DEBUG_CHANNEL,
-            error_header="Ошибка",
-            application="Kronos",
-            time_=datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S %p"),
-            error_body=error_body,
+            bot = bot,
+            chat_id = DEBUG_CHANNEL,
+            error_header = "Ошибка",
+            application = "Kronos",
+            time_ = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S %p"),
+            error_body = error_body,
         )
 
 
