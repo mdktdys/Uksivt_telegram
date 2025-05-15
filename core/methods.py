@@ -5,53 +5,38 @@ import requests
 
 from typing import List
 from aiogram import Bot
-from requests import Response
+from aiogram.types import BufferedInputFile, FSInputFile, Message
 from aiogram.utils.media_group import MediaGroupBuilder
-from aiogram.types import FSInputFile, BufferedInputFile, Message
-from models.search_result import DayScheduleFormatted
-from supabase import create_client, Client
-from callbacks.events import on_check_start, on_check_end
-from callbacks.tools import send_large_text
-from utils.extensions import weekday_name, month_name
+from requests import Response
+from supabase import Client, create_client
 
+from callbacks.events import on_check_end, on_check_start
+from callbacks.tools import send_large_text
+from DTOmodels.schemas import (
+    CheckResultCheckExisting,
+    CheckResultFoundNew,
+    CheckZamenaResultFailed,
+    ZamenaParseFailedNotFoundItems,
+)
+from models.search_result import DayScheduleFormatted
 from my_secrets import (
-    SCHEDULER_SUPABASE_ANON_KEY,
-    SCHEDULER_SUPABASE_URL,
-    
-    API_URL,
     API_KEY,
-    
+    API_URL,
     DEBUG_CHANNEL,
     MAIN_CHANNEL,
+    SCHEDULER_SUPABASE_ANON_KEY,
+    SCHEDULER_SUPABASE_URL,
 )
-
-from DTOmodels.schemas import (
-    ZamenaParseFailedNotFoundItems,
-    ZamenaParseSucess,
-    
-    CheckResultCheckExisting,
-    CheckZamenaResultFailed,
-    CheckResultFoundNew,
-)
+from utils.extensions import month_name, weekday_name
 
 key: str = SCHEDULER_SUPABASE_ANON_KEY
 url: str = SCHEDULER_SUPABASE_URL
 supabase_connect: Client = create_client(url, key)
 
 
-# async def alert(bot: Bot):
-#     res = [382, 383]
-#     for sub in get_subscribers(target_id=-1, target_type=-1):
-#         await bot.forward_messages(
-#             chat_id=sub,
-#             from_chat_id=MAIN_CHANNEL,
-#             message_ids=res,
-#         )
-
-
 async def send_zamena_alert(
     bot: Bot, target_id: int, date, chat_id: int, target_type: int
-):
+) -> None:
     target_type_named = ''
     if target_type != 1 and target_type != 2:
         return
@@ -86,12 +71,7 @@ def get_subscribers(target_type: int, target_id: int) -> List[str]:
     return [item["chat_id"] for item in res.data]
 
 
-def get_targetIds_subscribers(target_ids: list[int], target_type: int) -> List[str]:
-    result = (supabase_connect.table('Subscribers').select('chat_id').eq('target_type', target_type).in_('target_id', target_ids).execute())
-    return [item['chat_id'] for item in result.data]
-
-
-def get_file_extension(url_: str):
+def get_file_extension(url_: str) -> str:
     parts = url_.split("/")
     file_name = parts[-1]
     file_parts = file_name.split(".")
@@ -101,7 +81,7 @@ def get_file_extension(url_: str):
         return ""
 
 
-def download_file(link: str, filename: str):
+def download_file(link: str, filename: str) -> None:
     response = requests.get(link)
     if response.status_code == 200:
         with open(filename, "wb") as file:
@@ -168,10 +148,10 @@ async def parse_zamena(bot: Bot, url_: str, date: datetime.date, notify: bool):
         )
 
 
-async def check_new_zamena(bot: Bot):
+async def check_new_zamena(bot: Bot) -> None:
     try:
         message = ""
-        zamenas: List[(str, datetime)] = []
+        zamenas = []
         await on_check_start(bot=bot)
         res: Response = requests.get(f"{API_URL}parser/check_new", headers={"X-API-KEY": API_KEY})
         try:
@@ -179,7 +159,7 @@ async def check_new_zamena(bot: Bot):
             print(response)
             match response["result"]:
                 case "FoundNew":
-                    result = CheckResultFoundNew.model_validate_json(res.text)
+                    result: CheckResultFoundNew = CheckResultFoundNew.model_validate_json(res.text)
                     messages = []
                     for zamena in result.checks:
                         if zamena.result == "Failed":
@@ -198,7 +178,7 @@ async def check_new_zamena(bot: Bot):
                                     image_data, "temp_image.jpg"
                                 )
                                 media_group.add_photo(img)
-                            res: List[Message] = await bot.send_media_group(
+                            sended_messages: List[Message] = await bot.send_media_group(
                                 MAIN_CHANNEL, media=media_group.build()
                             )
                             for sub in get_subscribers(
@@ -209,7 +189,7 @@ async def check_new_zamena(bot: Bot):
                                         chat_id=sub,
                                         from_chat_id=MAIN_CHANNEL,
                                         message_ids=[
-                                            msg.message_id for msg in res
+                                            msg.message_id for msg in sended_messages
                                         ],
                                     )
                                 except Exception as e:
@@ -218,7 +198,7 @@ async def check_new_zamena(bot: Bot):
                         if zamena.result == "FailedDownload":
                             messages.append(f"\nНайдена\n{zamena.link}")
                             caption = f"Новые замены на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.link}'>Ссылка</a>"
-                            res: Message = await bot.send_message(
+                            sended_message: Message = await bot.send_message(
                                 chat_id=MAIN_CHANNEL, text=caption
                             )
                             for sub in get_subscribers(
@@ -228,7 +208,7 @@ async def check_new_zamena(bot: Bot):
                                     await bot.forward_message(
                                         chat_id=sub,
                                         from_chat_id=MAIN_CHANNEL,
-                                        message_id=res.message_id,
+                                        message_id=sended_message.message_id,
                                     )
                                 except Exception as e:
                                     print(e)
@@ -252,7 +232,7 @@ async def check_new_zamena(bot: Bot):
                                 )
                             )
 
-                            res: List[Message] = await bot.send_media_group(
+                            sended_messages: List[Message] = await bot.send_media_group(
                                 chat_id=MAIN_CHANNEL, media=media_group.build()
                             )
                             for sub in get_subscribers(
@@ -263,7 +243,7 @@ async def check_new_zamena(bot: Bot):
                                         chat_id=sub,
                                         from_chat_id=MAIN_CHANNEL,
                                         message_ids=[
-                                            msg.message_id for msg in res
+                                            msg.message_id for msg in sended_messages
                                         ],
                                     )
                                 except Exception as e:
@@ -300,7 +280,7 @@ async def check_new_zamena(bot: Bot):
                                         image_data, "temp_image.jpg"
                                     )
                                     media_group.add_photo(img)
-                                res: List[Message] = await bot.send_media_group(
+                                sended_messages: List[Message] = await bot.send_media_group(
                                     MAIN_CHANNEL, media=media_group.build()
                                 )
                                 for sub in get_subscribers(
@@ -311,7 +291,7 @@ async def check_new_zamena(bot: Bot):
                                             chat_id=sub,
                                             from_chat_id=MAIN_CHANNEL,
                                             message_ids=[
-                                                msg.message_id for msg in res
+                                                msg.message_id for msg in sended_messages
                                             ],
                                         )
                                     except Exception as e:
@@ -322,7 +302,7 @@ async def check_new_zamena(bot: Bot):
                                     f"\nОбнаружен перезалив\n{zamena.link}"
                                 )
                                 caption = f"Обнаружен перезалив на <a href='{zamena.link}'>{zamena.date}</a>\n\n<a href='{zamena.link}'>Ссылка</a>"
-                                res: Message = await bot.send_message(
+                                sended_message: Message = await bot.send_message(
                                     chat_id=MAIN_CHANNEL, text=caption
                                 )
                                 for sub in get_subscribers(
@@ -332,7 +312,7 @@ async def check_new_zamena(bot: Bot):
                                         await bot.forward_message(
                                             chat_id=sub,
                                             from_chat_id=MAIN_CHANNEL,
-                                            message_id=res.message_id,
+                                            message_id=sended_message.message_id,
                                         )
                                     except Exception as e:
                                         print(e)
@@ -359,14 +339,14 @@ async def check_new_zamena(bot: Bot):
                                     )
                                 )
 
-                                res: List[Message] = await bot.send_media_group(chat_id=MAIN_CHANNEL, media=media_group.build())
+                                sended_messages: List[Message] = await bot.send_media_group(chat_id=MAIN_CHANNEL, media=media_group.build())
                                 for sub in get_subscribers(target_id=-1, target_type=-1):
                                     try:
                                         await bot.forward_messages(
                                             chat_id=sub,
                                             from_chat_id=MAIN_CHANNEL,
                                             message_ids=[
-                                                msg.message_id for msg in res
+                                                msg.message_id for msg in sended_messages
                                             ],
                                         )
                                     except Exception as e:
@@ -388,7 +368,7 @@ async def check_new_zamena(bot: Bot):
                 time_=datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S %p"),
                 error_body=error_body,
             )
-            message = f"\n \n{e} {traceback.format_exc()}"
+            message: str = f"\n \n{e} {traceback.format_exc()}"
             print(e)
             print(traceback.format_exc())
 
@@ -402,7 +382,7 @@ async def check_new_zamena(bot: Bot):
             await bot.send_message(chat_id=DEBUG_CHANNEL, text=str(e))
 
     except Exception as e:
-        error_body = f"{str(e)}\n\n{traceback.format_exc()}"
+        error_body: str = f"{str(e)}\n\n{traceback.format_exc()}"
         from utils.sender import send_error_message
 
         await send_error_message(

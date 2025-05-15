@@ -12,8 +12,3 @@ async def a(message: Message) -> None:
     ])
     await message.answer("✏️ Введите группу или преподавателя, или воспользуйтесь расширенным поиском",
                          reply_markup=btn)
-
-
-@router.message(Command('about'))
-async def a(message: Message) -> None:
-    await message.answer("Норм")
