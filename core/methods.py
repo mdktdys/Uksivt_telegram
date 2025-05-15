@@ -17,6 +17,7 @@ from DTOmodels.schemas import (
     CheckResultFoundNew,
     CheckZamenaResultFailed,
     ZamenaParseFailedNotFoundItems,
+    ZamenaParseSucess,
 )
 from models.search_result import DayScheduleFormatted
 from my_secrets import (
@@ -79,6 +80,10 @@ def get_file_extension(url_: str) -> str:
         return file_parts[-1]
     else:
         return ""
+
+def get_targetIds_subscribers(target_ids: list[int], target_type: int) -> List[str]:
+    result = (supabase_connect.table('Subscribers').select('chat_id').eq('target_type', target_type).in_('target_id', target_ids).execute())
+    return [item['chat_id'] for item in result.data]
 
 
 def download_file(link: str, filename: str) -> None:
