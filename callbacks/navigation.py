@@ -287,7 +287,7 @@ async def a(message: Message) -> None:
 async def handle_notification_callback(
     callback: types.CallbackQuery, callback_data: Notification
 ) -> None:
-    date: datetime.date = callback_data.date
+    date: datetime.date = datetime.date.fromisoformat(callback_data.date)
     monday_date = date - datetime.timedelta(days=date.weekday())
     group = callback_data.search_id
     now_date = datetime.datetime.now()
