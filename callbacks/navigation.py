@@ -27,6 +27,9 @@ async def handle_notification_callback(
     choosed_week_is_current = week_number_from_september() == date
     choosed_day_is_current = True if date == now_date else False
     week_day = date.weekday()
+    
+    await callback.bot.answer_callback_query(callback.id, "🔔 Уведомления о заменах включены", show_alert=True)
+    return
 
     async with aiohttp.ClientSession(trust_env=True) as session:
         if not callback_data.is_subscribe:
@@ -93,7 +96,7 @@ async def handle_notification_callback(
 
 
 @router.callback_query(Search.filter(F.type == "group"))
-async def handle_group_callback(
+async def handle_group_callback_group(
     callback: types.CallbackQuery, callback_data: Search, api: ScheduleApi
 ) -> None:
 
