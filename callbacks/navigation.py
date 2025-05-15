@@ -28,9 +28,6 @@ async def handle_notification_callback(
     choosed_day_is_current = True if date == now_date else False
     week_day = date.weekday()
     
-    await callback.bot.answer_callback_query(callback.id, "🔔 Уведомления о заменах включены", show_alert=True)
-    return
-
     async with aiohttp.ClientSession(trust_env=True) as session:
         if not callback_data.is_subscribe:
             async with session.post(
