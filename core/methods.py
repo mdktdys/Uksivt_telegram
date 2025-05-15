@@ -133,7 +133,6 @@ async def parse_zamena(bot: Bot, url_: str, date: datetime.date, notify: bool):
             text = message,
             max_length = 3000
         )
-        # await bot.send_message(chat_id=DEBUG_CHANNEL, text=message)
     except Exception as e:
         error_body = f"{str(e)}\n\n{traceback.format_exc()}"
         from utils.sender import send_error_message
