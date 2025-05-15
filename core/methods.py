@@ -127,7 +127,7 @@ async def parse_zamena(bot: Bot, url_: str, date: datetime.date, notify: bool):
                 from utils.sender import send_multicast_message
                 await send_multicast_message(
                     chat_ids = group_subscribers + teacher_subscribers,
-                    message = "<a href='{url_}'>Появились замены для тебя! на {date}</a>" 
+                    message = f"<a href='{url_}'>Появились замены для тебя! на {date}</a>" 
                 )
                 message = f"✅ Успешно спарсил замену\n\n{url_} на {date}"
 
