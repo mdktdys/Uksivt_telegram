@@ -1,5 +1,5 @@
 import os
-LOG_LEVEL = "CRITICAL"
+LOG_LEVEL = 1
 
 MAIN_CHANNEL_ANCHOR_MESSAGE: int = int(os.environ["TELEGRAM_MAIN_CHANNEL_ANCHOR_MESSAGE"])
 API_URL: str = os.environ.get("TELEGRAM_API_URL") or "http://127.0.0.1:8000/api/v1/"
