@@ -3,7 +3,6 @@ import datetime
 import pytz
 from aiogram import Bot, Router
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from main import bot
 from core.enums.log_level_enum import LogLevel
 from utils import logger
 from my_secrets import MAIN_CHANNEL, MAIN_CHANNEL_ANCHOR_MESSAGE
@@ -28,8 +27,8 @@ def get_current_time():
     return times.strftime("%H:%M %d.%m")
 
 
-async def on_on() -> None:
-    await logger.log(level = LogLevel.CRITICAL, text = '🟢 Telegram Включен')
+async def on_on(bot: Bot) -> None:
+    await logger.log(level = LogLevel.CRITICAL, text = '🟢 Telegram Включен', bot = bot)
     keyboard: InlineKeyboardMarkup = create_keyboard_with_logo()
     try:
         await bot.edit_message_text(
@@ -45,7 +44,7 @@ async def on_on() -> None:
 
 
 async def on_exit(bot: Bot) -> None:
-    await logger.log(level = LogLevel.CRITICAL, text = '💤 Telegram Выключен')
+    await logger.log(level = LogLevel.CRITICAL, text = '💤 Telegram Выключен', bot = bot)
     keyboard: InlineKeyboardMarkup = create_keyboard_with_logo()
     await bot.edit_message_text(
         f"💤 uksivt.xyz\nПоиск по группам и преподам\nвыключен {get_current_time()}",
@@ -55,14 +54,14 @@ async def on_exit(bot: Bot) -> None:
     )
 
 
-async def on_check_start() -> None:
-    await logger.log(level = LogLevel.INFO, text = 'Начал проверку')
+async def on_check_start(bot: Bot) -> None:
+    await logger.log(level = LogLevel.INFO, text = 'Начал проверку', bot = bot)
 
 
 async def on_check_end(bot: Bot, result: str) -> None:
     keyboard: InlineKeyboardMarkup = create_keyboard_with_logo()
     
-    await logger.log(level = LogLevel.INFO, text = f'Проверил {result}')
+    await logger.log(level = LogLevel.INFO, text = f'Проверил {result}', bot = bot)
 
     try:
         await bot.edit_message_text(

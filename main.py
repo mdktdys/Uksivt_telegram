@@ -49,9 +49,9 @@ async def main() -> None:
         notifications.router,
     )
     try:
-        await on_on()
+        await on_on(bot = bot)
         await dp.start_polling(bot)
-        await check_new_zamena(bot=bot)
+        await check_new_zamena(bot = bot)
     finally:
         scheduler.shutdown()
         await on_exit(bot=bot)

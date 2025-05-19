@@ -1,12 +1,13 @@
 import html
+
+from aiogram import Bot
 from core.enums.log_level_enum import LogLevel
 from my_secrets import LOG_LEVEL, DEBUG_CHANNEL
-from main import bot
 import datetime
 
 log_level: LogLevel = LogLevel(LOG_LEVEL)
 
-async def log(level: LogLevel, text: str):
+async def log(level: LogLevel, text: str, bot: Bot):
     if (level.value > log_level.value):
         return
     
