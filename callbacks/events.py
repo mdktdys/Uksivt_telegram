@@ -2,8 +2,10 @@ import datetime
 
 import pytz
 from aiogram import Bot, Router
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+from core.enums.log_level_enum import LogLevel
+from utils import logger
 from my_secrets import MAIN_CHANNEL, MAIN_CHANNEL_ANCHOR_MESSAGE, DEBUG_CHANNEL
 
 router = Router()
@@ -60,12 +62,8 @@ async def on_check_start(bot: Bot) -> None:
 
 async def on_check_end(bot: Bot, result: str) -> None:
     keyboard: InlineKeyboardMarkup = create_keyboard_with_logo()
-
-    await bot.send_message(
-        chat_id=DEBUG_CHANNEL,
-        text=f"Проверил {result}",
-        parse_mode="html",
-    )
+    
+    await logger.log(level = LogLevel.INFO, text = f'Проверил {result}')
 
     try:
         await bot.edit_message_text(

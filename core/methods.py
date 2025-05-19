@@ -30,6 +30,7 @@ from my_secrets import (
 )
 from utils.extensions import month_name, weekday_name
 
+
 key: str = SCHEDULER_SUPABASE_ANON_KEY
 url: str = SCHEDULER_SUPABASE_URL
 supabase_connect: Client = create_client(url, key)
@@ -167,9 +168,7 @@ async def check_new_zamena(bot: Bot) -> None:
                     messages = []
                     for zamena in result.checks:
                         if zamena.result == "Failed":
-                            messages.append(
-                                f"\n⚠️ Ошибка замены\n<pre>{zamena.error[0:200]}\n{zamena.trace[0:300]}</pre>"
-                            )
+                            messages.append(f"\n⚠️ Ошибка замены\n<pre>{zamena.error[0:200]}\n{zamena.trace[0:300]}</pre>")
                         if zamena.result == "Success":
                             messages.append(f"\nНайдена\n{zamena.link}")
 
