@@ -49,7 +49,7 @@ async def main() -> None:
         notifications.router,
     )
     try:
-        await on_on(bot=bot)
+        await on_on()
         await dp.start_polling(bot)
         await check_new_zamena(bot=bot)
     finally:

@@ -3,13 +3,12 @@ import datetime
 import pytz
 from aiogram import Bot, Router
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-
+from main import bot
 from core.enums.log_level_enum import LogLevel
 from utils import logger
 from my_secrets import MAIN_CHANNEL, MAIN_CHANNEL_ANCHOR_MESSAGE
 
 router = Router()
-
 
 def create_keyboard_with_logo() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
@@ -29,7 +28,7 @@ def get_current_time():
     return times.strftime("%H:%M %d.%m")
 
 
-async def on_on(bot: Bot) -> None:
+async def on_on() -> None:
     await logger.log(level = LogLevel.CRITICAL, text = '🟢 Telegram Включен')
     keyboard: InlineKeyboardMarkup = create_keyboard_with_logo()
     try:
@@ -56,7 +55,7 @@ async def on_exit(bot: Bot) -> None:
     )
 
 
-async def on_check_start(bot: Bot) -> None:
+async def on_check_start() -> None:
     await logger.log(level = LogLevel.INFO, text = 'Начал проверку')
 
 
