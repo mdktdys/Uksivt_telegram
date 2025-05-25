@@ -9,7 +9,6 @@ from my_secrets import API_URL, API_KEY
 
 router = Router()
 
-
 @router.message(Command("sub"))
 async def sub(message: Message):
     subscribtion = Subscription(
@@ -61,5 +60,5 @@ async def unsub(message: Message):
 
 
 @router.message()
-async def hangle(message: Message):
+def hangle(message: Message):
     message.forward(chat_id = -1002596787538)
