@@ -61,4 +61,9 @@ async def unsub(message: Message):
 
 @router.message()
 async def hangle(message: Message):
-    await message.bot.send_message(chat_id = -1002596787538, text = message.text)
+    text = f'''
+    [{message.chat.full_name}]
+    [{message.from_user.username}]
+    {message.text}
+    '''
+    await message.bot.send_message(chat_id = -1002596787538, text = text)
