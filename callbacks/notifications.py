@@ -60,5 +60,5 @@ async def unsub(message: Message):
 
 
 @router.message()
-def hangle(message: Message):
-    message.forward(chat_id = -1002596787538)
+async def hangle(message: Message):
+    await message.bot.send_message(chat_id = -1002596787538, text = message.text)
