@@ -58,3 +58,8 @@ async def unsub(message: Message):
                     await message.answer((await res.text()))
     except Exception as error:
         await message.answer(f"Ошибка отписки\n{error}")
+
+
+@router.message()
+async def hangle(message: Message):
+    message.forward(chat_id = -1002596787538)

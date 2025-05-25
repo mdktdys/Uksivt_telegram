@@ -10,5 +10,7 @@ async def a(message: Message) -> None:
     btn = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🔎 Расширенный поиск", switch_inline_query_current_chat=" ")]
     ])
-    await message.answer("✏️ Введите группу или преподавателя, или воспользуйтесь расширенным поиском",
-                         reply_markup=btn)
+    await message.answer(
+        "✏️ Введите группу или преподавателя, или воспользуйтесь расширенным поиском",
+        reply_markup=btn
+    )
