@@ -256,7 +256,7 @@ async def check_new_zamena(bot: Bot) -> None:
                 case "Error":
                     result = CheckZamenaResultFailed.model_validate_json(res.text)
                     message = "\nОшибка"
-                    print(result)
+                    raise Exception(result.error)
                 case "CheckExisting":
                     result = CheckResultCheckExisting.model_validate_json(res.text)
                     messages = []
