@@ -66,7 +66,7 @@ async def show_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
         chat_id = callback.message.chat.id,
         message_id = callback.message.message_id,
         text = text,
-        reply_markup = InlineKeyboardMarkup(inline_keyboard = [buttons])
+        reply_markup = InlineKeyboardMarkup(inline_keyboard = buttons)
     )
     
 
