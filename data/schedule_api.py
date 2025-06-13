@@ -30,7 +30,7 @@ class ScheduleApi:
     
     async def get_teacher(self, teacher_id: int) -> Teacher:
         async with aiohttp.ClientSession(trust_env=True) as session:
-            url: str = ApiRoutes.get_teacher.format(id = teacher_id)
+            url: str = ApiRoutes.get_teacher.format(id = teacher_id, api_url=self.api_url)
             async with session.get(url) as res:
                 if res.status != 200:
                     raise Exception('failed get teacher')
@@ -40,7 +40,7 @@ class ScheduleApi:
     
     async def get_teacher_queues(self, teacher_id: int) -> list[Queue]:
         async with aiohttp.ClientSession(trust_env=True) as session:
-            url: str = ApiRoutes.get_teacher_queues.format(teacher_id = teacher_id)
+            url: str = ApiRoutes.get_teacher_queues.format(teacher_id = teacher_id, api_url=self.api_url)
             async with session.get(url) as res:
                 if res.status != 200:
                     raise Exception('failed get teacher')
