@@ -5,6 +5,7 @@ import aiohttp
 from models.search_result import DayScheduleFormatted
 from models.teacher_model import Teacher
 from models.queue_model import Queue
+from models.add_to_queue_model import AddQueueEntryForm
 
 
 class ScheduleApi:
@@ -61,29 +62,28 @@ class ScheduleApi:
                 return Queue.model_validate_json(await res.text())
 
 
-    async def add_to_queue(self, queue_id: int, user_id: str):
+    async def add_to_queue(self, queue_id: int, user_id: str, form: AddQueueEntryForm):
         async with aiohttp.ClientSession(trust_env=True) as session:
-            url: str = ApiRoutes.add_to_queue.format(queue_id = queue_id, api_url = self.api_url)
-            async with session.post(url, json = {'user_id': user_id}) as res:
+            url: str = ApiRoutes.get_queue.format(queue_id = queue_id, api_url = self.api_url)
+            async with session.post(url, json = form.model_dump_json()) as res:
                 if res.status != 200:
                     raise Exception('failed get teacher')
 
                 return None
 
 
-    async def remove_from_queue(self, queue_id: int, user_id: str):
+    async def remove_from_queue(self, entry_id: int, user_id: str):
         async with aiohttp.ClientSession(trust_env=True) as session:
-            url: str = ApiRoutes.remove_from_queue.format(queue_id = queue_id, api_url = self.api_url)
-            async with session.post(url, json = {'user_id': user_id}) as res:
+            url: str = ApiRoutes.get_queue.format(queue_id = entry_id, api_url = self.api_url)
+            async with session.delete(url) as res:
                 if res.status != 200:
                     raise Exception('failed get teacher')
 
                 return None
+
 
 class ApiRoutes:
     GROUP_SCHEDULE_FORMATTED = "{api_url}groups/day_schedule_formatted/{group}/{date}/{chat_id}/"
     get_teacher: str = "{api_url}teachers/id/{id}/"
     get_teacher_queues: str = "{api_url}teachers/queues/{teacher_id}/"
     get_queue: str = "{api_url}teachers/queue/{queue_id}/"
-    add_to_queue: str = "{api_url}teachers/queue/add/{queue_id}/"
-    remove_from_queue: str = "{api_url}teachers/queue/remove/{queue_id}/"

@@ -5,6 +5,7 @@ from data.schedule_api import ScheduleApi
 from models.teacher_model import Teacher
 from models.queue_model import Queue
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from models.add_to_queue_model import AddQueueEntryForm
 
 router = Router(name = 'queues_router')
 
@@ -55,9 +56,10 @@ async def show_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
 
     buttons: list[InlineKeyboardButton] = []
     if callback.message.chat.type == 'private':
-        contains_me: bool = any([True if student.student == callback.from_user.id else False for student in queue.students])
-        if contains_me:
-            buttons.append([InlineKeyboardButton(text = 'Выйти', callback_data = f'remove_from_queue|{queue.id}|{callback.from_user.id}')]) 
+        contains_me: list[Queue] = [student if student.student == callback.from_user.id else False for student in queue.students]
+        if len(contains_me) > 0:
+            contain: Queue = contains_me[0]
+            buttons.append([InlineKeyboardButton(text = 'Выйти', callback_data = f'remove_from_queue|{contain.id}|{callback.from_user.id}')]) 
         else:
             buttons.append([InlineKeyboardButton(text = 'Занять', callback_data = f'add_to_queue|{queue.id}|{callback.from_user.id}')])
     
@@ -75,14 +77,20 @@ async def add_to_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
     data: list[str] = callback.data.split('|')
     queue_id: str = data[1]
     user_id: str = data[2]
-    await api.add_to_queue(queue_id = queue_id, user_id = user_id)
+    form: AddQueueEntryForm = AddQueueEntryForm(
+        position = 1,
+        student = callback.from_user.id,
+        creator_tg_id = callback.from_user.id,
+        comment = ''
+    )
+    await api.add_to_queue(queue_id = queue_id, user_id = user_id, form = form)
     await show_queue(callback = callback, api = api)
-    
+
 
 @router.callback_query(F.data.startswith('remove_from_queue'))
 async def remove_from_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
     data: list[str] = callback.data.split('|')
-    queue_id: str = data[1]
+    entry_id: str = data[1]
     user_id: str = data[2]
-    await api.remove_from_queue(queue_id = queue_id, user_id = user_id)
+    await api.remove_from_queue(entry_id = entry_id, user_id = user_id)
     await show_queue(callback = callback, api = api)
