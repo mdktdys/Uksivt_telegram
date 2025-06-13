@@ -50,9 +50,20 @@ class ScheduleApi:
                 raw_json = await res.text()
                 parsed = json.loads(raw_json)
                 return [Queue.model_validate(item) for item in parsed]
+            
+    
+    async def get_queue(self, queue_id: int) -> Queue:
+        async with aiohttp.ClientSession(trust_env=True) as session:
+            url: str = ApiRoutes.get_queue.format(queue_id = queue_id, api_url=self.api_url)
+            async with session.get(url) as res:
+                if res.status != 200:
+                    raise Exception('failed get teacher')
+
+                return Queue.model_validate_json(await res.text())
 
 
 class ApiRoutes:
     GROUP_SCHEDULE_FORMATTED = "{api_url}groups/day_schedule_formatted/{group}/{date}/{chat_id}/"
     get_teacher: str = "{api_url}teachers/id/{id}/"
     get_teacher_queues: str = "{api_url}teachers/queues/{teacher_id}/"
+    get_queue: str = "{api_url}teachers/queue/{queue_id}/"

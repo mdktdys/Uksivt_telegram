@@ -25,10 +25,35 @@ async def show_teacher_queues(callback: CallbackQuery, api: ScheduleApi) -> None
     
     lines.append([InlineKeyboardButton(text = 'Назад', callback_data = f'teacher|{teacher.id}')])
     
-    text = f'Очереди преподавателя {teacher.name}'
+    text: str = f'Очереди преподавателя {teacher.name}'
     await callback.bot.edit_message_text(
         chat_id = callback.message.chat.id,
         message_id = callback.message.message_id,
         text = text,
         reply_markup = InlineKeyboardMarkup(inline_keyboard = lines)
+    )
+    
+
+@router.callback_query(F.data.startswith('queue'))
+async def show_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
+    queue_id: str = callback.data.split('|')[1]
+    queue: Queue | None = await api.get_queue(queue_id = queue_id)
+    
+    if queue is None:
+        return
+    
+    lines = []
+    for entry in queue.entries:
+        lines.append(f'#{entry.position} {entry.student}')
+    
+    text: str = f'''
+Очередь {queue.name}
+
+f{'\n'.join(lines)}
+'''
+    await callback.bot.edit_message_text(
+        chat_id = callback.message.chat.id,
+        message_id = callback.message.message_id,
+        text = text,
+        # reply_markup = InlineKeyboardMarkup(inline_keyboard = lines)
     )
