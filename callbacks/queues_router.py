@@ -6,8 +6,8 @@ from models.teacher_model import Teacher
 from models.queue_model import Queue
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-
 router = Router(name = 'queues_router')
+
 
 @router.callback_query(F.data.startswith('teacher_queues'))
 async def show_teacher_queues(callback: CallbackQuery, api: ScheduleApi) -> None:
