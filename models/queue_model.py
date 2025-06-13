@@ -15,4 +15,4 @@ class Queue(BaseModel):
     id: int
     teacher: int
     name: str
-    entries: list[QueueEntry] = []
+    students: list[QueueEntry] = []

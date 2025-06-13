@@ -43,7 +43,7 @@ async def show_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
         return
     
     lines = []
-    for entry in queue.entries:
+    for entry in queue.students:
         lines.append(f'#{entry.position} {entry.student}')
     
     text: str = f'''
