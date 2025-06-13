@@ -79,7 +79,7 @@ async def add_to_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
     user_id: str = data[2]
     form: AddQueueEntryForm = AddQueueEntryForm(
         position = 1,
-        student = callback.from_user.id,
+        student = callback.from_user.full_name,
         creator_tg_id = callback.from_user.id,
         comment = ''
     )

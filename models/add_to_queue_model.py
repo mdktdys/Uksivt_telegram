@@ -6,5 +6,5 @@ class AddQueueEntryForm(BaseModel):
 
     position: int
     student: str
-    creator_tg_id: str
+    creator_tg_id: int
     comment: str
