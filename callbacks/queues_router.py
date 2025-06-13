@@ -57,9 +57,9 @@ async def show_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
     if callback.message.chat.type == 'private':
         contains_me: bool = any([True if student.student == callback.from_user.id else False for student in queue.students])
         if contains_me:
-            buttons.append([InlineKeyboardButton(text = 'Занять', callback_data = f'add_to_queue|{queue.id}|{callback.from_user.id}')])
-        else:
             buttons.append([InlineKeyboardButton(text = 'Выйти', callback_data = f'remove_from_queue|{queue.id}|{callback.from_user.id}')]) 
+        else:
+            buttons.append([InlineKeyboardButton(text = 'Занять', callback_data = f'add_to_queue|{queue.id}|{callback.from_user.id}')])
     
     buttons.append([InlineKeyboardButton(text = 'Назад', callback_data = f'teacher_queues|{queue.teacher}')])
     await callback.bot.edit_message_text(
