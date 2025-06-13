@@ -12,12 +12,12 @@ router = Router(name = 'queues_router')
 @router.callback_query(F.data.startswith('teacher_queues'))
 async def show_teacher_queues(callback: CallbackQuery, api: ScheduleApi) -> None:
     teacher_id: str = callback.data.split('|')[1]
-    teacher: Teacher | None = api.get_teacher(teacher_id = teacher_id)
+    teacher: Teacher | None = await api.get_teacher(teacher_id = teacher_id)
     
     if teacher is None:
         return
     
-    queues: list[Queue] = api.get_teacher_queues(teacher_id = teacher_id)
+    queues: list[Queue] = await api.get_teacher_queues(teacher_id = teacher_id)
     lines = []
     for queue in queues:
         button_text: str = f'{queue.name}'
