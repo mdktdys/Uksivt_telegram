@@ -49,7 +49,7 @@ async def show_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
     text: str = f'''
 Очередь {queue.name}
 
-{'\n'.join(lines)}
+{lines}
 '''
     await callback.bot.edit_message_text(
         chat_id = callback.message.chat.id,
