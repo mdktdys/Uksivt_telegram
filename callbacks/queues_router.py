@@ -56,7 +56,7 @@ async def show_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
 
     buttons: list[InlineKeyboardButton] = []
     if callback.message.chat.type == 'private':
-        contains_me: list[Queue] = [student if student.student == callback.from_user.id else False for student in queue.students]
+        contains_me: list[Queue] = [student for student in queue.students if student.student == str(callback.from_user.id)]
         if len(contains_me) > 0:
             contain: Queue = contains_me[0]
             buttons.append([InlineKeyboardButton(text = 'Выйти', callback_data = f'remove_from_queue|{contain.id}|{callback.from_user.id}')]) 
