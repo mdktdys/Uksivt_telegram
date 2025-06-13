@@ -46,14 +46,43 @@ async def show_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
     for entry in queue.students:
         lines.append(f'#{entry.position} {entry.student}')
     
+    body = '\n'.join(lines)
     text: str = f'''
 Очередь {queue.name}
 
-{lines}
+{body}
 '''
+
+    buttons: list[InlineKeyboardButton] = []
+    if callback.message.chat.type == 'private':
+        contains_me: bool = any([True if student.student == callback.from_user.id else False for student in queue.students])
+        if contains_me:
+            buttons.append([InlineKeyboardButton(text = 'Занять', callback_data = f'add_to_queue|{queue.id}|{callback.from_user.id}')])
+        else:
+            buttons.append([InlineKeyboardButton(text = 'Выйти', callback_data = f'remove_from_queue|{queue.id}|{callback.from_user.id}')]) 
+    
+    buttons.append([InlineKeyboardButton(text = 'Назад', callback_data = f'teacher_queues|{queue.teacher}')])
     await callback.bot.edit_message_text(
         chat_id = callback.message.chat.id,
         message_id = callback.message.message_id,
         text = text,
-        # reply_markup = InlineKeyboardMarkup(inline_keyboard = lines)
+        reply_markup = InlineKeyboardMarkup(inline_keyboard = [buttons])
     )
+    
+
+@router.callback_query(F.data.startswith('add_to_queue'))
+async def add_to_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
+    data: list[str] = callback.data.split('|')
+    queue_id: str = data[1]
+    user_id: str = data[2]
+    await api.add_to_queue(queue_id = queue_id, user_id = user_id)
+    await show_queue(callback = callback, api = api)
+    
+
+@router.callback_query(F.data.startswith('remove_from_queue'))
+async def remove_from_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
+    data: list[str] = callback.data.split('|')
+    queue_id: str = data[1]
+    user_id: str = data[2]
+    await api.remove_from_queue(queue_id = queue_id, user_id = user_id)
+    await show_queue(callback = callback, api = api)

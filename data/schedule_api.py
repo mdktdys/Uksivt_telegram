@@ -8,7 +8,6 @@ from models.queue_model import Queue
 
 
 class ScheduleApi:
-    
     def __init__(self, api_key: str, api_url: str) -> None:
         self.api_key: str = api_key
         self.api_url: str = api_url
@@ -62,8 +61,29 @@ class ScheduleApi:
                 return Queue.model_validate_json(await res.text())
 
 
+    async def add_to_queue(self, queue_id: int, user_id: str):
+        async with aiohttp.ClientSession(trust_env=True) as session:
+            url: str = ApiRoutes.add_to_queue.format(queue_id = queue_id, api_url = self.api_url)
+            async with session.post(url, json = {'user_id': user_id}) as res:
+                if res.status != 200:
+                    raise Exception('failed get teacher')
+
+                return None
+
+
+    async def remove_from_queue(self, queue_id: int, user_id: str):
+        async with aiohttp.ClientSession(trust_env=True) as session:
+            url: str = ApiRoutes.remove_from_queue.format(queue_id = queue_id, api_url = self.api_url)
+            async with session.post(url, json = {'user_id': user_id}) as res:
+                if res.status != 200:
+                    raise Exception('failed get teacher')
+
+                return None
+
 class ApiRoutes:
     GROUP_SCHEDULE_FORMATTED = "{api_url}groups/day_schedule_formatted/{group}/{date}/{chat_id}/"
     get_teacher: str = "{api_url}teachers/id/{id}/"
     get_teacher_queues: str = "{api_url}teachers/queues/{teacher_id}/"
     get_queue: str = "{api_url}teachers/queue/{queue_id}/"
+    add_to_queue: str = "{api_url}teachers/queue/add/{queue_id}/"
+    remove_from_queue: str = "{api_url}teachers/queue/remove/{queue_id}/"
