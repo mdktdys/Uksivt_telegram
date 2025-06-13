@@ -33,8 +33,12 @@ def build_keyboard(
                 target_id=search_id,
                 is_subscribe=is_subscribed,
             ).pack(),
-        )
+        ),
     ]
+    
+    if search_type == 'teacher':
+        queue_button: InlineKeyboardButton = InlineKeyboardButton(text = 'Очередь', callback_data = f'teacher_queues|{search_id}')
+        notification_buttons.append(queue_button)
 
     days: list[str] = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"]
 
