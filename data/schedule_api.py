@@ -28,7 +28,7 @@ class ScheduleApi:
                 return response
             
     
-    async def get_teacher(teacher_id: int) -> Teacher:
+    async def get_teacher(self, teacher_id: int) -> Teacher:
         async with aiohttp.ClientSession(trust_env=True) as session:
             url: str = ApiRoutes.get_teacher.format(id = teacher_id)
             async with session.get(url) as res:
@@ -38,7 +38,7 @@ class ScheduleApi:
                 return Teacher.model_validate_json(await res.text())
             
     
-    async def get_teacher_queues(teacher_id: int) -> list[Queue]:
+    async def get_teacher_queues(self, teacher_id: int) -> list[Queue]:
         async with aiohttp.ClientSession(trust_env=True) as session:
             url: str = ApiRoutes.get_teacher_queues.format(teacher_id = teacher_id)
             async with session.get(url) as res:
