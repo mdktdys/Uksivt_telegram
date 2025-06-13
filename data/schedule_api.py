@@ -35,7 +35,9 @@ class ScheduleApi:
                 if res.status != 200:
                     raise Exception('failed get teacher')
 
-                return Teacher.model_validate_json(await res.text())
+                raw_json = await res.text()
+                parsed = json.loads(raw_json)
+                return [Teacher.model_validate(item) for item in parsed][0]
             
     
     async def get_teacher_queues(self, teacher_id: int) -> list[Queue]:
