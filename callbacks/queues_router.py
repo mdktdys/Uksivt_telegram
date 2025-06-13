@@ -26,7 +26,7 @@ async def show_teacher_queues(callback: CallbackQuery, api: ScheduleApi) -> None
     lines.append([InlineKeyboardButton(text = 'Назад', callback_data = f'teacher|{teacher.id}')])
     
     text = 'Очереди преподавателя {teacher.name}'
-    callback.bot.edit_message_text(
+    await callback.bot.edit_message_text(
         chat_id = callback.message.chat.id,
         message_id = callback.message.message_id,
         text = text,
