@@ -9,11 +9,3 @@ def settings_screen_keyboard() -> InlineKeyboardMarkup:
     keyboard.append([InlineKeyboardButton(text = 'Изменить имя', callback_data = 'change_name_screen')])
     keyboard.append([InlineKeyboardButton(text = 'Назад', callback_data = 'menu_screen')])
     return InlineKeyboardMarkup(inline_keyboard = keyboard)
-
-1
-3
-7
-8
-12
-15
-28
