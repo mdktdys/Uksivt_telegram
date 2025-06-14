@@ -80,10 +80,8 @@ class ScheduleApi:
 
     async def remove_from_queue(self, entry_id: int, user_id: str):
         async with aiohttp.ClientSession(trust_env=True) as session:
-            url: str = ApiRoutes.queue.format(api_url = self.api_url)
-            async with session.delete(url, json= {
-                'entry_id': entry_id
-            }) as res:
+            url: str = ApiRoutes.get_queue.format(queue_id = entry_id,api_url = self.api_url)
+            async with session.delete(url) as res:
                 if res.status != 200:
                     raise Exception('failed get teacher')
 
