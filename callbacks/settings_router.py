@@ -15,7 +15,7 @@ class SettingsStates(StatesGroup):
 @router.callback_query(F.data == "settings_screen")
 async def show_settings(callback: CallbackQuery) -> None:
     text: str = settings_screen()
-    await callback.bot.send_message(text = text, reply_markup = settings_screen_keyboard())
+    await callback.bot.send_message(text = text, chat_id = callback.message.chat.id, reply_markup = settings_screen_keyboard())
     
     
 @router.callback_query(F.data == "change_name_screen")
@@ -23,7 +23,7 @@ async def show_change_name(callback: CallbackQuery, state: FSMContext) -> None:
     text: str = change_name_screen()
     await state.set_state(SettingsStates.waiting_for_name)
     await state.update_data(message_id = callback.message.message_id)
-    await callback.bot.send_message(text = text, reply_markup = change_name_screen_keyboard())
+    await callback.bot.send_message(text = text, chat_id = callback.message.chat.id, reply_markup = change_name_screen_keyboard())
     
     
 @router.message(SettingsStates.waiting_for_name)
