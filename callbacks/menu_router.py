@@ -15,7 +15,8 @@ async def command_start_handler(message: Message) -> None:
     
 @router.callback_query(F.data == "menu_screen")
 async def show_menu(callback: CallbackQuery) -> None:
-     await callback.bot.send_message(
+    await callback.bot.delete_message(message_id = callback.message.message_id, chat_id = callback.message.chat.id)
+    await callback.bot.send_message(
         chat_id = callback.message.chat.id,
         text = menu_screen(),
         reply_markup = menu_screen_keyboard()
