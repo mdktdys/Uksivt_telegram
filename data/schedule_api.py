@@ -65,13 +65,15 @@ class ScheduleApi:
     async def add_to_queue(self, user_id: str, form: AddQueueEntryForm):
         async with aiohttp.ClientSession(trust_env=True) as session:
             url: str = ApiRoutes.queue.format(api_url = self.api_url)
-            async with session.post(url, json = {
+            json = {
                     'queue_id': form.queue_id,
                     'position': form.position,
                     'student': form.student,
                     'creator_tg_id': form.creator_tg_id,
                     'comment': form.comment
-                }) as res:
+                }
+            print(json)
+            async with session.post(url, json = json) as res:
                 if res.status != 200:
                     raise Exception('failed get teacher')
 
