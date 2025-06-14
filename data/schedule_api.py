@@ -1,6 +1,7 @@
 import datetime
 import json
 import logging
+from typing import Any
 import aiohttp
 from models.search_result import DayScheduleFormatted
 from models.teacher_model import Teacher
@@ -65,7 +66,7 @@ class ScheduleApi:
     async def add_to_queue(self, user_id: str, form: AddQueueEntryForm):
         async with aiohttp.ClientSession(trust_env=True) as session:
             url: str = ApiRoutes.queue.format(api_url = self.api_url)
-            json = {
+            json: dict[str, Any] = {
                     'queue_id': form.queue_id,
                     'position': form.position,
                     'student': form.student,
