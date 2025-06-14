@@ -70,7 +70,7 @@ class ScheduleApi:
                     'queue_id': form.queue_id,
                     'position': form.position,
                     'student': form.student,
-                    'creator_tg_id': str(form.creator_tg_id),
+                    'creator_tg_id': form.creator_tg_id,
                     'comment': form.comment
                 }
             print(json)
