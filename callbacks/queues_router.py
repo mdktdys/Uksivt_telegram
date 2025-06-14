@@ -43,32 +43,11 @@ async def show_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
     if queue is None:
         return
     
-    lines = []
-    for entry in queue.students:
-        lines.append(f'#{entry.position} {entry.student}')
-    
-    body = '\n'.join(lines)
-    text: str = f'''
-Очередь {queue.name}
-
-{body}
-'''
-
-    buttons: list[InlineKeyboardButton] = []
-    if callback.message.chat.type == 'private':
-        contains_me: list[Queue] = [student for student in queue.students if str(student.creator_tg_id) == str(callback.from_user.id)]
-        if len(contains_me) > 0:
-            contain: Queue = contains_me[0]
-            buttons.append([InlineKeyboardButton(text = 'Выйти', callback_data = f'remove_from_queue|{contain.id}|{queue.id}')]) 
-        else:
-            buttons.append([InlineKeyboardButton(text = 'Занять', callback_data = f'add_to_queue|{queue.id}|{callback.from_user.id}')])
-    
-    buttons.append([InlineKeyboardButton(text = 'Назад', callback_data = f'teacher_queues|{queue.teacher}')])
     await callback.bot.edit_message_text(
         chat_id = callback.message.chat.id,
         message_id = callback.message.message_id,
-        text = text,
-        reply_markup = InlineKeyboardMarkup(inline_keyboard = buttons)
+        text = queue_screen(queue = queue),
+        reply_markup = queue_keyboard(queue = queue, callback = callback)
     )
     
 
@@ -94,5 +73,39 @@ async def remove_from_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
     entry_id: str = data[1]
     queue_id: str = data[2]
     await api.remove_from_queue(entry_id = entry_id)
-    callback = CallbackQuery(data = f'queue|{queue_id}', bot = callback.bot, message = callback.message, id = callback.id, from_user = callback.from_user, chat_instance = callback.chat_instance, inline_message_id = callback.inline_message_id)
-    await show_queue(callback = callback, api = api)
+    
+    queue_id: str = callback.data.split('|')[1]
+    queue: Queue | None = await api.get_queue(queue_id = queue_id)
+    await callback.bot.edit_message_text(
+        chat_id = callback.message.chat.id,
+        message_id = callback.message.message_id,
+        text = queue_screen(queue = queue),
+        reply_markup = queue_keyboard(queue = queue, callback = callback)
+    )
+    
+    
+def queue_screen(queue: Queue):
+    lines = []
+    for entry in queue.students:
+        lines.append(f'#{entry.position} {entry.student}')
+    body = '\n'.join(lines)
+    text: str = f'''
+    Очередь {queue.name}
+
+    {body}
+    '''
+    return text
+
+
+def queue_keyboard(queue: Queue, callback: CallbackQuery) -> InlineKeyboardMarkup:
+    buttons: list[InlineKeyboardButton] = []
+    if callback.message.chat.type == 'private':
+        contains_me: list[Queue] = [student for student in queue.students if str(student.creator_tg_id) == str(callback.from_user.id)]
+        if len(contains_me) > 0:
+            contain: Queue = contains_me[0]
+            buttons.append([InlineKeyboardButton(text = 'Выйти', callback_data = f'remove_from_queue|{contain.id}|{queue.id}')]) 
+        else:
+            buttons.append([InlineKeyboardButton(text = 'Занять', callback_data = f'add_to_queue|{queue.id}|{callback.from_user.id}')])
+    
+    buttons.append([InlineKeyboardButton(text = 'Назад', callback_data = f'teacher_queues|{queue.teacher}')])
+    return InlineKeyboardMarkup(inline_keyboard = buttons)
