@@ -62,11 +62,11 @@ class ScheduleApi:
                 return Queue.model_validate_json(await res.text())
 
 
-    async def add_to_queue(self, queue_id: int, user_id: str, form: AddQueueEntryForm):
+    async def add_to_queue(self, user_id: str, form: AddQueueEntryForm):
         async with aiohttp.ClientSession(trust_env=True) as session:
             url: str = ApiRoutes.queue.format(api_url = self.api_url)
             async with session.post(url, json = {
-                    'queue_id': form.queue,
+                    'queue_id': form.queue_id,
                     'position': form.position,
                     'student': form.student,
                     'creator_tg_id': form.creator_tg_id,
