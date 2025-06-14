@@ -31,12 +31,13 @@ async def show_change_name(callback: CallbackQuery, state: FSMContext) -> None:
 @router.message(SettingsStates.waiting_for_name)
 async def process_name_input(message: Message, state: FSMContext) -> None:
     try:
-        # data: Dict[str, Any] = await state.get_data()
-        # message_id: int | None = data.get("message_id")
+        data: Dict[str, Any] = await state.get_data()
+        message_id: int | None = data.get("message_id")
 
-        # name: str = message.text
+        name: str = message.text
         
         text: str = settings_screen()
+        await message.bot.delete_message(message_id = message_id, chat_id = message.chat.id)
         await message.bot.delete_message(message_id = message.message_id, chat_id = message.chat.id)
         await message.bot.send_message(
             chat_id = message.chat.id,
