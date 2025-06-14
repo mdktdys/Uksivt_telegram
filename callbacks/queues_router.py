@@ -94,5 +94,5 @@ async def remove_from_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
     entry_id: str = data[1]
     queue_id: str = data[2]
     await api.remove_from_queue(entry_id = entry_id)
-    callback = CallbackQuery(data = f'queue|{queue_id}', message = callback.message, id = callback.id, from_user = callback.from_user, chat_instance = callback.chat_instance, inline_message_id = callback.inline_message_id)
+    callback = CallbackQuery(data = f'queue|{queue_id}', bot = callback.bot, message = callback.message, id = callback.id, from_user = callback.from_user, chat_instance = callback.chat_instance, inline_message_id = callback.inline_message_id)
     await show_queue(callback = callback, api = api)
