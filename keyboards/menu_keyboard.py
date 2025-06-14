@@ -8,7 +8,8 @@ def menu_screen_keyboard() -> InlineKeyboardMarkup:
     
     keyboard.append([InlineKeyboardButton(text='Поиск', switch_inline_query_current_chat = '')])
     keyboard.append([
-        InlineKeyboardButton(text="🐋", url="https://uksivt.xyz/"),
-        InlineKeyboardButton(text = 'Изменить имя', callback_data = 'change_name'),
+        InlineKeyboardButton(text="Сайт", url="https://uksivt.xyz/"),
+        InlineKeyboardButton(text="🐋 Канал замен", url="https://t.me/bot_uksivt"),
     ])
+    keyboard.append([InlineKeyboardButton(text = 'Настройки', callback_data = 'settings_screen')])
     return InlineKeyboardMarkup(inline_keyboard = keyboard)
