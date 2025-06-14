@@ -46,9 +46,9 @@ async def main() -> None:
         test.router,
         parser.router,
         events.router,
-        notifications.router,
         queues_router.router,
-        menu_router.router
+        menu_router.router,
+        notifications.router,
     )
     try:
         await on_on(bot = bot)
