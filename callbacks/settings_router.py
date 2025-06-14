@@ -39,7 +39,7 @@ async def process_name_input(message: Message, state: FSMContext) -> None:
         await message.bot.edit_message_text(
             chat_id = message.chat.id,
             message_id = message_id,
-            caption = text,
+            text = text,
             reply_markup = settings_screen_keyboard()
         )
         await state.clear()
