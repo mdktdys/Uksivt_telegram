@@ -8,6 +8,7 @@ class QueueEntry(BaseModel):
     position: int
     student: str
     comment: str
+    creator_tg_id: str
     teacher_comment: str | None
 
 
