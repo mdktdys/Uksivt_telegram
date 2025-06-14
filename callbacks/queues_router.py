@@ -84,7 +84,7 @@ async def remove_from_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
     
     
 def queue_screen(queue: Queue):
-    lines = []
+    lines: list[str] = []
     for entry in queue.students:
         lines.append(f'#{entry.position} {entry.student}')
     body = '\n'.join(lines)
