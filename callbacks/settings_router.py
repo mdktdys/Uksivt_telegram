@@ -24,8 +24,8 @@ async def show_change_name(callback: CallbackQuery, state: FSMContext) -> None:
     text: str = change_name_screen()
     await callback.bot.delete_message(chat_id = callback.message.chat.id, message_id = callback.message.message_id)
     await state.set_state(SettingsStates.waiting_for_name)
-    await state.update_data(message_id = callback.message.message_id)
-    await callback.bot.send_message(text = text, chat_id = callback.message.chat.id, reply_markup = change_name_screen_keyboard())
+    message: Message = await callback.bot.send_message(text = text, chat_id = callback.message.chat.id, reply_markup = change_name_screen_keyboard())
+    await state.update_data(message_id = message.message_id)
     
     
 @router.message(SettingsStates.waiting_for_name)
@@ -37,7 +37,7 @@ async def process_name_input(message: Message, state: FSMContext) -> None:
         name: str = message.text
         
         text: str = settings_screen()
-        # await message.bot.delete_message(message_id = message_id, chat_id = message.chat.id)
+        await message.bot.delete_message(message_id = message_id, chat_id = message.chat.id)
         await message.bot.delete_message(message_id = message.message_id, chat_id = message.chat.id)
         await message.bot.send_message(
             chat_id = message.chat.id,
