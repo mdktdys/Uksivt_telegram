@@ -74,7 +74,6 @@ async def remove_from_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
     queue_id: str = data[2]
     await api.remove_from_queue(entry_id = entry_id)
     
-    queue_id: str = callback.data.split('|')[1]
     queue: Queue | None = await api.get_queue(queue_id = queue_id)
     await callback.bot.edit_message_text(
         chat_id = callback.message.chat.id,
@@ -90,9 +89,9 @@ def queue_screen(queue: Queue):
         lines.append(f'#{entry.position} {entry.student}')
     body = '\n'.join(lines)
     text: str = f'''
-    Очередь {queue.name}
+Очередь {queue.name}
 
-    {body}
+{body}
     '''
     return text
 
