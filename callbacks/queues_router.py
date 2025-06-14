@@ -59,7 +59,7 @@ async def show_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
         contains_me: list[Queue] = [student for student in queue.students if str(student.creator_tg_id) == str(callback.from_user.id)]
         if len(contains_me) > 0:
             contain: Queue = contains_me[0]
-            buttons.append([InlineKeyboardButton(text = 'Выйти', callback_data = f'remove_from_queue|{contain.id}|{callback.from_user.id}')]) 
+            buttons.append([InlineKeyboardButton(text = 'Выйти', callback_data = f'remove_from_queue|{contain.id}|{queue.id}')]) 
         else:
             buttons.append([InlineKeyboardButton(text = 'Занять', callback_data = f'add_to_queue|{queue.id}|{callback.from_user.id}')])
     
@@ -92,6 +92,7 @@ async def add_to_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
 async def remove_from_queue(callback: CallbackQuery, api: ScheduleApi) -> None:
     data: list[str] = callback.data.split('|')
     entry_id: str = data[1]
-    user_id: str = data[2]
-    await api.remove_from_queue(entry_id = entry_id, user_id = user_id)
+    queue_id: str = data[2]
+    await api.remove_from_queue(entry_id = entry_id)
+    callback.data = f'queue|{queue_id}'
     await show_queue(callback = callback, api = api)
