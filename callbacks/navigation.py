@@ -17,9 +17,7 @@ router = Router()
 
 
 @router.callback_query(Notification.filter(F.type == "group"))
-async def handle_notification_callback(
-    callback: types.CallbackQuery, callback_data: Notification
-) -> None:
+async def handle_notification_callback(callback: types.CallbackQuery, callback_data: Notification) -> None:
     date: datetime.date = datetime.datetime.fromisoformat(callback_data.date).date()
     monday_date = date - datetime.timedelta(days=date.weekday())
     group = callback_data.search_id

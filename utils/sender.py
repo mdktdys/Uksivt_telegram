@@ -4,7 +4,6 @@ from aiogram import Bot
 from main import bot
 from my_secrets import DEBUG_CHANNEL
 
-
 async def send_message(
     chat_id,
     message: str

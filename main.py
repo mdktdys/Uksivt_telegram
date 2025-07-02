@@ -5,7 +5,7 @@ import sys
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from callbacks import navigation, search, test, parser, events, notifications
+from callbacks import navigation, search, test, parser, events, notifications, queues_router, menu_router, settings_router
 from callbacks.events import on_on, on_exit
 from core.methods import check_new_zamena
 from data.schedule_api import ScheduleApi
@@ -46,12 +46,15 @@ async def main() -> None:
         test.router,
         parser.router,
         events.router,
+        queues_router.router,
+        menu_router.router,
+        settings_router.router,
         notifications.router,
     )
     try:
-        await on_on(bot=bot)
+        await on_on(bot = bot)
         await dp.start_polling(bot)
-        await check_new_zamena(bot=bot)
+        await check_new_zamena(bot = bot)
     finally:
         scheduler.shutdown()
         await on_exit(bot=bot)
