@@ -252,9 +252,6 @@ async def a(message: Message) -> None:
     week_day = date.weekday()
 
     async with aiohttp.ClientSession(trust_env=True) as session:
-        print(
-            f'{API_URL}teachers/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/'
-        )
         async with session.get(
             f'{API_URL}teachers/day_schedule_formatted/{group}/{datetime.datetime.now().strftime("%Y-%m-%d")}/{message.chat.id}/',
             headers={"X-API-KEY": API_KEY},
