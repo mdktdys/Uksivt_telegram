@@ -3,7 +3,7 @@ from .auth_keyboard import auth_keyboard
 
 
 async def handle_auth(message: Message) -> None:
-    token: str | None = message.text.split(" ")[1]
+    token: str | None = message.text.split(" ")[1].replace('auth', '')
 
     if token is None:
         return
