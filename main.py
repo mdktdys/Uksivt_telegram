@@ -2,10 +2,11 @@ import asyncio
 import logging
 import sys
 
+from src.modules.auth.auth_router import router as auth_router
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from callbacks import navigation, search, test, parser, events, notifications, queues_router, menu_router, settings_router
+from callbacks import navigation, search, parser, events, notifications, queues_router, menu_router, settings_router
 from callbacks.events import on_on, on_exit
 from core.methods import check_new_zamena
 from data.schedule_api import ScheduleApi
@@ -43,7 +44,7 @@ async def main() -> None:
     dp.include_routers(
         navigation.router,
         search.router,
-        test.router,
+        auth_router,
         parser.router,
         events.router,
         queues_router.router,
