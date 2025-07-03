@@ -1,7 +1,9 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-def menu_screen():
+
+def menu_screen() -> str:
     return 'Для поиска расписания в чатах начните вводить (Бот должен состоять в чате)\n@UksivtZameny_bot [Наименование]'
+
 
 def menu_screen_keyboard() -> InlineKeyboardMarkup:
     keyboard: list[list[InlineKeyboardButton]] = []
