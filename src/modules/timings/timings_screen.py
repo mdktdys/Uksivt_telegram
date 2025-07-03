@@ -2,7 +2,7 @@ from models.timings_model import Timings
 
 
 def timings_screen(timings: list[Timings] | None) -> str:
-    text = "🔔 Расписание звонков без обеда\n"
+    text = "🔔 Расписание звонков\n\n"
     if not timings:
         return text + "Не удалось получить расписание звонков"
 
@@ -11,7 +11,7 @@ def timings_screen(timings: list[Timings] | None) -> str:
 
 
 def obed_timings_screen(timings: list[Timings] | None) -> str:
-    text = "🍽️ Расписание звонков с обедом\n"
+    text = "🍽️ Расписание звонков без обеда\n\n"
     if not timings:
         return text + "Не удалось получить расписание звонков"
 
@@ -19,7 +19,7 @@ def obed_timings_screen(timings: list[Timings] | None) -> str:
     return text
 
 def saturday_timings_screen(timings: list[Timings] | None) -> str:
-    text = "📅 Расписание звонков по субботе\n"
+    text = "📅 Расписание звонков по субботе\n\n"
     if not timings:
         return text + "Не удалось получить расписание звонков"
 
