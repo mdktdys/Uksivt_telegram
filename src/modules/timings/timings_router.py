@@ -2,8 +2,8 @@ from aiogram import Router, F
 from aiogram.types import CallbackQuery
 from models.timings_model import Timings
 from src.services.data_service import DataService
-from .timings_keyboard import timings_keyboard
-from .timings_screen import timings_screen
+from .timings_keyboard import timings_keyboard, obed_timings_keyboard, saturday_timings_keyboard
+from .timings_screen import timings_screen, saturday_timings_screen, obed_timings_screen
 
 
 router = Router(name = 'timings_router')
@@ -28,8 +28,8 @@ async def show_obed_timings_screen(callback: CallbackQuery, data_service: DataSe
     await callback.bot.edit_message_text(
         chat_id = callback.message.chat.id,
         message_id = callback.message.message_id,
-        text = timings_screen(timings),
-        reply_markup = timings_keyboard()
+        text = obed_timings_screen(timings),
+        reply_markup = obed_timings_keyboard()
     )
 
 
@@ -40,6 +40,6 @@ async def show_saturday_timings_screen(callback: CallbackQuery, data_service: Da
     await callback.bot.edit_message_text(
         chat_id = callback.message.chat.id,
         message_id = callback.message.message_id,
-        text = timings_screen(timings),
-        reply_markup = timings_keyboard()
+        text = saturday_timings_screen(timings),
+        reply_markup = saturday_timings_keyboard()
     )
