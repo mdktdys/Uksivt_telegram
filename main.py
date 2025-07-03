@@ -21,6 +21,7 @@ from my_secrets import (
 )
 from src.middlewares.services_middleware import ServicesMiddleware
 from src.services.data_service import DataService
+from src.services.assets_service import AssetsService
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from src.router import router
@@ -58,7 +59,8 @@ async def main() -> None:
     )
     
     data_service: DataService = DataService()
-    services_middleware: ServicesMiddleware = ServicesMiddleware(data_service)
+    assets_service: AssetsService = AssetsService()
+    services_middleware: ServicesMiddleware = ServicesMiddleware(data_service, assets_service)
     dp.message.middleware(services_middleware)
     dp.callback_query.middleware(services_middleware)
 
