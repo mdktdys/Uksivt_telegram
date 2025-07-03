@@ -1,5 +1,4 @@
-from aiogram.types import FSInputFile, BufferedInputFile
-from io import BytesIO
+from aiogram.types import BufferedInputFile
 from pathlib import Path
 
 
@@ -15,9 +14,8 @@ class AssetsService:
             if file.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp"}:
                 continue
 
-            data = file.read_bytes()
-            name = file.name
-            self._images[file.stem] = BufferedInputFile(data=data, filename=name)
+            file_bytes = file.read_bytes()
+            self._images[file.stem] = BufferedInputFile(file_bytes, filename=file.name)
 
     def get_image(self, name: str) -> BufferedInputFile:
         image = self._images.get(name)
