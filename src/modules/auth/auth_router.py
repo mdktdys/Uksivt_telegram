@@ -42,11 +42,11 @@ async def auth_user(
     url = "https://api.uksivt.xyz/api/v1/telegram/verify"
     data: dict[str, str] = {
         "token": token,
-        'firstname': first_name,
-        'lastname': last_name,
-        'username': username,
-        "user_id": user_id,
-        "chat_id": chat_id,
+        "first_name": first_name,
+        "last_name": last_name,
+        "username": username,
+        "user_id": str(user_id),
+        "chat_id": str(chat_id),
         "photo_url": photo_url
     }
 
