@@ -2,6 +2,7 @@ from aiogram import F, Router
 from aiogram.types import User, UserProfilePhotos, CallbackQuery
 from aiogram.types.photo_size import PhotoSize
 import aiohttp
+from typing import Optional, Any
 
 router = Router(name = 'auth_router')
 
@@ -16,9 +17,9 @@ async def auth_login(callback: CallbackQuery) -> None:
 
     await auth_user(
         token = token,
-        first_name = user.first_name,
-        last_name = user.last_name,
-        username = user.username,
+        first_name = user.first_name if user.first_name is not None else None,
+        last_name = user.last_name if user.last_name is not None else None,
+        username = user.username if user.username is not None else None,
         user_id = user.id,
         chat_id = callback.message.chat.id,
         photo_url = ''
@@ -34,19 +35,19 @@ async def auth_user(
     token: str,
     user_id: int,
     chat_id: int,
-    photo_url: str,
-    first_name: str,
-    last_name: str,
-    username: str
+    photo_url: Optional[str] = None,
+    first_name: Optional[str] = None,
+    last_name: Optional[str] = None,
+    username: Optional[str] = None
 ) -> None:
     url = "https://api.uksivt.xyz/api/v1/telegram/verify"
-    data: dict[str, str] = {
+    data: dict[str, Any] = {
         "token": token,
         "first_name": first_name,
         "last_name": last_name,
         "username": username,
-        "user_id": str(user_id),
-        "chat_id": str(chat_id),
+        "user_id": user_id,
+        "chat_id": chat_id,
         "photo_url": photo_url
     }
 
