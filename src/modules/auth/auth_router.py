@@ -64,4 +64,4 @@ async def auth_user(
             if response.status == 201:
                 print("User authenticated successfully.")
             else:
-                raise Exception(await response.text())
+                raise Exception(str(response))
