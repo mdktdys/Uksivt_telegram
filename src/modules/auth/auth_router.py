@@ -1,6 +1,5 @@
 from aiogram import F, Router
 from aiogram.types import User, UserProfilePhotos, CallbackQuery
-from aiogram.methods import GetUserProfilePhotos
 from aiogram.types.photo_size import PhotoSize
 import aiohttp
 
@@ -11,8 +10,8 @@ router = Router(name = 'auth_router')
 async def auth_login(callback: CallbackQuery) -> None:
     token: str = callback.data.split("|")[1]
     user: User = callback.from_user
-    photos: GetUserProfilePhotos = user.get_profile_photos()
-    photo: PhotoSize = photos().photos[0][0]
+    photos: UserProfilePhotos = await callback.bot.get_user_profile_photos(user.id)
+    photo: PhotoSize = photos.photos[0][0]
 
     await auth_user(
         token = token,
