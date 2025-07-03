@@ -20,8 +20,8 @@ async def auth_login(callback: CallbackQuery) -> None:
         first_name = user.first_name if user.first_name is not None else None,
         last_name = user.last_name if user.last_name is not None else None,
         username = user.username if user.username is not None else None,
-        user_id = user.id,
-        chat_id = callback.message.chat.id,
+        user_id = str(user.id),
+        chat_id = str(callback.message.chat.id),
         photo_url = ''
     )
     
