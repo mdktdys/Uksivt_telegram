@@ -52,6 +52,7 @@ async def auth_user(
     }
 
     async with aiohttp.ClientSession() as session:
+        print(data)
         async with session.post(url, json = data) as response:
             print(response)
             print(await response.text())
