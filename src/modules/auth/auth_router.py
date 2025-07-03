@@ -51,7 +51,7 @@ async def auth_user(
     }
 
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, data = data) as response:
+        async with session.post(url, json = data) as response:
             if response.status == 201:
                 print("User authenticated successfully.")
             else:
