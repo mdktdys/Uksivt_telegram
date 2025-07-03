@@ -11,7 +11,8 @@ async def auth_login(callback: CallbackQuery) -> None:
     token: str = callback.data.split("|")[1]
     user: User = callback.from_user
     photos: UserProfilePhotos = await callback.bot.get_user_profile_photos(user.id)
-    photo: PhotoSize = photos.photos[0][0]
+    print(photos.photos.count())
+    # photo: PhotoSize = photos.photos[0]
 
     await auth_user(
         token = token,
@@ -20,7 +21,7 @@ async def auth_login(callback: CallbackQuery) -> None:
         username = user.username,
         user_id = user.id,
         chat_id = callback.message.chat.id,
-        photo_url = photo.file_id
+        photo_url = ''
     )
     
     await callback.bot.send_message(
