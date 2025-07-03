@@ -4,7 +4,7 @@ from models.timings_model import Timings
 
 class DataService:
     def __init__(self) -> None:
-        self.base_url: str | None = 'https://api.uksivt.xyz/'
+        self.base_url: str | None = 'https://api.uksivt.xyz'
         self.client: httpx.AsyncClient = httpx.AsyncClient()
         self.headers: dict[str, str] = {
             'x-api-key': API_KEY
