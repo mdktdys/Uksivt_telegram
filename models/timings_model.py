@@ -3,7 +3,7 @@ from datetime import time
 
 
 class Timings(BaseModel):
-    model_config = ConfigDict(strict=True)
+    model_config = ConfigDict(populate_by_name=True)
     
     number: int
     start: time 
