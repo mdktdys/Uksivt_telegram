@@ -15,6 +15,9 @@ async def auth_login(callback: CallbackQuery) -> None:
 
     await auth_user(
         token = token,
+        first_name = user.first_name,
+        last_name = user.last_name,
+        username = user.username,
         user_id = user.id,
         chat_id = callback.message.chat.id,
         photo_url = photo.file_id
@@ -26,10 +29,21 @@ async def auth_login(callback: CallbackQuery) -> None:
     )
     
 
-async def auth_user(token: str, user_id: int, chat_id: int, photo_url: str) -> None:
+async def auth_user(
+    token: str,
+    user_id: int,
+    chat_id: int,
+    photo_url: str,
+    first_name: str,
+    last_name: str,
+    username: str
+) -> None:
     url = "https://api.uksivt.xyz/api/v1/telegram/verify"
     data: dict[str, str] = {
         "token": token,
+        'firstname': first_name,
+        'lastname': last_name,
+        'username': username,
         "user_id": user_id,
         "chat_id": chat_id,
         "photo_url": photo_url
