@@ -15,16 +15,24 @@ async def auth_login(callback: CallbackQuery) -> None:
     print(photos)
     # photo: PhotoSize = photos.photos[0]
 
-    await auth_user(
-        token = token,
-        first_name = user.first_name if user.first_name is not None else None,
-        last_name = user.last_name if user.last_name is not None else None,
-        username = user.username if user.username is not None else None,
-        user_id = str(user.id),
-        chat_id = str(callback.message.chat.id),
-        photo_url = ''
-    )
-    
+    try:
+        await auth_user(
+            token = token,
+            first_name = user.first_name if user.first_name is not None else None,
+            last_name = user.last_name if user.last_name is not None else None,
+            username = user.username if user.username is not None else None,
+            user_id = str(user.id),
+            chat_id = str(callback.message.chat.id),
+            photo_url = ''
+        )
+    except Exception as e:
+        print(e)
+        await callback.bot.send_message(
+            chat_id = callback.message.chat.id,
+            text = 'Ошибка авторизации! ' + str(e)
+        )
+        return
+
     await callback.bot.send_message(
         chat_id = callback.message.chat.id,
         text = 'Успешная авторизация!'
@@ -52,11 +60,8 @@ async def auth_user(
     }
 
     async with aiohttp.ClientSession() as session:
-        print(data)
         async with session.post(url, json = data) as response:
-            print(response)
-            print(await response.text())
             if response.status == 201:
                 print("User authenticated successfully.")
             else:
-                print("Failed to authenticate user.")
+                raise Exception(await response.text())
