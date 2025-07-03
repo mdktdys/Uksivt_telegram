@@ -7,6 +7,7 @@ def menu_screen_keyboard() -> InlineKeyboardMarkup:
     keyboard: list[list[InlineKeyboardButton]] = []
     
     keyboard.append([InlineKeyboardButton(text='🔎 Поиск', switch_inline_query_current_chat = '')])
+    keyboard.append([InlineKeyboardButton(text='🔔 Звонки', callback_data = 'timings_screen')])
     keyboard.append([
         InlineKeyboardButton(text="🌐 Сайт", url="https://uksivt.xyz/"),
         InlineKeyboardButton(text="🐋 Канал замен", url="https://t.me/bot_uksivt"),

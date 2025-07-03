@@ -3,6 +3,7 @@ import logging
 import sys
 
 from src.modules.auth.auth_router import router as auth_router
+
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
@@ -18,9 +19,11 @@ from my_secrets import (
     API_URL,
     TOKEN,
 )
-
+from src.middlewares.services_middleware import ServicesMiddleware
+from src.services.data_service import DataService
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
+from src.router import router
 
 dp = Dispatcher(api=ScheduleApi(api_key=API_KEY, api_url=API_URL))
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
@@ -42,6 +45,7 @@ async def main() -> None:
     scheduler.start()
 
     dp.include_routers(
+        router,
         navigation.router,
         search.router,
         auth_router,
@@ -52,6 +56,12 @@ async def main() -> None:
         settings_router.router,
         notifications.router,
     )
+    
+    data_service: DataService = DataService()
+    services_middleware: ServicesMiddleware = ServicesMiddleware(data_service)
+    dp.message.middleware(services_middleware)
+    dp.callback_query.middleware(services_middleware)
+
     try:
         await on_on(bot = bot)
         await dp.start_polling(bot)
