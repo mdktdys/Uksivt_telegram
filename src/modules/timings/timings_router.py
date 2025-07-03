@@ -14,6 +14,7 @@ async def show_timings_screen(callback: CallbackQuery, data_service: DataService
     timings: list[Timings] = await data_service.get_timings()
 
     await callback.bot.edit_message_text(
+        message_id = callback.message.message_id,
         text = timings_screen(timings),
         reply_markup = timings_keyboard()
     )
@@ -24,6 +25,7 @@ async def show_obed_timings_screen(callback: CallbackQuery, data_service: DataSe
     timings: list[Timings] = await data_service.get_timings()
 
     await callback.bot.edit_message_text(
+        message_id = callback.message.message_id,
         text = timings_screen(timings),
         reply_markup = timings_keyboard()
     )
@@ -34,6 +36,7 @@ async def show_saturday_timings_screen(callback: CallbackQuery, data_service: Da
     timings: list[Timings] = await data_service.get_timings()
 
     await callback.bot.edit_message_text(
+        message_id = callback.message.message_id,
         text = timings_screen(timings),
         reply_markup = timings_keyboard()
     )
