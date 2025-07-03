@@ -8,7 +8,6 @@ router = Router(name = 'menu_router')
 
 @router.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
-    
     if message.text.__contains__('auth'):
         await handle_auth(message = message)
         return
