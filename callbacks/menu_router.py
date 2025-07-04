@@ -1,6 +1,6 @@
 from aiogram.filters import CommandStart
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, InputMediaPhoto
 from keyboards.menu_keyboard import menu_screen_keyboard, menu_screen
 from src.modules.auth.auth_handler import handle_auth
 from src.services.assets_service import AssetsService
@@ -18,6 +18,7 @@ async def command_start_handler(message: Message, assets_service: AssetsService,
     
     await message.bot.send_photo(
         chat_id = message.chat.id,
+        
         caption = menu_screen(user = user),
         photo = assets_service.get_image("menu_image"),
         reply_markup = menu_screen_keyboard()
@@ -29,7 +30,9 @@ async def show_menu(callback: CallbackQuery, assets_service: AssetsService, user
     await callback.bot.edit_message_media(
         chat_id = callback.message.chat.id,
         message_id = callback.message.message_id,
-        media = assets_service.get_image("menu_image"),
-        caption = menu_screen(user = user),
+        media = InputMediaPhoto(
+            assets_service.get_image("menu_image"),
+            caption = menu_screen(user = user),
+        ),
         reply_markup = menu_screen_keyboard()
     )
