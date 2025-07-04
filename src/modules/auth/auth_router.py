@@ -1,8 +1,8 @@
 from aiogram import F, Router
 from aiogram.types import User, UserProfilePhotos, CallbackQuery
-from aiogram.types.photo_size import PhotoSize
 import aiohttp
 from typing import Optional, Any
+from .auth_keyboard import auth_success_keyboard
 
 router = Router(name = 'auth_router')
 
@@ -26,16 +26,19 @@ async def auth_login(callback: CallbackQuery) -> None:
             photo_url = ''
         )
     except Exception as e:
-        print(e)
-        await callback.bot.send_message(
+        await callback.bot.edit_message_text(
             chat_id = callback.message.chat.id,
-            text = 'Ошибка авторизации! ' + str(e)
+            message_id = callback.message.message_id,
+            text = 'Ошибка авторизации!' + str(e),
+            reply_markup = auth_success_keyboard()
         )
         return
 
-    await callback.bot.send_message(
+    await callback.bot.edit_message_text(
         chat_id = callback.message.chat.id,
-        text = 'Успешная авторизация!'
+        message_id = callback.message.message_id,
+        text = '✅ Успешная авторизация!',
+        reply_markup = auth_success_keyboard()
     )
     
 
