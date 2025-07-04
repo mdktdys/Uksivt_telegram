@@ -18,7 +18,6 @@ async def command_start_handler(message: Message, assets_service: AssetsService,
     
     await message.bot.send_photo(
         chat_id = message.chat.id,
-        
         caption = menu_screen(user = user),
         photo = assets_service.get_image("menu_image"),
         reply_markup = menu_screen_keyboard()
@@ -31,7 +30,7 @@ async def show_menu(callback: CallbackQuery, assets_service: AssetsService, user
         chat_id = callback.message.chat.id,
         message_id = callback.message.message_id,
         media = InputMediaPhoto(
-            assets_service.get_image("menu_image"),
+            media = assets_service.get_image("menu_image"),
             caption = menu_screen(user = user),
         ),
         reply_markup = menu_screen_keyboard()
