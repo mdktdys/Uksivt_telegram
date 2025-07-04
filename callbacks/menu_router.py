@@ -6,7 +6,9 @@ from src.modules.auth.auth_handler import handle_auth
 from src.services.assets_service import AssetsService
 from models.user_model import User
 
+
 router = Router(name = 'menu_router')
+
 
 @router.message(CommandStart())
 async def command_start_handler(message: Message, assets_service: AssetsService, user: User) -> None:
