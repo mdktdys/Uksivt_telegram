@@ -2,7 +2,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from models.user_model import User
 
 def menu_screen(user: User) -> str:
-    return f'Привет {user.username}!\nДля поиска расписания в чатах начните вводить (Бот должен состоять в чате)\n@UksivtZameny_bot [Наименование]'
+    return f'Привет {user.username}!\n\nДля поиска расписания в чатах начни вводить (Бот должен состоять в чате)\n@UksivtZameny_bot [Наименование]'
 
 
 def menu_screen_keyboard() -> InlineKeyboardMarkup:

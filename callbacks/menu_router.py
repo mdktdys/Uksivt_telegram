@@ -24,10 +24,10 @@ async def command_start_handler(message: Message, assets_service: AssetsService,
 
 @router.callback_query(F.data == "menu_screen")
 async def show_menu(callback: CallbackQuery, assets_service: AssetsService, user: User) -> None:
-    await callback.bot.delete_message(message_id = callback.message.message_id, chat_id = callback.message.chat.id)
-    await callback.bot.send_photo(
+    await callback.bot.edit_message_media(
         chat_id = callback.message.chat.id,
-        photo = assets_service.get_image("menu_image"),
+        message_id = callback.message.message_id,
+        media = assets_service.get_image("menu_image"),
         caption = menu_screen(user = user),
         reply_markup = menu_screen_keyboard()
     )
