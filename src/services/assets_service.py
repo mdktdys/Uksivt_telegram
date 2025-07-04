@@ -9,6 +9,7 @@ class AssetsService:
 
         self._load_images()
 
+
     def _load_images(self) -> None:
         for file in self._assets_dir.glob("*.*"):
             if file.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp"}:
@@ -17,8 +18,9 @@ class AssetsService:
             file_bytes = file.read_bytes()
             self._images[file.stem] = BufferedInputFile(file_bytes, filename=file.name)
 
+
     def get_image(self, name: str) -> BufferedInputFile:
-        image = self._images.get(name)
+        image: BufferedInputFile | None = self._images.get(name)
         if not image:
             raise ValueError(f"Изображение '{name}' не найдено.")
         return image

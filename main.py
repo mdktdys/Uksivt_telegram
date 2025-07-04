@@ -20,6 +20,8 @@ from my_secrets import (
     TOKEN,
 )
 from src.middlewares.services_middleware import ServicesMiddleware
+from src.middlewares.user_middleware import UserMiddleware
+from src.services.user_service import UserService
 from src.services.data_service import DataService
 from src.services.assets_service import AssetsService
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -60,9 +62,15 @@ async def main() -> None:
     
     data_service: DataService = DataService()
     assets_service: AssetsService = AssetsService()
+
     services_middleware: ServicesMiddleware = ServicesMiddleware(data_service, assets_service)
     dp.message.middleware(services_middleware)
     dp.callback_query.middleware(services_middleware)
+    
+    user_service: UserService = UserService()
+    user_middleware: UserMiddleware = UserMiddleware(user_service)
+    dp.message.middleware(user_middleware)
+    dp.callback_query.middleware(user_middleware)
 
     try:
         await on_on(bot = bot)
