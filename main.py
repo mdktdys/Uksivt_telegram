@@ -1,52 +1,63 @@
 import asyncio
-import logging
 import sys
-
-from src.modules.auth.auth_router import router as auth_router
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from callbacks import navigation, search, parser, events, notifications, queues_router, menu_router, settings_router
-from callbacks.events import on_on, on_exit
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
+
+from callbacks import (
+    events,
+    menu_router,
+    navigation,
+    notifications,
+    parser,
+    queues_router,
+    search,
+    settings_router,
+)
+from callbacks.events import on_exit, on_on
 from core.methods import check_new_zamena
 from data.schedule_api import ScheduleApi
 from my_secrets import (
-    CHECK_ZAMENA_INTERVAL_START_HOUR,
-    CHECK_ZAMENA_INTERVAL_END_HOUR,
-    CHECK_ZAMENA_INTERVAL_MINUTES,
     API_KEY,
     API_URL,
+    CHECK_ZAMENA_INTERVAL_END_HOUR,
+    CHECK_ZAMENA_INTERVAL_MINUTES,
+    CHECK_ZAMENA_INTERVAL_START_HOUR,
     TOKEN,
 )
 from src.middlewares.services_middleware import ServicesMiddleware
 from src.middlewares.user_middleware import UserMiddleware
-from src.services.user_service import UserService
-from src.services.data_service import DataService
-from src.services.assets_service import AssetsService
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.cron import CronTrigger
+from src.modules.auth.auth_router import router as auth_router
+from src.modules.tests.test_router import router as test_router
 from src.router import router
+from src.services.assets_service import AssetsService
+from src.services.data_service import DataService
+from src.services.user_service import UserService
+from utils.logger import logger
 
-dp = Dispatcher(api=ScheduleApi(api_key=API_KEY, api_url=API_URL))
-bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+logger.info('as')
 
+logger.info('🚀 Бот запускается')
+dp = Dispatcher(api = ScheduleApi(api_key = API_KEY, api_url = API_URL))
+bot = Bot(token = TOKEN, default = DefaultBotProperties(parse_mode = ParseMode.HTML))
+logger.info('⚙️ Бот запущен')
 
 async def main() -> None:
-    logging.basicConfig(level=logging.DEBUG)
-    logging.getLogger("aiohttp").setLevel(logging.DEBUG)
     scheduler = AsyncIOScheduler()
 
-    if CHECK_ZAMENA_INTERVAL_MINUTES is not None:
-        trigger = CronTrigger(
-            minute=f"0/{CHECK_ZAMENA_INTERVAL_MINUTES}",
-            hour=f"{CHECK_ZAMENA_INTERVAL_START_HOUR}-{CHECK_ZAMENA_INTERVAL_END_HOUR}",
-            timezone="Asia/Yekaterinburg",
-            jitter=180,
-        )
-        scheduler.add_job(check_new_zamena, trigger, args=(bot,))
+    # if CHECK_ZAMENA_INTERVAL_MINUTES is not None:
+    #     trigger = CronTrigger(
+    #         minute=f"0/{CHECK_ZAMENA_INTERVAL_MINUTES}",
+    #         hour=f"{CHECK_ZAMENA_INTERVAL_START_HOUR}-{CHECK_ZAMENA_INTERVAL_END_HOUR}",
+    #         timezone="Asia/Yekaterinburg",
+    #         jitter=180,
+    #     )
+    #     scheduler.add_job(check_new_zamena, trigger, args=(bot,))
     scheduler.start()
-
+    
     dp.include_routers(
         router,
         navigation.router,
@@ -58,7 +69,9 @@ async def main() -> None:
         menu_router.router,
         settings_router.router,
         notifications.router,
+        test_router
     )
+    logger.info('⚙️ Добавлены роутеры')
     
     data_service: DataService = DataService()
     assets_service: AssetsService = AssetsService()
@@ -78,12 +91,10 @@ async def main() -> None:
         await check_new_zamena(bot = bot)
     finally:
         scheduler.shutdown()
-        await on_exit(bot=bot)
+        await on_exit(bot = bot)
 
 
 if __name__ == "__main__":
-    if sys.platform == "win32":
-        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    logger.info('Запуск')
 
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     asyncio.run(main())

@@ -1,4 +1,5 @@
 import os
+
 LOG_LEVEL = 1
 
 MAIN_CHANNEL_ANCHOR_MESSAGE: int = int(os.environ["TELEGRAM_MAIN_CHANNEL_ANCHOR_MESSAGE"])

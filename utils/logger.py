@@ -1,11 +1,17 @@
+import datetime
 import html
+from logging import Logger, getLogger
 
 from aiogram import Bot
-from core.enums.log_level_enum import LogLevel
-from my_secrets import LOG_LEVEL, DEBUG_CHANNEL
-import datetime
+from pyfiglet import Figlet
 
-log_level: LogLevel = LogLevel(LOG_LEVEL)
+from core.enums.log_level_enum import LogLevel
+from my_secrets import DEBUG_CHANNEL
+
+log_level: LogLevel = LogLevel.INFO
+logger: Logger = getLogger(__name__)
+
+print(Figlet(font = 'doom').renderText('DEV @MDKTDYS'))
 
 async def log(level: LogLevel, text: str, bot: Bot):
     if (level.value > log_level.value):
@@ -37,4 +43,4 @@ async def log(level: LogLevel, text: str, bot: Bot):
         chat_id = DEBUG_CHANNEL,
         parse_mode = "html",
         text = message,
-    ) 
+    )

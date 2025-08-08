@@ -15,7 +15,7 @@ class AssetsService:
             if file.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp"}:
                 continue
 
-            file_bytes = file.read_bytes()
+            file_bytes: bytes = file.read_bytes()
             self._images[file.stem] = BufferedInputFile(file_bytes, filename=file.name)
 
 

@@ -1,12 +1,13 @@
 import datetime
 import json
-import logging
 from typing import Any
+
 import aiohttp
+
+from models.add_to_queue_model import AddQueueEntryForm
+from models.queue_model import Queue
 from models.search_result import DayScheduleFormatted
 from models.teacher_model import Teacher
-from models.queue_model import Queue
-from models.add_to_queue_model import AddQueueEntryForm
 
 
 class ScheduleApi:
@@ -22,7 +23,6 @@ class ScheduleApi:
             url: str = ApiRoutes.GROUP_SCHEDULE_FORMATTED.format(group=group, date=date, chat_id=chat_id, api_url=self.api_url)
             async with session.get(url, headers = self.headers) as res:
                 if res.status != 200:
-                    logging.error(f"Failed to get group schedule formatted from {url}: {await res.text()}")
                     raise Exception("Failed to get group schedule formatted")
 
                 response: DayScheduleFormatted = DayScheduleFormatted.model_validate_json(await res.text())
@@ -95,5 +95,7 @@ class ApiRoutes:
     GROUP_SCHEDULE_FORMATTED = "{api_url}groups/day_schedule_formatted/{group}/{date}/{chat_id}/"
     get_teacher: str = "{api_url}teachers/id/{id}/"
     get_teacher_queues: str = "{api_url}teachers/queues/{teacher_id}/"
+    get_queue: str = "{api_url}teachers/queue/{queue_id}/"
+    queue: str = "{api_url}teachers/queue/"
     get_queue: str = "{api_url}teachers/queue/{queue_id}/"
     queue: str = "{api_url}teachers/queue/"
