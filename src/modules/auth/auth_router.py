@@ -11,6 +11,9 @@ router = Router(name = 'auth_router')
 
 @router.callback_query(F.data.startswith("auth_login"))
 async def auth_login(callback: CallbackQuery) -> None:
+    if callback.data is None:
+        return
+
     token: str = callback.data.split("|")[1]
     user: User = callback.from_user
 
@@ -50,7 +53,7 @@ async def auth_user(
     last_name: Optional[str] = None,
     username: Optional[str] = None
 ) -> None:
-    url = "https://api.uksivt.xyz/api/v1/telegram_auth/verify"
+    url = "https://api.uksivt.xyz/api/v1/telegram_auth/verify_token"
     data: dict[str, Any] = {
         "token": token,
         "first_name": first_name,
