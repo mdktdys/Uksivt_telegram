@@ -22,7 +22,8 @@ async def auth_login(callback: CallbackQuery) -> None:
     user: User = callback.from_user
 
     try:
-        photos: UserProfilePhotos = await user.get_profile_photos(limit = 1)
+        photos: UserProfilePhotos = await user.get_profile_photos()
+        
         file: File = await callback.bot.get_file(photos.photos[0][0].file_id)
         photo_bytes: BinaryIO | None = await callback.bot.download_file(file.file_path, 'user profile photo.png')
         
