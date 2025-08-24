@@ -1,8 +1,10 @@
-from typing import Any, Optional
+from typing import Any, BinaryIO, Optional
 
 import aiohttp
 from aiogram import F, Router
 from aiogram.types import CallbackQuery, User
+from aiogram.types.file import File
+from aiogram.types.user_profile_photos import UserProfilePhotos
 
 from my_secrets import API_KEY
 
@@ -13,13 +15,17 @@ router = Router(name = 'auth_router')
 
 @router.callback_query(F.data.startswith("auth_login"))
 async def auth_login(callback: CallbackQuery) -> None:
-    if callback.data is None:
+    if callback.data is None or callback.bot is None:
         return
 
     token: str = callback.data.split("|")[1]
     user: User = callback.from_user
 
     try:
+        photos: UserProfilePhotos = await user.get_profile_photos(limit = 1)
+        file: File = await callback.bot.get_file(photos.photos[0][0].file_id)
+        photo_bytes: BinaryIO | None = await callback.bot.download_file(file.file_path, 'user profile photo.png')
+        
         await auth_user(
             token = token,
             first_name = user.first_name if user.first_name is not None else None,
@@ -27,7 +33,7 @@ async def auth_login(callback: CallbackQuery) -> None:
             username = user.username if user.username is not None else None,
             user_id = str(user.id),
             chat_id = str(callback.message.chat.id),
-            photo_url = ''
+            photo_url = photo_bytes
         )
     except Exception as e:
         await callback.bot.edit_message_text(
