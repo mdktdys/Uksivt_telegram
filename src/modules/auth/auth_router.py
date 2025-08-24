@@ -53,7 +53,7 @@ async def auth_user(
     last_name: Optional[str] = None,
     username: Optional[str] = None
 ) -> None:
-    url = "https://api.uksivt.xyz/api/v1/telegram_auth/verify_token"
+    url = "https://api.uksivt.xyz/v1/telegram_auth/verify_token"
     data: dict[str, Any] = {
         "token": token,
         "first_name": first_name,
