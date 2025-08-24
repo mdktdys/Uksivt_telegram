@@ -8,3 +8,4 @@ redis~=5.0.8
 pika==1.3.2
 apscheduler==3.10.4
 supabase
+pyfiglet==1.0.4
