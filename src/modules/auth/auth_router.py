@@ -4,6 +4,8 @@ import aiohttp
 from aiogram import F, Router
 from aiogram.types import CallbackQuery, User
 
+from my_secrets import API_KEY
+
 from .auth_keyboard import auth_success_keyboard
 
 router = Router(name = 'auth_router')
@@ -65,7 +67,7 @@ async def auth_user(
     }
 
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, json = data) as response:
+        async with session.post(url, json = data, headers={'x-api-key':API_KEY}) as response:
             if response.status == 201:
                 print("User authenticated successfully.")
             else:
