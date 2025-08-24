@@ -1,7 +1,9 @@
-from aiogram import F, Router
-from aiogram.types import User, UserProfilePhotos, CallbackQuery
+from typing import Any, Optional
+
 import aiohttp
-from typing import Optional, Any
+from aiogram import F, Router
+from aiogram.types import CallbackQuery, User
+
 from .auth_keyboard import auth_success_keyboard
 
 router = Router(name = 'auth_router')
@@ -48,7 +50,7 @@ async def auth_user(
     last_name: Optional[str] = None,
     username: Optional[str] = None
 ) -> None:
-    url = "https://api.uksivt.xyz/api/v1/telegram/verify"
+    url = "https://api.uksivt.xyz/api/v1/telegram_auth/verify"
     data: dict[str, Any] = {
         "token": token,
         "first_name": first_name,
