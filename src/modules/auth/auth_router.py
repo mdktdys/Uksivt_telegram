@@ -2,7 +2,7 @@ from typing import Any, BinaryIO, Optional
 
 import aiohttp
 from aiogram import F, Router
-from aiogram.types import CallbackQuery, User
+from aiogram.types import CallbackQuery, ChatFullInfo, ChatPhoto, User
 from aiogram.types.file import File
 from aiogram.types.user_profile_photos import UserProfilePhotos
 
@@ -22,10 +22,11 @@ async def auth_login(callback: CallbackQuery) -> None:
     user: User = callback.from_user
 
     try:
-        photos: UserProfilePhotos = await user.get_profile_photos()
+        chat_info: ChatFullInfo = await callback.bot.get_chat(chat_id = callback.from_user.id)
+        photo: ChatPhoto | None = chat_info.photo
         
-        file: File = await callback.bot.get_file(photos.photos[0][0].file_id)
-        photo_bytes: BinaryIO | None = await callback.bot.download_file(file.file_path, 'user profile photo.png')
+        file: File = await callback.bot.get_file(photo.small_file_id)
+        photo_bytes: BinaryIO | None = await callback.bot.download_file(file.file_path)
         
         await auth_user(
             token = token,

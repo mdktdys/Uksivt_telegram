@@ -1,6 +1,7 @@
 import datetime
 import html
-from logging import Logger, getLogger
+from logging import DEBUG, Logger, StreamHandler, getLogger
+from typing import TextIO
 
 from aiogram import Bot
 from pyfiglet import Figlet
@@ -8,15 +9,15 @@ from pyfiglet import Figlet
 from core.enums.log_level_enum import LogLevel
 from my_secrets import DEBUG_CHANNEL
 
-log_level: LogLevel = LogLevel.INFO
-logger: Logger = getLogger(__name__)
+logger: Logger = getLogger()
+logger.setLevel(DEBUG)
+handler: StreamHandler[TextIO] = StreamHandler()
+handler.setLevel(DEBUG)
+logger.addHandler(handler)
 
 print(Figlet(font = 'doom').renderText('DEV @MDKTDYS'))
 
 async def log(level: LogLevel, text: str, bot: Bot):
-    if (level.value > log_level.value):
-        return
-    
     message = ''
     if level == LogLevel.CRITICAL:
         message: str = (
@@ -44,3 +45,10 @@ async def log(level: LogLevel, text: str, bot: Bot):
         parse_mode = "html",
         text = message,
     )
+    
+    
+
+
+
+
+

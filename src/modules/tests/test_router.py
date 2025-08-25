@@ -1,8 +1,11 @@
 from aiogram import Router
 from aiogram.types import Message
+from aiogram.types.chat_full_info import ChatFullInfo
+from aiogram.types.chat_photo import ChatPhoto
+
+from utils.logger import logger
 
 router = Router(name = 'test_router')
-
 
 @router.message()
 async def handle_all(message: Message) -> None:
@@ -74,4 +77,4 @@ async def handle_all(message: Message) -> None:
             await message.bot.send_message(
                 chat_id = target_chat_id,
                 text = text_info
-            )
+            )            

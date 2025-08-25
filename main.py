@@ -7,27 +7,14 @@ from aiogram.enums import ParseMode
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 
-from callbacks import (
-    events,
-    menu_router,
-    navigation,
-    notifications,
-    parser,
-    queues_router,
-    search,
-    settings_router,
-)
+from callbacks import (events, menu_router, navigation, notifications, parser,
+                       queues_router, search, settings_router)
 from callbacks.events import on_exit, on_on
 from core.methods import check_new_zamena
 from data.schedule_api import ScheduleApi
-from my_secrets import (
-    API_KEY,
-    API_URL,
-    CHECK_ZAMENA_INTERVAL_END_HOUR,
-    CHECK_ZAMENA_INTERVAL_MINUTES,
-    CHECK_ZAMENA_INTERVAL_START_HOUR,
-    TOKEN,
-)
+from my_secrets import (API_KEY, API_URL, CHECK_ZAMENA_INTERVAL_END_HOUR,
+                        CHECK_ZAMENA_INTERVAL_MINUTES,
+                        CHECK_ZAMENA_INTERVAL_START_HOUR, TOKEN)
 from src.middlewares.services_middleware import ServicesMiddleware
 from src.middlewares.user_middleware import UserMiddleware
 from src.modules.auth.auth_router import router as auth_router
@@ -37,8 +24,6 @@ from src.services.assets_service import AssetsService
 from src.services.data_service import DataService
 from src.services.user_service import UserService
 from utils.logger import logger
-
-logger.info('as')
 
 logger.info('🚀 Бот запускается')
 dp = Dispatcher(api = ScheduleApi(api_key = API_KEY, api_url = API_URL))
@@ -95,6 +80,4 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    logger.info('Запуск')
-
     asyncio.run(main())
