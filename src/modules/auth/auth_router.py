@@ -7,6 +7,7 @@ from aiogram.types.file import File
 from aiogram.types.user_profile_photos import UserProfilePhotos
 
 from my_secrets import API_KEY
+from utils import logger
 
 from .auth_keyboard import auth_success_keyboard
 
@@ -44,6 +45,7 @@ async def auth_login(callback: CallbackQuery) -> None:
         )
 
     except Exception as e:
+        logger.logger.error(e)
         await callback.bot.edit_message_text(
             chat_id = callback.message.chat.id,
             message_id = callback.message.message_id,
@@ -71,37 +73,20 @@ async def auth_user(
 ) -> None:
     url = "https://api.uksivt.xyz/v1/telegram_auth/verify_token"
 
-    if photo_bytes:
-        form = aiohttp.FormData()
-        form.add_field('token', token)
-        form.add_field('first_name', first_name or "")
-        form.add_field('last_name', last_name or "")
-        form.add_field('username', username or "")
-        form.add_field('user_id', user_id)
-        form.add_field('chat_id', chat_id)
-        
-        if photo_bytes is not None:
-            form.add_field('photo', photo_bytes, filename='avatar.jpg', content_type='image/jpeg')
+    form = aiohttp.FormData()
+    form.add_field('token', token)
+    form.add_field('first_name', first_name or "")
+    form.add_field('last_name', last_name or "")
+    form.add_field('username', username or "")
+    form.add_field('user_id', user_id)
+    form.add_field('chat_id', chat_id)
+    
+    if photo_bytes is not None:
+        form.add_field('photo', photo_bytes, filename='avatar.jpg', content_type='image/jpeg')
 
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, data = form, headers={'x-api-key':API_KEY}) as response:
-                if response.status == 201:
-                    print("User authenticated successfully.")
-                else:
-                    raise Exception(await response.text())
-    else:
-        data: dict[str, Any] = {
-            "token": token,
-            "first_name": first_name,
-            "last_name": last_name,
-            "username": username,
-            "user_id": user_id,
-            "chat_id": chat_id,
-            "photo_url": None
-        }
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, json = data, headers={'x-api-key':API_KEY}) as response:
-                if response.status == 201:
-                    print("User authenticated successfully.")
-                else:
-                    raise Exception(await response.text())
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, data = form, headers={'x-api-key':API_KEY}) as response:
+            if response.status == 201:
+                print("User authenticated successfully.")
+            else:
+                raise Exception(await response.text())
