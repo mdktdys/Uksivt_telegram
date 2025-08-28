@@ -42,6 +42,7 @@ async def auth_login(callback: CallbackQuery) -> None:
             chat_id = str(callback.message.chat.id),
             photo_bytes = photo_bytes
         )
+
     except Exception as e:
         await callback.bot.edit_message_text(
             chat_id = callback.message.chat.id,
@@ -78,7 +79,9 @@ async def auth_user(
         form.add_field('username', username or "")
         form.add_field('user_id', user_id)
         form.add_field('chat_id', chat_id)
-        form.add_field('photo', photo_bytes, filename='avatar.jpg', content_type='image/jpeg')
+        
+        if photo_bytes is not None:
+            form.add_field('photo', photo_bytes, filename='avatar.jpg', content_type='image/jpeg')
 
         async with aiohttp.ClientSession() as session:
             async with session.post(url, data = form, headers={'x-api-key':API_KEY}) as response:
