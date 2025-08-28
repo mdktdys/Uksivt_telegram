@@ -25,17 +25,13 @@ async def auth_login(callback: CallbackQuery) -> None:
         chat_info: ChatFullInfo = await callback.bot.get_chat(chat_id = callback.from_user.id)
         photo: ChatPhoto | None = chat_info.photo
         
-        if photo is None:
-            return
+        photo_bytes: BinaryIO | bytes | None = None
+        if photo is not None:
+            file: File = await callback.bot.get_file(photo.small_file_id)
+            photo_bytes = await callback.bot.download_file(file.file_path)
         
-        file: File = await callback.bot.get_file(photo.small_file_id)
-        photo_bytes: BinaryIO | bytes | None = await callback.bot.download_file(file.file_path)
-        
-        if photo_bytes is None:
-            return
-        
-        if hasattr(photo_bytes, "read"):
-            photo_bytes = photo_bytes.read()
+            if hasattr(photo_bytes, "read"):
+                photo_bytes = photo_bytes.read()
         
         await auth_user(
             token = token,

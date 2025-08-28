@@ -19,6 +19,7 @@ class UserService:
         response: httpx.Response = await self.client.get(url, headers=self.headers, params={"user_id": user_id})
         if response.status_code == 200:
             user = response.json()
+            
             return User(**user)
         return None
 
