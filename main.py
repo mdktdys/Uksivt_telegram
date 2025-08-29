@@ -33,14 +33,14 @@ logger.info('⚙️ Бот запущен')
 async def main() -> None:
     scheduler = AsyncIOScheduler()
 
-    # if CHECK_ZAMENA_INTERVAL_MINUTES is not None:
-    #     trigger = CronTrigger(
-    #         minute=f"0/{CHECK_ZAMENA_INTERVAL_MINUTES}",
-    #         hour=f"{CHECK_ZAMENA_INTERVAL_START_HOUR}-{CHECK_ZAMENA_INTERVAL_END_HOUR}",
-    #         timezone="Asia/Yekaterinburg",
-    #         jitter=180,
-    #     )
-    #     scheduler.add_job(check_new_zamena, trigger, args=(bot,))
+    if CHECK_ZAMENA_INTERVAL_MINUTES is not None:
+        trigger = CronTrigger(
+            minute=f"0/{CHECK_ZAMENA_INTERVAL_MINUTES}",
+            hour=f"{CHECK_ZAMENA_INTERVAL_START_HOUR}-{CHECK_ZAMENA_INTERVAL_END_HOUR}",
+            timezone="Asia/Yekaterinburg",
+            jitter=180,
+        )
+        scheduler.add_job(check_new_zamena, trigger, args=(bot,))
     scheduler.start()
     
     dp.include_routers(
