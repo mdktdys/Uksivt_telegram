@@ -16,7 +16,8 @@ def create_keyboard_with_logo() -> InlineKeyboardMarkup:
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text="🐋", web_app = WebAppInfo(url = 'https://uksivt.xyz/')
+                    text= '🐋',
+                    url = 'https://uksivt.xyz/'
                 )
             ]
         ]
@@ -35,9 +36,9 @@ async def on_on(bot: Bot) -> None:
     try:
         await bot.edit_message_text(
             f"uksivt.xyz\nПоиск по группам и преподам\nвключен {get_current_time()}",
-            chat_id=MAIN_CHANNEL,
-            message_id=MAIN_CHANNEL_ANCHOR_MESSAGE,
-            reply_markup=keyboard,
+            chat_id = MAIN_CHANNEL,
+            message_id = MAIN_CHANNEL_ANCHOR_MESSAGE,
+            reply_markup = keyboard,
         )
         pass
     except Exception as e:
@@ -68,12 +69,11 @@ async def on_check_end(bot: Bot, result: str) -> None:
     try:
         await bot.edit_message_text(
             f"Проверено {get_current_time()}\nuksivt.xyz Поиск по группам и преподам",
-            chat_id=MAIN_CHANNEL,
-            message_id=MAIN_CHANNEL_ANCHOR_MESSAGE,
-            reply_markup=keyboard,
-            parse_mode="html",
+            chat_id = MAIN_CHANNEL,
+            message_id = MAIN_CHANNEL_ANCHOR_MESSAGE,
+            reply_markup = keyboard,
+            parse_mode = "html",
         )
     except Exception as e:
         print(e)
-        pass
         pass
