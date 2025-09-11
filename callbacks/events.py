@@ -2,7 +2,8 @@ import datetime
 
 import pytz
 from aiogram import Bot, Router
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import (InlineKeyboardButton, InlineKeyboardMarkup,
+                           WebAppInfo)
 
 from core.enums.log_level_enum import LogLevel
 from my_secrets import MAIN_CHANNEL, MAIN_CHANNEL_ANCHOR_MESSAGE
@@ -15,7 +16,7 @@ def create_keyboard_with_logo() -> InlineKeyboardMarkup:
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text="🐋", url="https://t.me/UksivtZameny_bot/zameny_uksivt/"
+                    text="🐋", web_app = WebAppInfo(url = 'https://uksivt.xyz/')
                 )
             ]
         ]
