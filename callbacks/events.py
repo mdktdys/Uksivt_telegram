@@ -2,8 +2,7 @@ import datetime
 
 import pytz
 from aiogram import Bot, Router
-from aiogram.types import (InlineKeyboardButton, InlineKeyboardMarkup,
-                           WebAppInfo)
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from core.enums.log_level_enum import LogLevel
 from my_secrets import MAIN_CHANNEL, MAIN_CHANNEL_ANCHOR_MESSAGE
@@ -74,6 +73,9 @@ async def on_check_end(bot: Bot, result: str) -> None:
             reply_markup = keyboard,
             parse_mode = "html",
         )
+    except Exception as e:
+        print(e)
+        pass
     except Exception as e:
         print(e)
         pass
