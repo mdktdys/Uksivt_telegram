@@ -76,6 +76,3 @@ async def on_check_end(bot: Bot, result: str) -> None:
     except Exception as e:
         print(e)
         pass
-    except Exception as e:
-        print(e)
-        pass
