@@ -17,7 +17,7 @@ def create_keyboard_with_logo() -> InlineKeyboardMarkup:
             [
                 InlineKeyboardButton(
                     text= '🐋',
-                    url = 'https://uksivt.xyz/'
+                    url = 'https://t.me/UksivtZameny_bot/zameny_uksivt/'
                 )
             ]
         ]
