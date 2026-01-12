@@ -80,7 +80,6 @@ async def on_check_end(bot: Bot, result: str, assets_service: AssetsService) -> 
             chat_id = MAIN_CHANNEL,
             message_id = MAIN_CHANNEL_ANCHOR_MESSAGE,
             reply_markup = keyboard,
-            parse_mode = "html",
         )
     except Exception as e:
         print(e)
