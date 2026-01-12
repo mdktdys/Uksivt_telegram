@@ -7,6 +7,7 @@ from aiogram.types import Message
 # from callbacks.events import on_check, on_check_start
 from core.methods import check_new_zamena, parse_zamena, send_zamena_alert
 from my_secrets import DEBUG_CHANNEL
+from src.services.assets_service import AssetsService
 
 router = Router()
 
@@ -36,7 +37,6 @@ admins = [1283168392]
 #
 #             # Ожидаем выполнения таски
 #             result = AsyncResult(task_id)
-#
 #             # Ожидаем, пока таска выполнится
 #             while not result.ready():
 #                 await asyncio.sleep(1)  # Спим, чтобы не перегружать CPU
@@ -102,8 +102,8 @@ async def myalert(message: Message):
 
 
 @router.message(F.text, Command("check"))
-async def check_new(message: Message):
-    await check_new_zamena(bot=message.bot)
+async def check_new(message: Message, assets_service: AssetsService):
+    await check_new_zamena(bot=message.bot, assets_service=assets_service)
 
 
 @router.message(F.text, Command("nikita"))

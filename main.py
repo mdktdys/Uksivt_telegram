@@ -33,6 +33,9 @@ logger.info('⚙️ Бот запущен')
 async def main() -> None:
     scheduler = AsyncIOScheduler()
 
+    data_service: DataService = DataService()
+    assets_service: AssetsService = AssetsService()
+
     if CHECK_ZAMENA_INTERVAL_MINUTES is not None:
         trigger = CronTrigger(
             minute=f"0/{CHECK_ZAMENA_INTERVAL_MINUTES}",
@@ -40,7 +43,7 @@ async def main() -> None:
             timezone="Asia/Yekaterinburg",
             jitter=180,
         )
-        scheduler.add_job(check_new_zamena, trigger, args=(bot,))
+        scheduler.add_job(check_new_zamena, trigger, args=(bot, assets_service))
     scheduler.start()
     
     dp.include_routers(
@@ -58,8 +61,7 @@ async def main() -> None:
     )
     logger.info('⚙️ Добавлены роутеры')
     
-    data_service: DataService = DataService()
-    assets_service: AssetsService = AssetsService()
+    
 
     services_middleware: ServicesMiddleware = ServicesMiddleware(data_service, assets_service)
     dp.message.middleware(services_middleware)
@@ -71,12 +73,12 @@ async def main() -> None:
     dp.callback_query.middleware(user_middleware)
 
     try:
-        await on_on(bot = bot)
+        await on_on(bot = bot, assets_service = assets_service)
         await dp.start_polling(bot)
-        await check_new_zamena(bot = bot)
+        await check_new_zamena(bot = bot, assets_service = assets_service)
     finally:
         scheduler.shutdown()
-        await on_exit(bot = bot)
+        await on_exit(bot = bot, assets_service = assets_service)
 
 
 if __name__ == "__main__":

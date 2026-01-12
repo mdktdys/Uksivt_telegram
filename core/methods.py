@@ -28,6 +28,8 @@ from my_secrets import (
     SCHEDULER_SUPABASE_ANON_KEY,
     SCHEDULER_SUPABASE_URL,
 )
+
+from src.services.assets_service import AssetsService
 from utils.extensions import month_name, weekday_name
 
 
@@ -153,7 +155,7 @@ async def parse_zamena(bot: Bot, url_: str, date: datetime.date, notify: bool):
         )
 
 
-async def check_new_zamena(bot: Bot) -> None:
+async def check_new_zamena(bot: Bot, assets_service: AssetsService) -> None:
     try:
         message = ""
         zamenas = []
@@ -375,7 +377,7 @@ async def check_new_zamena(bot: Bot) -> None:
             print(e)
             print(traceback.format_exc())
 
-        await on_check_end(bot=bot, result = message[0:2000])
+        await on_check_end(bot=bot, result = message[0:2000], assets_service = assets_service)
 
         try:
             for zam in zamenas:
