@@ -106,16 +106,6 @@ async def check_new(message: Message, assets_service: AssetsService):
     await check_new_zamena(bot=message.bot, assets_service=assets_service)
 
 
-@router.message(F.text, Command("nikita"))
-async def nikita(message: Message):
-    # -4536719993
-    await message.bot.forward_messages(
-        from_chat_id=-1002035415883,
-        chat_id=-4536719993,
-        message_ids=[504, 505, 506, 507],
-    )
-
-
 @router.message(F.text, Command("zamena"))
 async def zamena(message: Message):
     url = message.text.split(" ")[1]
